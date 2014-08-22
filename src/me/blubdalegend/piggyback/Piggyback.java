@@ -30,6 +30,8 @@ public class Piggyback extends JavaPlugin {
 
 		conf.addDefault("metrics", true);
 		
+		conf.addDefault("throwMobAway", true);
+		
 		conf.addDefault("message.send", true);
 		conf.addDefault("message.prefix", "[" + ChatColor.GOLD + "Piggyback"
 				+ ChatColor.WHITE + "] ");
