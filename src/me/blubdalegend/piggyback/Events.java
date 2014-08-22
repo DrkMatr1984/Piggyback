@@ -1,6 +1,5 @@
 package me.blubdalegend.piggyback;
 
-
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -23,14 +22,21 @@ public class Events implements Listener {
 
 		if (player.hasPermission("piggyback.use") || player.isOp()) {
 			if (player.isSneaking()) {
+				boolean send = plugin.getConfig().getBoolean("message.send");
+				String prefix = plugin.getConfig().getString("message.prefix");
+				String carryMsg = plugin.getConfig().getString("message.carry");
+				String dropMsg = plugin.getConfig().getString("message.drop");
+
 				if (clicked.isInsideVehicle()) {
 					clicked.leaveVehicle();
-					player.sendMessage(ChatColor.GREEN + "No longer carrying "
-							+ clicked.getType());
+					if (send == true) {
+						player.sendMessage(prefix + dropMsg);
+					}
 				} else {
 					player.setPassenger(clicked);
-					player.sendMessage(ChatColor.GREEN
-							+ "You are now carrying " + clicked.getType());
+					if (send == true) {
+						player.sendMessage(prefix + carryMsg);
+					}
 				}
 			}
 		} else {
