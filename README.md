@@ -1,3 +1,7 @@
+PIGGYBACK FOR BUKKIT IS NO LONGER IN DEVELOPMENT, PLEASE CHECK OUT Piggyback-Revamp FOR THE SPONGE VERSION OF THE PLUGIN!
+=========================================================================================================================
+
+
 Piggyback
 =========
 
