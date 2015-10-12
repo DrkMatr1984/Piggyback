@@ -115,8 +115,6 @@ public class Events implements org.bukkit.event.Listener
 				          	  if (plugin.config.send){
 				          		  player.sendMessage(plugin.config.prefix + " " + plugin.config.noPickUpPlayer);
 				          	  }
-				          	  event.setDamage(0);
-						      event.setCancelled(true);
 				        	  return;
 			        	  }
 			          }
