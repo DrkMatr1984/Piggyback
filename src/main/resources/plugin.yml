@@ -1,0 +1,19 @@
+name: PBack
+version: 1.3
+main: me.blubdalegend.piggyback.Piggyback
+softdepend: [Citizens]
+
+description: Crouch, Click, Piggyback!
+commands:
+  pback:
+    description: Toggle your ability to be picked up
+    aliases: [piggyback, piggyb, pb]
+    usage: |
+        /pback(on/off) - Toggles your ability to be picked up
+permissions:
+    piggyback.use:
+        description: The user will be able to pick up entities and players, providing the player being picked up is not toggled off
+        default: op
+    piggyback.toggle:
+        description: Allows the user toggle on/off their ability to be picked up
+        default: op
