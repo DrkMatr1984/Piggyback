@@ -17,6 +17,8 @@ public class ConfigAccessor
 	public List<String> disabledPlayers = new ArrayList<String>();
 	public FileConfiguration f;
 	
+	public Piggyback plugin;
+	
 	public boolean shiftRightClick;
 	public boolean throwMob;
 	public boolean pickupNPC;
@@ -33,12 +35,16 @@ public class ConfigAccessor
 	public String toggleOff;
 	public String error;
 	
+	public ConfigAccessor(Piggyback plugin){
+		this.plugin = plugin;
+	}
+	
 	public void saveDefaultUserList() {
 	      if (usersFile == null) {
-	          usersFile = new File(Piggyback.plugin.getDataFolder(), "toggles.yml");
+	          usersFile = new File(plugin.getDataFolder(), "toggles.yml");
 	      }
 	      if (!usersFile.exists()) {           
-	    	  Piggyback.plugin.saveResource("toggles.yml", false);
+	    	  plugin.saveResource("toggles.yml", false);
 	      }   
 	  }
 	  
@@ -70,10 +76,10 @@ public class ConfigAccessor
 	  
 	  public void saveDefaultLanguageFile() {
 	      if (languageFile == null) {
-	          languageFile = new File(Piggyback.plugin.getDataFolder(), "language.yml");
+	          languageFile = new File(plugin.getDataFolder(), "language.yml");
 	      }
 	      if (!languageFile.exists()) {           
-	    	  Piggyback.plugin.saveResource("language.yml", false);
+	    	  plugin.saveResource("language.yml", false);
 	      }   
 	  }
 	  
@@ -94,14 +100,14 @@ public class ConfigAccessor
 	  
 	  public void initConfig()
 	  {
-		f = Piggyback.plugin.getConfig();
+		f = plugin.getConfig();
 	    f.options().header("PIGGYBACK CONFIGURATION FILE");
 	    f.addDefault("shiftRightClick", Boolean.valueOf(true));
 	    f.addDefault("throwMobAway", Boolean.valueOf(true));
 	    f.addDefault("PickUpNPCs", Boolean.valueOf(false));
 	    f.addDefault("message.send", Boolean.valueOf(true)); 
 	    f.options().copyDefaults(true);
-	    Piggyback.plugin.saveConfig();
+	    plugin.saveConfig();
 	    
 	    shiftRightClick = f.getBoolean("shiftRightClick");
 		throwMob = f.getBoolean("throwMobAway");

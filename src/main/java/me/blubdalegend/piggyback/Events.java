@@ -4,15 +4,20 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.util.Vector;
 
 public class Events implements org.bukkit.event.Listener
 {	
-  Piggyback plugin = Piggyback.plugin;
+  public Piggyback plugin;
   
-  @EventHandler
+  public Events(Piggyback plugin){
+	  this.plugin = plugin;
+  }
+  
+  @EventHandler(priority=EventPriority.NORMAL, ignoreCancelled=true)
   public void playerInteractEntity(PlayerInteractEntityEvent event)
   {
 	Entity clicked = null;
@@ -69,7 +74,7 @@ public class Events implements org.bukkit.event.Listener
     }
   }
   
-  @EventHandler
+  @EventHandler(priority=EventPriority.NORMAL, ignoreCancelled=true)
   public void playerLeftInteractEntity(EntityDamageByEntityEvent event)
   {
 	    Entity clicked = null;
@@ -88,7 +93,7 @@ public class Events implements org.bukkit.event.Listener
 			          clicked.leaveVehicle();
 			          if (plugin.config.throwMob) {
 			            throwEntity(clicked, player);
-			            event.setDamage(0);
+			            event.setDamage(0.0D);
 				        event.setCancelled(true);
 			          }
 			          if (plugin.config.send) {
@@ -98,7 +103,7 @@ public class Events implements org.bukkit.event.Listener
 			        else {
 			          if ((clicked.getType() == EntityType.PAINTING) || (clicked.getType() == EntityType.ITEM_FRAME) || (clicked.getType() == EntityType.ARMOR_STAND) || (clicked.getType() == EntityType.ARROW))
 			          {
-			        	event.setDamage(0);
+			        	event.setDamage(0.0D);
 			            event.setCancelled(true);
 			            return;
 			          }
@@ -106,7 +111,7 @@ public class Events implements org.bukkit.event.Listener
 			            if(plugin.config.send){
 			        	  player.sendMessage(plugin.config.prefix + " " + plugin.config.noPickUpNPC);
 			            }
-			            event.setDamage(0);
+			            event.setDamage(0.0D);
 				        event.setCancelled(true);
 				        return;
 			          }
@@ -115,17 +120,18 @@ public class Events implements org.bukkit.event.Listener
 				          	  if (plugin.config.send){
 				          		  player.sendMessage(plugin.config.prefix + " " + plugin.config.noPickUpPlayer);
 				          	  }
+				          	  event.setDamage(0.0D);
+							  event.setCancelled(true);
 				        	  return;
 			        	  }
 			          }
 				      player.setPassenger(clicked);
-				      event.setDamage(0);
+				      event.setDamage(0.0D);
 					  event.setCancelled(true);
 				      if (plugin.config.send) {
 				          player.sendMessage(plugin.config.prefix + " " + plugin.config.carryMsg);
 				      }
-			          event.setDamage(0);
-				      event.setCancelled(true);
+				      return;
 			          }
 			      }
 			    }

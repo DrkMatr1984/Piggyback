@@ -9,27 +9,23 @@ import org.bukkit.plugin.PluginManager;
 
 public class Piggyback extends org.bukkit.plugin.java.JavaPlugin
 {
-  public static Piggyback plugin;
+  public Piggyback plugin;
   private Logger log = getLogger();
   private PluginManager pm = getServer().getPluginManager();
-  public ConfigAccessor config = new ConfigAccessor();
+  public ConfigAccessor config;
   
   public void onEnable()
   {
-	plugin = this;
+	plugin = this; 
+	config = new ConfigAccessor(plugin);
     config.initConfig();
-    this.pm.registerEvents(new Events(), plugin);
+    this.pm.registerEvents(new Events(plugin), plugin);
     this.log.info("Piggyback enabled!");
   }
   
   public void onDisable(){
 	  config.saveUserList();
 	  plugin.getPluginLoader().disablePlugin(plugin);
-  }
-  
-  public static Piggyback getPiggy()
-  {
-	  return plugin;
   }
   
   @Override
