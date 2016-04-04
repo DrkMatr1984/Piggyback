@@ -1,5 +1,5 @@
 name: PBack
-version: 1.3b
+version: 1.4
 main: me.blubdalegend.piggyback.Piggyback
 softdepend: [Citizens]
 
