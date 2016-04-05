@@ -1,5 +1,6 @@
 package me.blubdalegend.piggyback;
 
+import org.bukkit.craftbukkit.v1_9_R1.entity.CraftPlayer;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -8,6 +9,8 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.util.Vector;
+
+import net.minecraft.server.v1_9_R1.PacketPlayOutMount;
 
 public class Events implements org.bukkit.event.Listener
 {	
@@ -20,58 +23,69 @@ public class Events implements org.bukkit.event.Listener
   @EventHandler(priority=EventPriority.NORMAL, ignoreCancelled=true)
   public void playerInteractEntity(PlayerInteractEntityEvent event)
   {
-	Entity clicked = null;
-    Player player = event.getPlayer();
-    if(plugin.config.shiftRightClick){
-        clicked = event.getRightClicked();
-    if ((player.hasPermission("piggyback.use")) || (player.isOp()))
-    {
-      if (player.isSneaking())
-      {
-        if (clicked.isInsideVehicle())
-        {
-          clicked.leaveVehicle();
-          if (plugin.config.throwMob) {
-            throwEntity(clicked, player);
-          }
-          if (plugin.config.send) {
-            player.sendMessage(plugin.config.prefix + " " + plugin.config.dropMsg);
-          }
-        }
-        else {
-          if ((clicked.getType() == EntityType.PAINTING) || (clicked.getType() == EntityType.ITEM_FRAME) || (clicked.getType() == EntityType.ARMOR_STAND) || (clicked.getType() == EntityType.ARROW))
-          {
-            event.setCancelled(true);
-            return;
-          }
-          if ((clicked.hasMetadata("NPC")) && (!plugin.config.pickupNPC)) {
-        	  if (plugin.config.send){
-        		  player.sendMessage(plugin.config.prefix + " " + plugin.config.noPickUpNPC);
-        	  }
-        	  event.setCancelled(true);
-              return;
-          }
-          if(clicked instanceof Player){
-        	  if(plugin.config.disabledPlayers.contains(clicked.getUniqueId().toString())){
-        		  if (plugin.config.send){
-        			  player.sendMessage(plugin.config.prefix + " " + plugin.config.noPickUpPlayer);
-        		  }
-        		  event.setCancelled(true);
-                  return;
-        	  }
-          }  
-	      player.setPassenger(clicked);
-	      if (plugin.config.send) {
-	          player.sendMessage(plugin.config.prefix + plugin.config.carryMsg);
-	      }          
-        }
-        }
-    }else {
-      if (plugin.config.send){
-      player.sendMessage(plugin.config.prefix + " " + plugin.config.noPerms);
-      }
-    }
-    }
+	  Entity clicked = null;
+	  Player player = event.getPlayer();
+	  if(plugin.config.shiftRightClick){
+		  clicked = event.getRightClicked();
+		  if ((player.hasPermission("piggyback.use")) || (player.isOp()))
+		  {
+			  if (player.isSneaking())
+			  {
+				  if(player.getPassenger()!=null){
+					  if (player.getPassenger().equals(clicked))
+					  {
+						  clicked.leaveVehicle();
+						  PacketPlayOutMount packet = new PacketPlayOutMount(((CraftPlayer)player).getHandle());
+						  ((CraftPlayer)player).getHandle().playerConnection.sendPacket(packet);
+						  if (plugin.config.throwMob) {
+							  throwEntity(clicked, player);
+							  if(clicked instanceof Player){
+								  PacketPlayOutMount clickedPacket = new PacketPlayOutMount(((CraftPlayer)clicked).getHandle());
+								  ((CraftPlayer)clicked).getHandle().playerConnection.sendPacket(clickedPacket);
+				    		  }
+						  }
+						  if (plugin.config.send) {
+							  player.sendMessage(plugin.config.prefix + " " + plugin.config.dropMsg);
+						  }
+						  return;
+					  }
+		    	  }else {
+		    		  if ((clicked.getType() == EntityType.PAINTING) || (clicked.getType() == EntityType.ITEM_FRAME) || (clicked.getType() == EntityType.ARMOR_STAND) || (clicked.getType() == EntityType.ARROW))
+		    		  {
+		    			  return;
+		    		  }
+		    		  if ((clicked.hasMetadata("NPC")) && (!plugin.config.pickupNPC)) {
+		    			  if(plugin.config.send){
+		    				  player.sendMessage(plugin.config.prefix + " " + plugin.config.noPickUpNPC);
+		    			  }
+		    			  return;
+		    		  }
+		    		  if(clicked instanceof Player){
+		    			  if(plugin.config.disabledPlayers.contains(clicked.getUniqueId().toString())){        	  
+		    				  if (plugin.config.send){
+		    					  player.sendMessage(plugin.config.prefix + " " + plugin.config.noPickUpPlayer);
+		    				  }
+		    				  return;
+		    			  }
+		    		  }
+		    		  player.setPassenger(clicked);
+		    		  PacketPlayOutMount packet = new PacketPlayOutMount(((CraftPlayer)player).getHandle());
+		    		  ((CraftPlayer)player).getHandle().playerConnection.sendPacket(packet);
+		    		  if(clicked instanceof Player){
+		    			  PacketPlayOutMount clickedPacket = new PacketPlayOutMount(((CraftPlayer)clicked).getHandle());
+		    			  ((CraftPlayer)clicked).getHandle().playerConnection.sendPacket(clickedPacket);
+		    		  }
+		    		  if (plugin.config.send) {
+		    			  player.sendMessage(plugin.config.prefix + " " + plugin.config.carryMsg);
+		    		  }
+		    	  }
+			  }
+		  }else {
+			  if (plugin.config.send){
+				  player.sendMessage(plugin.config.prefix + " " + plugin.config.noPerms);
+			  }
+		  }
+	  }
   }
   
   @EventHandler(priority=EventPriority.NORMAL, ignoreCancelled=true)
@@ -86,61 +100,74 @@ public class Events implements org.bukkit.event.Listener
 		        clicked = event.getEntity();
 			    if ((player.hasPermission("piggyback.use")) || (player.isOp()))
 			    {
-			      if (player.isSneaking())
-			      {
-			        if (clicked.isInsideVehicle())
-			        {
-			          clicked.leaveVehicle();
-			          if (plugin.config.throwMob) {
-			            throwEntity(clicked, player);
-			            event.setDamage(0.0D);
-				        event.setCancelled(true);
-			          }
-			          if (plugin.config.send) {
-			            player.sendMessage(plugin.config.prefix + plugin.config.dropMsg);
-			          }
-			        }
-			        else {
-			          if ((clicked.getType() == EntityType.PAINTING) || (clicked.getType() == EntityType.ITEM_FRAME) || (clicked.getType() == EntityType.ARMOR_STAND) || (clicked.getType() == EntityType.ARROW))
-			          {
-			        	event.setDamage(0.0D);
-			            event.setCancelled(true);
-			            return;
-			          }
-			          if ((clicked.hasMetadata("NPC")) && (!plugin.config.pickupNPC)) {
-			            if(plugin.config.send){
-			        	  player.sendMessage(plugin.config.prefix + " " + plugin.config.noPickUpNPC);
-			            }
-			            event.setDamage(0.0D);
-				        event.setCancelled(true);
-				        return;
-			          }
-			          if(clicked instanceof Player){
-			          	  if(plugin.config.disabledPlayers.contains(clicked.getUniqueId().toString())){        	  
-				          	  if (plugin.config.send){
-				          		  player.sendMessage(plugin.config.prefix + " " + plugin.config.noPickUpPlayer);
-				          	  }
-				          	  event.setDamage(0.0D);
-							  event.setCancelled(true);
-				        	  return;
-			        	  }
-			          }
-				      player.setPassenger(clicked);
-				      event.setDamage(0.0D);
-					  event.setCancelled(true);
-				      if (plugin.config.send) {
-				          player.sendMessage(plugin.config.prefix + " " + plugin.config.carryMsg);
-				      }
-				      return;
-			          }
-			      }
+			    	if (player.isSneaking())
+			    	{
+			    		if(player.getPassenger()!=null){
+			    			if (player.getPassenger().equals(clicked))
+				    		{
+				    			clicked.leaveVehicle();
+				    			PacketPlayOutMount packet = new PacketPlayOutMount(((CraftPlayer)player).getHandle());
+				    			((CraftPlayer)player).getHandle().playerConnection.sendPacket(packet);
+				    			if (plugin.config.throwMob) {
+				    				throwEntity(clicked, player);
+				    				if(clicked instanceof Player){
+						    			  PacketPlayOutMount clickedPacket = new PacketPlayOutMount(((CraftPlayer)clicked).getHandle());
+							    		  ((CraftPlayer)clicked).getHandle().playerConnection.sendPacket(clickedPacket);
+						    		  }
+				    			}
+				    			if (plugin.config.send) {
+				    				player.sendMessage(plugin.config.prefix + " " + plugin.config.dropMsg);
+				    			}
+				    			event.setDamage(0.0D);
+			    				event.setCancelled(true);
+				    		}
+			    			return;
+			    		}else {
+			    			if ((clicked.getType() == EntityType.PAINTING) || (clicked.getType() == EntityType.ITEM_FRAME) || (clicked.getType() == EntityType.ARMOR_STAND) || (clicked.getType() == EntityType.ARROW))
+			    			{
+			    				event.setDamage(0.0D);
+			    				event.setCancelled(true);
+			    				return;
+			    			}
+			    			if ((clicked.hasMetadata("NPC")) && (!plugin.config.pickupNPC)) {
+			    				if(plugin.config.send){
+			    					player.sendMessage(plugin.config.prefix + " " + plugin.config.noPickUpNPC);
+			    				}
+			    				event.setDamage(0.0D);
+			    				event.setCancelled(true);
+			    				return;
+			    			}
+			    			if(clicked instanceof Player){
+			    				if(plugin.config.disabledPlayers.contains(clicked.getUniqueId().toString())){        	  
+			    					if (plugin.config.send){
+			    						player.sendMessage(plugin.config.prefix + " " + plugin.config.noPickUpPlayer);
+			    					}
+			    					event.setDamage(0.0D);
+			    					event.setCancelled(true);
+			    					return;
+			    				}
+			    			}	
+			    			player.setPassenger(clicked);
+			    			PacketPlayOutMount packet = new PacketPlayOutMount(((CraftPlayer)player).getHandle());
+			    			((CraftPlayer)player).getHandle().playerConnection.sendPacket(packet);
+			    			if(clicked instanceof Player){
+			    				PacketPlayOutMount clickedPacket = new PacketPlayOutMount(((CraftPlayer)clicked).getHandle());
+					    		((CraftPlayer)clicked).getHandle().playerConnection.sendPacket(clickedPacket);
+				    		}
+			    			if (plugin.config.send) {
+			    				player.sendMessage(plugin.config.prefix + " " + plugin.config.carryMsg);
+			    			}
+			    			event.setDamage(0.0D);
+			    			event.setCancelled(true);
+			    		}
+			    	}
+			    }else {
+			    	if (plugin.config.send){
+			    		player.sendMessage(plugin.config.prefix + " " + plugin.config.noPerms);
+			    	}
 			    }
-	        }else {
-	        	if (plugin.config.send){
-	        	player.sendMessage(plugin.config.prefix + " " + plugin.config.noPerms);
-	        	}
 	        }
-		}
+	    }
   	}
   
   private void throwEntity(Entity ent, Player player)
@@ -150,16 +177,16 @@ public class Events implements org.bukkit.event.Listener
     
     vector.setY(0.4D);
     if (pitch == 0) {
-      vector.setZ(vector.getZ() + 1.5D);
+    	vector.setZ(vector.getZ() + 1.5D);
     }
     if (pitch == 1) {
-      vector.setX(vector.getX() - 1.5D);
+    	vector.setX(vector.getX() - 1.5D);
     }
     if (pitch == 2) {
-      vector.setZ(vector.getZ() - 1.5D);
+    	vector.setZ(vector.getZ() - 1.5D);
     }
     if (pitch == 3) {
-      vector.setX(vector.getX() + 1.5D);
+    	vector.setX(vector.getX() + 1.5D);
     }
     ent.setVelocity(vector);
   }

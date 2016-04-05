@@ -4,8 +4,8 @@ message:
   drop: '&cDropped the mob&r'
   toggleOn: '&aYou may now be picked up by other players!'
   toggleOff: '&cYou may no longer be picked up by other players!'
-  noPickUpNPC: "&cYou can''t pick up NPCs!&r"
+  noPickUpNPC: '&cYou can''t pick up NPCs!&r'
   noPickUpPlayer: '&cSorry, this player cannot be picked up.'
-  noPerms: "&cSorry, you don''t have permission to do that. :(&r"
-  notAPlayer: "&cYou''re not a player! You can''t toggle being picked up!&r"
+  noPerms: "&cSorry, you don't have permission to do that. :(&r"
+  notAPlayer: "&cYou're not a player! You can''t toggle being picked up!&r"
   error: '&4An Error has Occured!&r'
