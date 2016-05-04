@@ -23,6 +23,7 @@ public class ConfigAccessor
 	public boolean throwMob;
 	public boolean pickupNPC;
 	public boolean send;
+	public boolean respectClaimPerms;
 	
 	public String prefix;      
 	public String carryMsg;
@@ -103,6 +104,7 @@ public class ConfigAccessor
 		f = plugin.getConfig();
 	    f.options().header("PIGGYBACK CONFIGURATION FILE");
 	    f.addDefault("shiftRightClick", Boolean.valueOf(true));
+	    f.addDefault("respectClaimPerms", Boolean.valueOf(true));
 	    f.addDefault("throwMobAway", Boolean.valueOf(true));
 	    f.addDefault("PickUpNPCs", Boolean.valueOf(false));
 	    f.addDefault("message.send", Boolean.valueOf(true)); 
@@ -110,6 +112,7 @@ public class ConfigAccessor
 	    plugin.saveConfig();
 	    
 	    shiftRightClick = f.getBoolean("shiftRightClick");
+	    respectClaimPerms = f.getBoolean("respectClaimPerms");
 		throwMob = f.getBoolean("throwMobAway");
 		pickupNPC = f.getBoolean("PickUpNPCs");
 		send = f.getBoolean("message.send");
