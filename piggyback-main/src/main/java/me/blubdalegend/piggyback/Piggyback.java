@@ -1,7 +1,9 @@
 package me.blubdalegend.piggyback;
 
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -14,13 +16,24 @@ public class Piggyback extends org.bukkit.plugin.java.JavaPlugin
   private PluginManager pm = getServer().getPluginManager();
   public ConfigAccessor config;
   
+  public String version;
+  public String clazzName;
+  public String sendPacket;
+  public int Version;
+  public static Class<?> clazz;
+  
   public void onEnable()
   {
 	plugin = this; 
 	config = new ConfigAccessor(plugin);
     config.initConfig();
-    this.pm.registerEvents(new Events(plugin), plugin);
-    this.log.info("Piggyback enabled!");
+    this.version = getNmsVersion().replace("_", "").toLowerCase();
+    if(!checkCompat()){
+    	this.setEnabled(false);
+    }else{
+    	this.pm.registerEvents(new Events(plugin), plugin);
+        this.log.info("Piggyback enabled!");
+    }
   }
   
   public void onDisable(){
@@ -57,5 +70,37 @@ public class Piggyback extends org.bukkit.plugin.java.JavaPlugin
 	      sender.sendMessage(plugin.config.prefix + " " + plugin.config.error);
 	  }
 	  return false;
+  }
+  
+  private boolean checkCompat()
+  {
+	String baseVersion = this.version.substring(1 ,3);
+	Version = Integer.parseInt(baseVersion);
+	if(this.Version < 19){
+		this.version = "pre1_9";
+		this.clazzName = (getClass().getPackage().getName() + ".nms." + this.version + ".SendPacketTask");
+	}
+	if(this.Version > 18){
+		this.clazzName = (getClass().getPackage().getName() + ".nms." + getNmsVersion().toLowerCase() + ".SendPacketTask");
+	}
+    
+    try {
+      clazz = Class.forName(this.clazzName);
+      if (AbstractPacketTask.class.isAssignableFrom(clazz)) {
+        return true;
+      }
+      getLogger().log(Level.WARNING, "PiggyBack could not be loaded, version {" + getNmsVersion().toLowerCase() + "} is not supported yet!");
+      setEnabled(false);
+      return false;
+    } catch (ClassNotFoundException e) {
+      getLogger().log(Level.WARNING, "PiggyBack could not be loaded, version {" + getNmsVersion().toLowerCase() + "} is not supported yet!");
+      setEnabled(false);
+      return false;
+    }
+  }
+  
+  private String getNmsVersion()
+  {
+    return Bukkit.getServer().getClass().getPackage().getName().replace("org.bukkit.craftbukkit.", "");
   }
 }

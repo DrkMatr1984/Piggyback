@@ -1,5 +1,8 @@
 package me.blubdalegend.piggyback;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -7,16 +10,17 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
+import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.Vector;
-import org.spigotmc.event.entity.EntityDismountEvent;
 
 public class Events implements org.bukkit.event.Listener
 {	
-  public Piggyback plugin;
+  public static Piggyback plugin;
   
   public Events(Piggyback plugin){
-	  this.plugin = plugin;
+	  Events.plugin = plugin;
   }
   
   @EventHandler(priority=EventPriority.HIGH, ignoreCancelled=false)
@@ -191,17 +195,25 @@ public class Events implements org.bukkit.event.Listener
 	  }
   }
   
-  @EventHandler(priority=EventPriority.NORMAL, ignoreCancelled=true)
-  public void onPlayerExit(EntityDismountEvent event)
-  {
-	  if(event.getDismounted() instanceof Player){
-		  Player player = (Player) event.getDismounted();
-		  sendMountPacket(player);
-	  }
+  @EventHandler(priority=EventPriority.NORMAL, ignoreCancelled=false)
+  public void onPlayerToggleSneakEvent(PlayerToggleSneakEvent event) {
+	  Player player = event.getPlayer();
+	  if(player.getVehicle()!=null){
+		  Events.sendMountPacket(player);
+	  }	  
   }
   	
-  private void sendMountPacket(Player player) {
-	  new SendPacketTask(player).runTaskLater(plugin, 2L);
+  static void sendMountPacket(Player player) {
+	  Method method;
+	try {
+		method = Piggyback.clazz.getDeclaredMethod("SendPacketTask", Player.class, JavaPlugin.class);
+		Object obj = Piggyback.clazz.newInstance();
+		method.invoke(obj, player, ((JavaPlugin)Events.plugin));
+	} catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+	  
   }
   
   private void throwEntity(Entity ent, Player player)

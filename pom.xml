@@ -4,59 +4,37 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>me.blubdalegend</groupId>
-    <artifactId>piggyback</artifactId>
-    <version>1.5</version>
-    <name>Piggyback</name>
+    <groupId>me.blubdalegend.piggyback</groupId>
+    <artifactId>piggyback-parent</artifactId>
+    <!-- Artifact ID doesn't matter for anything but the final product
+               At least, it doesn't matter externally to this setup -->
+    <packaging>pom</packaging>
+    <!-- Packaging? POM -->
+    <version>parent</version>
+    <name>piggyback Parent</name>
 
     <!-- Properties -->
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <build.number>Unknown</build.number>
     </properties>
-
+    
+    <modules>  
+      <module>piggyback-common</module>
+      <module>piggyback-main</module>
+      <module>v1_9_r1</module>
+      <module>v1_9_r2</module>
+      <module>pre1_9</module>         
+    </modules>
+    
     <!-- Repositories -->
     <repositories>
-        <repository>
-            <id>spigot-repo</id>
-            <url>https://hub.spigotmc.org/nexus/content/groups/public/</url>
-        </repository>
-        <repository>
+      <repository>
+          <id>spigot-repo</id>
+          <url>https://hub.spigotmc.org/nexus/content/groups/public/</url>
+      </repository>
+      <repository>
 			<id>md_5-repo</id>
 			<url>http://repo.md-5.net/content/groups/public/</url>
-		  </repository>
+		</repository>  
     </repositories>
-    <!-- Dependencies -->
-    <dependencies>
-        <dependency>
-            <groupId>org.bukkit</groupId>
-            <artifactId>bukkit</artifactId>
-            <version>1.9.2-R0.1-SNAPSHOT</version>
-            <type>jar</type>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.spigotmc</groupId>
-            <artifactId>spigot</artifactId>
-            <version>1.9.2-R0.1-SNAPSHOT</version>
-            <type>jar</type>
-            <scope>provided</scope>
-        </dependency>
-    </dependencies>
-
-    <!-- Build information -->
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>2.5.1</version>
-                <configuration>
-                    <source>1.7</source>
-                    <target>1.7</target>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
-
 </project>

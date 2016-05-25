@@ -19,7 +19,11 @@ dependency-reduced-pom.xml
 .project
 .classpath
 /.settings/
-
+/v1_9_r2/target/
+/v1_9_r1/target/
+/pre1_9/target/
+/piggyback-common/target/
+/piggyback-main/target/
 /lib/
 .settings
 .git
