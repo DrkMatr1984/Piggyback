@@ -16,7 +16,7 @@ public class Piggyback extends org.bukkit.plugin.java.JavaPlugin
   private PluginManager pm = getServer().getPluginManager();
   public ConfigAccessor config;
   
-  public String version;
+  public static String version;
   public String clazzName;
   public String sendPacket;
   public int Version;
@@ -27,7 +27,7 @@ public class Piggyback extends org.bukkit.plugin.java.JavaPlugin
 	plugin = this; 
 	config = new ConfigAccessor(plugin);
     config.initConfig();
-    this.version = getNmsVersion().replace("_", "").toLowerCase();
+    version = getNmsVersion().replace("_", "").toLowerCase();
     if(!checkCompat()){
     	this.setEnabled(false);
     }else{
@@ -74,13 +74,13 @@ public class Piggyback extends org.bukkit.plugin.java.JavaPlugin
   
   private boolean checkCompat()
   {
-	String baseVersion = this.version.substring(1 ,3);
+	String baseVersion = version.substring(1 ,3);
 	Version = Integer.parseInt(baseVersion);
-	if(this.Version < 19){
-		this.version = "pre1_9";
-		this.clazzName = (getClass().getPackage().getName() + ".nms." + this.version + ".SendPacketTask");
+	if(this.Version < 19 && this.Version > 11){
+		version = "pre1_9";
+		this.clazzName = (getClass().getPackage().getName() + ".nms." + version + ".SendPacketTask");
 	}
-	if(this.Version > 18){
+	if(this.Version > 18 || this.Version == 11){
 		this.clazzName = (getClass().getPackage().getName() + ".nms." + getNmsVersion().toLowerCase() + ".SendPacketTask");
 	}
     

@@ -35,6 +35,8 @@ public class ConfigAccessor
 	public String toggleOn;
 	public String toggleOff;
 	public String error;
+	public List<String> disabledEntities;
+	public List<String> disabledWorlds;
 	
 	public ConfigAccessor(Piggyback plugin){
 		this.plugin = plugin;
@@ -101,13 +103,20 @@ public class ConfigAccessor
 	  
 	  public void initConfig()
 	  {
+		disabledEntities = new ArrayList<String>();
+		disabledEntities.add("");
+		disabledWorlds = new ArrayList<String>();
+		disabledWorlds.add("");
 		f = plugin.getConfig();
 	    f.options().header("PIGGYBACK CONFIGURATION FILE");
 	    f.addDefault("shiftRightClick", Boolean.valueOf(true));
 	    f.addDefault("respectClaimPerms", Boolean.valueOf(true));
 	    f.addDefault("throwMobAway", Boolean.valueOf(true));
 	    f.addDefault("PickUpNPCs", Boolean.valueOf(false));
-	    f.addDefault("message.send", Boolean.valueOf(true)); 
+	    f.addDefault("message.send", Boolean.valueOf(true));
+	    f.addDefault("entityBlacklist", disabledEntities);
+	    f.addDefault("worldBlacklist", disabledWorlds);
+	    
 	    f.options().copyDefaults(true);
 	    plugin.saveConfig();
 	    
@@ -116,6 +125,8 @@ public class ConfigAccessor
 		throwMob = f.getBoolean("throwMobAway");
 		pickupNPC = f.getBoolean("PickUpNPCs");
 		send = f.getBoolean("message.send");
+		disabledEntities = f.getStringList("entityBlacklist");
+		disabledWorlds = f.getStringList("worldBlacklist");
 	    
 	    saveDefaultUserList();
 	    loadUserList();

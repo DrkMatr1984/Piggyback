@@ -9,6 +9,6 @@ import me.blubdalegend.piggyback.AbstractPacketTask;
 public class SendPacketTask implements AbstractPacketTask{
 	
 	
-	public void SendPacketTask(Player player, JavaPlugin plugin){
+	public void ASendPacketTask(JavaPlugin plugin){
 	}	
 }

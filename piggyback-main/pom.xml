@@ -5,7 +5,7 @@
     <artifactId>piggyback</artifactId>
     <packaging>jar</packaging>
     <name>piggyback-main</name>
-    <version>1.6</version>
+    <version>1.6.1</version>
     <!-- This is where I track the version -->
     <dependencies>
     	  <dependency>
@@ -19,6 +19,13 @@
             <groupId>me.blubdalegend</groupId>
             <artifactId>piggyback-v1_9_r2</artifactId>
             <version>v1_9_r2</version>
+            <type>jar</type>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>me.blubdalegend</groupId>
+            <artifactId>piggyback-v1_10_r1</artifactId>
+            <version>v1_10_r1</version>
             <type>jar</type>
             <scope>compile</scope>
         </dependency>
@@ -96,6 +103,7 @@
                                     <include>me.blubdalegend:piggyback-pre1_9</include>
                                     <include>me.blubdalegend:piggyback-v1_9_r1</include>
                                     <include>me.blubdalegend:piggyback-v1_9_r2</include>
+                                    <include>me.blubdalegend:piggyback-v1_10_r1</include>
                                     <include>me.blubdalegend:piggyback-common</include>
                                 </includes>
                             </artifactSet>

@@ -1,5 +1,6 @@
 package me.blubdalegend.piggyback.nms.v1_9_r2;
 
+import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.v1_9_R2.entity.CraftPlayer;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.entity.Player;
@@ -12,16 +13,19 @@ public class SendPacketTask implements AbstractPacketTask{
 	
 	private JavaPlugin plugin;
 	
-	public void SendPacketTask(Player p, JavaPlugin plugin){
-		final Player player = p;
+	public void ASendPacketTask(JavaPlugin plugin){
 		this.plugin = plugin;
 		new BukkitRunnable() {
 			@Override
 			public void run() {
-				PacketPlayOutMount packet = new PacketPlayOutMount(((CraftPlayer) player).getHandle());
-		        ((CraftPlayer) player).getHandle().playerConnection.sendPacket(packet);
+				PacketPlayOutMount packet;
+				for(Player player : Bukkit.getServer().getOnlinePlayers()){
+					packet = new PacketPlayOutMount(((CraftPlayer) player).getHandle());
+			        ((CraftPlayer) player).getHandle().playerConnection.sendPacket(packet);
+				}
+				
 			}
-        }.runTaskLater(this.plugin, 2L);
+        }.runTaskLater(this.plugin, 5L);
 	}
 	
 }
