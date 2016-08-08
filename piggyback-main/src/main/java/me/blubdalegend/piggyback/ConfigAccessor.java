@@ -89,16 +89,16 @@ public class ConfigAccessor
 	  public void loadLanguageFile(){
 		  language = YamlConfiguration.loadConfiguration(languageFile);
 		  
-		  prefix = formatColor(language.getString("message.prefix"));      
-	      carryMsg = formatColor(language.getString("message.carry"));
-		  dropMsg = formatColor(language.getString("message.drop"));
-		  toggleOn = formatColor(language.getString("message.toggleOn"));
-		  toggleOff = formatColor(language.getString("message.toggleOff"));
-		  noPickUpNPC = formatColor(language.getString("message.noPickUpNPC"));
-		  noPerms = formatColor(language.getString("message.noPerms"));
-		  notAPlayer = formatColor(language.getString("message.notAPlayer"));
-		  noPickUpPlayer = formatColor(language.getString("message.noPickUpPlayer"));
-		  error = formatColor(language.getString("message.error"));
+		  prefix = language.getString("message.prefix");      
+	      carryMsg = language.getString("message.carry");
+		  dropMsg = language.getString("message.drop");
+		  toggleOn = language.getString("message.toggleOn");
+		  toggleOff = language.getString("message.toggleOff");
+		  noPickUpNPC = language.getString("message.noPickUpNPC");
+		  noPerms = language.getString("message.noPerms");
+		  notAPlayer = language.getString("message.notAPlayer");
+		  noPickUpPlayer = language.getString("message.noPickUpPlayer");
+		  error = language.getString("message.error");
 	  }
 	  
 	  public void initConfig()
@@ -132,11 +132,5 @@ public class ConfigAccessor
 	    loadUserList();
 	    saveDefaultLanguageFile();
 	    loadLanguageFile();
-	  }
-	  
-	  private String formatColor(String msg){
-		  String temp = msg;
-		  temp = temp.replaceAll("&", "§");
-		  return temp;
 	  }
 }

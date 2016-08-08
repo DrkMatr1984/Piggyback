@@ -4,6 +4,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -49,25 +50,35 @@ public class Piggyback extends org.bukkit.plugin.java.JavaPlugin
 		        {
 		        	if(sender.hasPermission("piggyback.toggle") || sender.isOp()){
 		        		if (!(sender instanceof Player)) {
-		                    sender.sendMessage(config.prefix + " " + config.notAPlayer);
-		                    return true;
+		        			if(!((config.prefix + " " + config.notAPlayer).equals(" "))){
+		        				sender.sendMessage(ChatColor.translateAlternateColorCodes('&', config.prefix + " " + config.notAPlayer));
+		        			}
+		        			return true;
 		                }
 		        		Player p = (Player)sender;
 		        		if (!config.disabledPlayers.contains(p.getUniqueId().toString())) {
-		                    p.sendMessage(plugin.config.prefix + " " + plugin.config.toggleOff);
+		        			if(!((plugin.config.prefix + " " + plugin.config.toggleOff).equals(" "))){
+		        				p.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.config.prefix + " " + plugin.config.toggleOff));
+		        			}
 		                    config.disabledPlayers.add(p.getUniqueId().toString());
 		                } else {
-		                    p.sendMessage(plugin.config.prefix + " " + plugin.config.toggleOn);
+		                	if(!((plugin.config.prefix + " " + plugin.config.toggleOn).equals(" "))){
+		                		p.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.config.prefix + " " + plugin.config.toggleOn));
+		                	}
 		                    config.disabledPlayers.remove(p.getUniqueId().toString());
 		                }
 		                return true;
 		        	}else{
-		        		sender.sendMessage(plugin.config.prefix + " " + plugin.config.noPerms);
+		        		if(!((plugin.config.prefix + " " + plugin.config.noPerms).equals(" "))){
+		        			sender.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.config.prefix + " " + plugin.config.noPerms));
+		        		}	
 		        	}
 		        }
 		  }
 	  }catch (Exception e) {
-	      sender.sendMessage(plugin.config.prefix + " " + plugin.config.error);
+		  if(!((plugin.config.prefix + " " + plugin.config.error).equals(" "))){
+			  sender.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.config.prefix + " " + plugin.config.error));
+		  }
 	  }
 	  return false;
   }

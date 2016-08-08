@@ -14,6 +14,7 @@ import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.Vector;
+import org.bukkit.ChatColor;
 
 public class Events implements org.bukkit.event.Listener
 {	
@@ -78,7 +79,7 @@ public class Events implements org.bukkit.event.Listener
 							  }
 							  if (plugin.config.send) {
 								  if(!((plugin.config.prefix + " " + plugin.config.dropMsg).equals(" "))){
-									  player.sendMessage(plugin.config.prefix + " " + plugin.config.dropMsg);
+									  player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.config.prefix + " " + plugin.config.dropMsg));
 								  }
 							  }
 							  event.setDamage(0.0D);
@@ -95,7 +96,7 @@ public class Events implements org.bukkit.event.Listener
 						  if ((clicked.hasMetadata("NPC")) && (!plugin.config.pickupNPC)) {
 							  if(plugin.config.send){
 								  if(!((plugin.config.prefix + " " + plugin.config.noPickUpNPC).equals(" "))){
-			    					  player.sendMessage(plugin.config.prefix + " " + plugin.config.noPickUpNPC);
+			    					  player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.config.prefix + " " + plugin.config.noPickUpNPC));
 			    				  }
 							  }
 							  event.setDamage(0.0D);
@@ -106,7 +107,7 @@ public class Events implements org.bukkit.event.Listener
 							  if(plugin.config.disabledPlayers.contains(clicked.getUniqueId().toString())){        	  
 								  if (plugin.config.send){
 									  if(!((plugin.config.prefix + " " + plugin.config.noPickUpPlayer).equals(" "))){
-			    						  player.sendMessage(plugin.config.prefix + " " + plugin.config.noPickUpPlayer);
+			    						  player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.config.prefix + " " + plugin.config.noPickUpPlayer));
 			    					  }
 								  }
 								  event.setDamage(0.0D);
@@ -118,7 +119,7 @@ public class Events implements org.bukkit.event.Listener
 						  sendMountPacket();
 						  if(player.getPassenger()!=null){
 							  if(!((plugin.config.prefix + " " + plugin.config.carryMsg).equals(" "))){
-		    					  player.sendMessage(plugin.config.prefix + " " + plugin.config.carryMsg);
+		    					  player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.config.prefix + " " + plugin.config.carryMsg));
 		    				  }
 						  }
 						  event.setDamage(0.0D);
@@ -128,7 +129,7 @@ public class Events implements org.bukkit.event.Listener
 			  }else {
 				  if (plugin.config.send){
 					  if(!((plugin.config.prefix + " " + plugin.config.noPerms).equals(" "))){
-						  player.sendMessage(plugin.config.prefix + " " + plugin.config.noPerms);
+						  player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.config.prefix + " " + plugin.config.noPerms));
 					  }
 				  }
 			  }
@@ -195,7 +196,7 @@ public class Events implements org.bukkit.event.Listener
 					  if (plugin.config.send)
 					  {
 						  if(!((plugin.config.prefix + " " + plugin.config.dropMsg).equals(" "))){
-							  player.sendMessage(plugin.config.prefix + " " + plugin.config.dropMsg);
+							  player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.config.prefix + " " + plugin.config.dropMsg));
 						  }		  
 					  }
 					  return;
@@ -208,7 +209,7 @@ public class Events implements org.bukkit.event.Listener
 	    		  if ((clicked.hasMetadata("NPC")) && (!plugin.config.pickupNPC)) {
 	    			  if(plugin.config.send){
 	    				  if(!((plugin.config.prefix + " " + plugin.config.noPickUpNPC).equals(" "))){
-	    					  player.sendMessage(plugin.config.prefix + " " + plugin.config.noPickUpNPC);
+	    					  player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.config.prefix + " " + plugin.config.noPickUpNPC));
 	    				  }
 	    			  }
 	    			  return;
@@ -219,7 +220,7 @@ public class Events implements org.bukkit.event.Listener
 	    				  if (plugin.config.send)
 	    				  {
 	    					  if(!((plugin.config.prefix + " " + plugin.config.noPickUpPlayer).equals(" "))){
-	    						  player.sendMessage(plugin.config.prefix + " " + plugin.config.noPickUpPlayer);
+	    						  player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.config.prefix + " " + plugin.config.noPickUpPlayer));
 	    					  }
 	    				  }
 	    				  return;
@@ -231,7 +232,7 @@ public class Events implements org.bukkit.event.Listener
 	    		  {
 	    			  if(player.getPassenger()!=null){
 	    				  if(!((plugin.config.prefix + " " + plugin.config.carryMsg).equals(" "))){
-	    					  player.sendMessage(plugin.config.prefix + " " + plugin.config.carryMsg);
+	    					  player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.config.prefix + " " + plugin.config.carryMsg));
 	    				  }
 	    			  }
 	    		  }
@@ -241,7 +242,7 @@ public class Events implements org.bukkit.event.Listener
 		  if (plugin.config.send)
 		  {
 			  if(!((plugin.config.prefix + " " + plugin.config.noPerms).equals(" "))){
-				  player.sendMessage(plugin.config.prefix + " " + plugin.config.noPerms);
+				  player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.config.prefix + " " + plugin.config.noPerms));
 			  }			  
 		  }
 	  }
