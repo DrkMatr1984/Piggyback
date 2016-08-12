@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.EntityType;
 
 public class ConfigAccessor
 {
@@ -105,7 +106,12 @@ public class ConfigAccessor
 	  public void initConfig()
 	  {
 		disabledEntities = new ArrayList<String>();
-		disabledEntities.add("");
+		if(Piggyback.version!="pre1_9"){
+			disabledEntities.add(EntityType.ARMOR_STAND.toString());
+			disabledEntities.add(EntityType.BOAT.toString());
+		}else{
+			disabledEntities.add(EntityType.BOAT.toString());
+		}		
 		disabledWorlds = new ArrayList<String>();
 		disabledWorlds.add("");
 		f = plugin.getConfig();
