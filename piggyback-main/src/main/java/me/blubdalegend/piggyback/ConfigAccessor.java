@@ -24,6 +24,9 @@ public class ConfigAccessor
 	public boolean pickupNPC;
 	public boolean send;
 	public boolean respectClaimPerms;
+	public boolean requireEmptyHand;
+	public List<String> disabledEntities;
+	public List<String> disabledWorlds;
 	
 	public String prefix;      
 	public String carryMsg;
@@ -35,8 +38,6 @@ public class ConfigAccessor
 	public String toggleOn;
 	public String toggleOff;
 	public String error;
-	public List<String> disabledEntities;
-	public List<String> disabledWorlds;
 	
 	public ConfigAccessor(Piggyback plugin){
 		this.plugin = plugin;
@@ -113,6 +114,7 @@ public class ConfigAccessor
 	    f.addDefault("respectClaimPerms", Boolean.valueOf(true));
 	    f.addDefault("throwMobAway", Boolean.valueOf(true));
 	    f.addDefault("PickUpNPCs", Boolean.valueOf(false));
+	    f.addDefault("requireEmptyHand", Boolean.valueOf(true));
 	    f.addDefault("message.send", Boolean.valueOf(true));
 	    f.addDefault("entityBlacklist", disabledEntities);
 	    f.addDefault("worldBlacklist", disabledWorlds);
@@ -124,6 +126,7 @@ public class ConfigAccessor
 	    respectClaimPerms = f.getBoolean("respectClaimPerms");
 		throwMob = f.getBoolean("throwMobAway");
 		pickupNPC = f.getBoolean("PickUpNPCs");
+		requireEmptyHand = f.getBoolean("requireEmptyHand");
 		send = f.getBoolean("message.send");
 		disabledEntities = f.getStringList("entityBlacklist");
 		disabledWorlds = f.getStringList("worldBlacklist");

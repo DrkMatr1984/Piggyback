@@ -15,6 +15,7 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.Vector;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 
 public class Events implements org.bukkit.event.Listener
 {	
@@ -47,6 +48,7 @@ public class Events implements org.bukkit.event.Listener
 	  }
   }
   
+  @SuppressWarnings("deprecation")
   @EventHandler(priority=EventPriority.HIGH, ignoreCancelled=false)
   public void playerLeftInteractEntity(EntityDamageByEntityEvent event)
   {
@@ -68,6 +70,17 @@ public class Events implements org.bukkit.event.Listener
 			  {
 				  if (player.isSneaking())
 				  {
+					  if(plugin.config.requireEmptyHand){
+						  if(Piggyback.version!="pre1_9"){
+							  if(player.getInventory().getItemInMainHand().getType()!=Material.AIR){
+								  return;
+							  }
+						  }else{
+							  if(player.getItemInHand().getType()!=Material.AIR){
+								  return;
+							  }
+						  }
+					  }
 					  if(clicked.isInsideVehicle()){
 						  if (player.getPassenger()!=null && player.getPassenger().equals(clicked))
 						  {
@@ -87,12 +100,18 @@ public class Events implements org.bukkit.event.Listener
 						  }
 						  return;
 					  }else {
-						  if ((clicked.getType() == EntityType.PAINTING) || (clicked.getType() == EntityType.ITEM_FRAME) || (clicked.getType() == EntityType.ARROW))
+						  if ((clicked.getType() == EntityType.PAINTING) || (clicked.getType() == EntityType.ITEM_FRAME) || (clicked.getType() == EntityType.ARROW) || (plugin.config.disabledEntities.contains(clicked.getType().toString())))
 						  {
 							  event.setDamage(0.0D);
 							  event.setCancelled(true);
 							  return;
 						  }
+						  if(plugin.config.disabledWorlds.contains(clicked.getWorld().toString()))
+			    		  {
+							  event.setDamage(0.0D);
+							  event.setCancelled(true);
+			    			  return;
+			    		  }
 						  if ((clicked.hasMetadata("NPC")) && (!plugin.config.pickupNPC)) {
 							  if(plugin.config.send){
 								  if(!((plugin.config.prefix + " " + plugin.config.noPickUpNPC).equals(" "))){
@@ -178,11 +197,23 @@ public class Events implements org.bukkit.event.Listener
 	  ent.setVelocity(vector);
   }
   
+  @SuppressWarnings("deprecation")
   private void doRightClick(Player player, Entity clicked){
 	  if ((player.hasPermission("piggyback.use")) || (player.isOp()))
 	  {
 		  if (player.isSneaking())
 		  {
+			  if(plugin.config.requireEmptyHand){
+				  if(Piggyback.version!="pre1_9"){
+					  if(player.getInventory().getItemInMainHand().getType()!=Material.AIR){
+						  return;
+					  }
+				  }else{
+					  if(player.getItemInHand().getType()!=Material.AIR){
+						  return;
+					  }
+				  }
+			  }
 			  if(player.getPassenger()!=null){
 				  if (player.getPassenger().equals(clicked))
 				  {
@@ -202,7 +233,7 @@ public class Events implements org.bukkit.event.Listener
 					  return;
 				  }
 	    	  }else {
-	    		  if ((clicked.getType() == EntityType.PAINTING) || (clicked.getType() == EntityType.ITEM_FRAME) || (clicked.getType() == EntityType.ARROW))
+	    		  if ((clicked.getType() == EntityType.PAINTING) || (clicked.getType() == EntityType.ITEM_FRAME) || (clicked.getType() == EntityType.ARROW) || (plugin.config.disabledEntities.contains(clicked.getType().toString())))
 	    		  {
 	    			  return;
 	    		  }
@@ -212,6 +243,10 @@ public class Events implements org.bukkit.event.Listener
 	    					  player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.config.prefix + " " + plugin.config.noPickUpNPC));
 	    				  }
 	    			  }
+	    			  return;
+	    		  }
+	    		  if(plugin.config.disabledWorlds.contains(clicked.getWorld().toString()))
+	    		  {
 	    			  return;
 	    		  }
 	    		  if(clicked instanceof Player)
