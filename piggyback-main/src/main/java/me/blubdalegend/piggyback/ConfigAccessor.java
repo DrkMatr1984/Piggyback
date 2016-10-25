@@ -20,12 +20,16 @@ public class ConfigAccessor
 	
 	public Piggyback plugin;
 	
-	public boolean shiftRightClick;
-	public boolean throwMob;
+	public boolean shiftRightClick; // true for use shift-right-click, false to use shift-left-click
+	public boolean throwRider; // Throw Rider instead of just dropping them
 	public boolean pickupNPC;
 	public boolean send;
-	public boolean respectClaimPerms;
+	public boolean cancelPickupIfAnotherPlugin;
 	public boolean requireEmptyHand;
+	public boolean preventDamagePlayerPlayertoRider;
+	public boolean preventDamagePlayerRidertoPlayer;
+	public boolean preventDamageMobPlayertoRider;
+	public boolean preventDamageMobRidertoPlayer;
 	public List<String> disabledEntities;
 	public List<String> disabledWorlds;
 	
@@ -117,25 +121,34 @@ public class ConfigAccessor
 		f = plugin.getConfig();
 	    f.options().header("PIGGYBACK CONFIGURATION FILE");
 	    f.addDefault("shiftRightClick", Boolean.valueOf(true));
-	    f.addDefault("respectClaimPerms", Boolean.valueOf(true));
-	    f.addDefault("throwMobAway", Boolean.valueOf(true));
-	    f.addDefault("PickUpNPCs", Boolean.valueOf(false));
+	    f.addDefault("throwRiderAway", Boolean.valueOf(true));
+	    f.addDefault("pickUpNPCs", Boolean.valueOf(false));
 	    f.addDefault("requireEmptyHand", Boolean.valueOf(true));
-	    f.addDefault("message.send", Boolean.valueOf(true));
-	    f.addDefault("entityBlacklist", disabledEntities);
-	    f.addDefault("worldBlacklist", disabledWorlds);
+	    f.addDefault("cancelPickup.IfAnotherPluginCancelsEvent", Boolean.valueOf(false));
+	    f.addDefault("damagePrevention.Player.PlayertoRider", Boolean.valueOf(true));
+	    f.addDefault("damagePrevention.Player.RidertoPlayer", Boolean.valueOf(true));
+	    f.addDefault("damagePrevention.Mobs.PlayertoRider", Boolean.valueOf(true));
+	    f.addDefault("damagePrevention.Mobs.RidertoPlayer", Boolean.valueOf(true));
+	    f.addDefault("messages.Send", Boolean.valueOf(true));
+	    f.addDefault("blacklists.entityBlacklist", disabledEntities);
+	    f.addDefault("blacklists.worldBlacklist", disabledWorlds);
 	    
 	    f.options().copyDefaults(true);
 	    plugin.saveConfig();
 	    
 	    shiftRightClick = f.getBoolean("shiftRightClick");
-	    respectClaimPerms = f.getBoolean("respectClaimPerms");
-		throwMob = f.getBoolean("throwMobAway");
-		pickupNPC = f.getBoolean("PickUpNPCs");
+		throwRider = f.getBoolean("throwRiderAway");
+		pickupNPC = f.getBoolean("pickUpNPCs");
 		requireEmptyHand = f.getBoolean("requireEmptyHand");
-		send = f.getBoolean("message.send");
-		disabledEntities = f.getStringList("entityBlacklist");
-		disabledWorlds = f.getStringList("worldBlacklist");
+		cancelPickupIfAnotherPlugin = f.getBoolean("cancelPickup.IfAnotherPluginCancelsEvent");
+		preventDamagePlayerPlayertoRider = f.getBoolean("damagePrevention.Player.PlayertoRider");
+		preventDamagePlayerRidertoPlayer = f.getBoolean("damagePrevention.Player.RidertoPlayer");
+		preventDamageMobPlayertoRider = f.getBoolean("damagePrevention.Mobs.PlayertoRider");
+		preventDamageMobRidertoPlayer = f.getBoolean("damagePrevention.Mobs.RidertoPlayer");
+		
+		send = f.getBoolean("messages.Send");
+		disabledEntities = f.getStringList("blacklists.entityBlacklist");
+		disabledWorlds = f.getStringList("blacklists.worldBlacklist");
 	    
 	    saveDefaultUserList();
 	    loadUserList();

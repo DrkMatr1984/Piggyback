@@ -25,16 +25,18 @@ public class Piggyback extends org.bukkit.plugin.java.JavaPlugin
   
   public void onEnable()
   {
-	plugin = this; 
+	plugin = this;
+	version = getNmsVersion().replace("_", "").toLowerCase();
+	boolean compat = checkCompat();
+	if(!compat){
+    	this.setEnabled(false);
+    }
 	config = new ConfigAccessor(plugin);
     config.initConfig();
-    version = getNmsVersion().replace("_", "").toLowerCase();
-    if(!checkCompat()){
-    	this.setEnabled(false);
-    }else{
+    if(compat){
     	this.pm.registerEvents(new Events(plugin), plugin);
         this.log.info("Piggyback enabled!");
-    }
+    }  
   }
   
   public void onDisable(){
@@ -87,9 +89,12 @@ public class Piggyback extends org.bukkit.plugin.java.JavaPlugin
   {
 	String baseVersion = version.substring(1 ,3);
 	Version = Integer.parseInt(baseVersion);
+	Integer i = Version;
+	getLogger().info("Version : " + i.toString());
 	if(this.Version < 19 && this.Version > 11){
 		version = "pre1_9";
 		this.clazzName = (getClass().getPackage().getName() + ".nms." + version + ".SendPacketTask");
+		getLogger().info("version : " + version);
 	}
 	if(this.Version > 18 || this.Version == 11){
 		this.clazzName = (getClass().getPackage().getName() + ".nms." + getNmsVersion().toLowerCase() + ".SendPacketTask");
