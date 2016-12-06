@@ -31,7 +31,7 @@
     <dependency>
       <groupId>me.blubdalegend</groupId>
       <artifactId>piggyback-common</artifactId>
-      <version>1.6</version>
+      <version>1.6.1</version>
       <type>jar</type>
       <scope>provided</scope>
     </dependency>

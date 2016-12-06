@@ -31,6 +31,13 @@
         </dependency>
         <dependency>
             <groupId>me.blubdalegend</groupId>
+            <artifactId>piggyback-v1_11_r1</artifactId>
+            <version>v1_11_r1</version>
+            <type>jar</type>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>me.blubdalegend</groupId>
             <artifactId>piggyback-pre1_9</artifactId>
             <version>pre1_9</version>
             <type>jar</type>
@@ -39,7 +46,7 @@
         <dependency>
             <groupId>me.blubdalegend</groupId>
             <artifactId>piggyback-common</artifactId>
-            <version>1.6</version>
+            <version>1.6.1</version>
             <type>jar</type>
             <scope>compile</scope>
         </dependency>
@@ -104,6 +111,7 @@
                                     <include>me.blubdalegend:piggyback-v1_9_r1</include>
                                     <include>me.blubdalegend:piggyback-v1_9_r2</include>
                                     <include>me.blubdalegend:piggyback-v1_10_r1</include>
+                                    <include>me.blubdalegend:piggyback-v1_11_r1</include>
                                     <include>me.blubdalegend:piggyback-common</include>
                                 </includes>
                             </artifactSet>

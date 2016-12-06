@@ -5,7 +5,7 @@
   <artifactId>piggyback-common</artifactId>
   <packaging>jar</packaging>
   <name>PiggyBack implementation Common</name>
-  <version>1.6</version>
+  <version>1.6.1</version>
 
   <parent>
     <groupId>me.blubdalegend.piggyback</groupId>

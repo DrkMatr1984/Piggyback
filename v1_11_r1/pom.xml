@@ -2,10 +2,10 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>me.blubdalegend</groupId>
-  <artifactId>piggyback-v1_9_r1</artifactId>
+  <artifactId>piggyback-v1_11_r1</artifactId>
   <packaging>jar</packaging>
-  <name>PiggyBack implementation v1_9_r1</name>
-  <version>v1_9_r1</version>
+  <name>PiggyBack implementation v1_11_r1</name>
+  <version>v1_11_r1</version>
 
   <parent>
     <groupId>me.blubdalegend.piggyback</groupId>
@@ -17,14 +17,14 @@
     <dependency>
       <groupId>org.bukkit</groupId>
       <artifactId>bukkit</artifactId>
-      <version>1.9.2-R0.1-SNAPSHOT</version>
+      <version>1.11-R0.1-SNAPSHOT</version>
       <type>jar</type>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.spigotmc</groupId>
       <artifactId>spigot</artifactId>
-      <version>1.9.2-R0.1-SNAPSHOT</version>
+      <version>1.11-R0.1-SNAPSHOT</version>
       <type>jar</type>
       <scope>provided</scope>
     </dependency>
