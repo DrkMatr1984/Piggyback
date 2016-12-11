@@ -1,5 +1,7 @@
 package me.blubdalegend.piggyback;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
@@ -12,8 +14,9 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.inventory.EquipmentSlot;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.Vector;
+
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 
@@ -98,22 +101,37 @@ public class Events implements org.bukkit.event.Listener
   @EventHandler(priority=EventPriority.NORMAL, ignoreCancelled=false)
   public void onPlayerToggleSneakEvent(PlayerToggleSneakEvent event) {
 	  Player player = event.getPlayer();
-	  if(player.getVehicle()!=null){
-		  Events.sendMountPacket();
+	  if(Piggyback.version!="pre1_9"){
+		  if(player.getVehicle()!=null){
+			  Events.sendMountPacket();
+		  } 
 	  }
+	  
   }
   	
   static void sendMountPacket() {
-	  Method method;
+	Class<?> eentity;
+	Class<?> mountPacket;
 	try {
-		method = Piggyback.clazz.getDeclaredMethod("ASendPacketTask", JavaPlugin.class);
-		Object obj = Piggyback.clazz.newInstance();
-		method.invoke(obj, ((JavaPlugin)Events.plugin));
-	} catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+		eentity = getNmsClass("Entity");
+		mountPacket = getNmsClass("PacketPlayOutMount");
+		Constructor<?> mPacketConstructor = mountPacket.getConstructor(eentity);
+		for(Player player : Bukkit.getServer().getOnlinePlayers()){
+			Method getHandle = player.getClass().getMethod("getHandle");
+			Object nmsPlayer = getHandle.invoke(player);					
+			Field conField = nmsPlayer.getClass().getField("playerConnection");
+		    Object con = conField.get(nmsPlayer);
+		    Object packet = mPacketConstructor.newInstance(nmsPlayer);
+		    Method sendPacket = getNmsClass("PlayerConnection").getMethod("sendPacket", getNmsClass("Packet"));
+		    sendPacket.invoke(con, packet);
+		}
+	} catch (ClassNotFoundException | NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchFieldException | InstantiationException e) {
 		// TODO Auto-generated catch block
 		e.printStackTrace();
+		Bukkit.getServer().getLogger().info("Can't Assemble Mount Packet");
 	}
-	  
+	
+	 
   }
   
   private void throwEntity(Entity ent, Player player)
@@ -157,10 +175,14 @@ public class Events implements org.bukkit.event.Listener
 	          }
 			  try{
 				  clicked.leaveVehicle();
-				  sendMountPacket();
+				  if(Piggyback.version!="pre1_9"){
+					  sendMountPacket();
+				  }
 				  if (plugin.config.throwRider) {
 					  throwEntity(clicked, player);
-					  sendMountPacket();
+					  if(Piggyback.version!="pre1_9"){
+						  sendMountPacket();
+					  }
 				  }
 				  if (plugin.config.send) {
 					  if(!((plugin.config.prefix + " " + plugin.config.dropMsg).equals(" "))){
@@ -213,7 +235,9 @@ public class Events implements org.bukkit.event.Listener
           }
 		  try{	
 			  player.setPassenger(clicked);
-			  sendMountPacket();
+			  if(Piggyback.version!="pre1_9"){
+				  sendMountPacket();
+			  }
 			  if(player.getPassenger()!=null){
 				  if(!((plugin.config.prefix + " " + plugin.config.carryMsg).equals(" "))){
 	   				  player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.config.prefix + " " + plugin.config.carryMsg));
@@ -248,11 +272,15 @@ public class Events implements org.bukkit.event.Listener
 	        }
             try{
             	clicked.leaveVehicle();
-            	sendMountPacket();
+            	if(Piggyback.version!="pre1_9"){
+					  sendMountPacket();
+				  }
             	if (plugin.config.throwRider) 
 				{
 					 throwEntity(clicked, player);
-					 sendMountPacket();
+					 if(Piggyback.version!="pre1_9"){
+						  sendMountPacket();
+					  }
 				}
 				if (plugin.config.send)
 				{
@@ -299,7 +327,9 @@ public class Events implements org.bukkit.event.Listener
 	    }
 	    try{
 	    	player.setPassenger(clicked);
-	    	sendMountPacket();
+	    	if(Piggyback.version!="pre1_9"){
+				  sendMountPacket();
+			  }
 	    	if (plugin.config.send) 
 	    	{
 	    		if(player.getPassenger()!=null){
@@ -312,6 +342,14 @@ public class Events implements org.bukkit.event.Listener
 	    	return;
 	    }
 	 }	
+  }
+  
+  static Class<?> getNmsClass(String nmsClassName) throws ClassNotFoundException {
+	    return Class.forName("net.minecraft.server." + Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3] + "." + nmsClassName);
+  }
+  
+  static Class<?> getCraftBukkitClass(String nmsClassName) throws ClassNotFoundException {
+	    return Class.forName("org.bukkit.craftbukkit." + Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3] + "." + nmsClassName);
   }
   
 }

@@ -1,6 +1,5 @@
 package me.blubdalegend.piggyback;
 
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
@@ -27,16 +26,11 @@ public class Piggyback extends org.bukkit.plugin.java.JavaPlugin
   {
 	plugin = this;
 	version = getNmsVersion().replace("_", "").toLowerCase();
-	boolean compat = checkCompat();
-	if(!compat){
-    	this.setEnabled(false);
-    }
+	getVersion();
 	config = new ConfigAccessor(plugin);
     config.initConfig();
-    if(compat){
-    	this.pm.registerEvents(new Events(plugin), plugin);
-        this.log.info("Piggyback enabled!");
-    }  
+    this.pm.registerEvents(new Events(plugin), plugin);
+    this.log.info("Piggyback enabled!");  
   }
   
   public void onDisable(){
@@ -85,7 +79,7 @@ public class Piggyback extends org.bukkit.plugin.java.JavaPlugin
 	  return false;
   }
   
-  private boolean checkCompat()
+  private void getVersion()
   {
 	String baseVersion = version.substring(1 ,3);
 	Version = Integer.parseInt(baseVersion);
@@ -93,26 +87,7 @@ public class Piggyback extends org.bukkit.plugin.java.JavaPlugin
 	getLogger().info("Version : " + i.toString());
 	if(this.Version < 19 && this.Version > 11){
 		version = "pre1_9";
-		this.clazzName = (getClass().getPackage().getName() + ".nms." + version + ".SendPacketTask");
-		getLogger().info("version : " + version);
-	}
-	if(this.Version > 18 || this.Version == 11){
-		this.clazzName = (getClass().getPackage().getName() + ".nms." + getNmsVersion().toLowerCase() + ".SendPacketTask");
-	}
-    
-    try {
-      clazz = Class.forName(this.clazzName);
-      if (AbstractPacketTask.class.isAssignableFrom(clazz)) {
-        return true;
-      }
-      getLogger().log(Level.WARNING, "PiggyBack could not be loaded, version {" + getNmsVersion().toLowerCase() + "} is not supported yet!");
-      setEnabled(false);
-      return false;
-    } catch (ClassNotFoundException e) {
-      getLogger().log(Level.WARNING, "PiggyBack could not be loaded, version {" + getNmsVersion().toLowerCase() + "} is not supported yet!");
-      setEnabled(false);
-      return false;
-    }
+	}    
   }
   
   private String getNmsVersion()
