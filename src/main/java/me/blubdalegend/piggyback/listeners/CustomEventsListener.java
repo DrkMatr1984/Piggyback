@@ -6,58 +6,23 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
-import org.bukkit.inventory.EquipmentSlot;
-import org.bukkit.util.Vector;
-
 import me.blubdalegend.piggyback.Piggyback;
+import me.blubdalegend.piggyback.actions.ThrowEntity;
+import me.blubdalegend.piggyback.events.PiggybackDropEntityEvent;
+import me.blubdalegend.piggyback.events.PiggybackPickupEntityEvent;
+import me.blubdalegend.piggyback.events.PiggybackThrowEntityEvent;
 import me.blubdalegend.piggyback.nms.NMStools;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 
-public class Events implements org.bukkit.event.Listener
+public class CustomEventsListener implements org.bukkit.event.Listener
 {	
-  public static Piggyback plugin;
+  private Piggyback plugin;
   
-  public Events(Piggyback plugin){
-	  Events.plugin = plugin;
-  }
-  
-  @EventHandler(priority=EventPriority.HIGH, ignoreCancelled=false)
-  public void checkRightClick(PlayerInteractEntityEvent event)
-  {
-	  if(plugin.config.cancelPickupIfAnotherPlugin){
-	      if(event.isCancelled()){
-	    	  return;
-	      }
-	  }
-	  Entity clicked = event.getRightClicked();
-	  Player player = event.getPlayer();
-	  if (player.isSneaking())
-	  {
-		  if(plugin.config.shiftRightClick){
-			  if ((player.hasPermission("piggyback.use")) || (player.isOp()))
-			  {
-				  if(Piggyback.version!="pre1_9"){
-					  if(event.getHand().equals(EquipmentSlot.HAND)){
-						  doRightClick(player, clicked);
-					  }
-				  }else{
-					  doRightClick(player, clicked);
-				  }
-			  }else{
-				  if (plugin.config.send)
-				  {
-					  if(!((plugin.config.prefix + " " + plugin.config.noPerms).equals(" "))){
-						  player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.config.prefix + " " + plugin.config.noPerms));
-					  }			  
-				  }
-			  }
-		  }
-	  }
-	  return;
+  public CustomEventsListener(Piggyback plugin){
+	  this.plugin = plugin;
   }
   
   @EventHandler(priority=EventPriority.HIGH, ignoreCancelled=false)
@@ -104,28 +69,6 @@ public class Events implements org.bukkit.event.Listener
 	  }
 	  
   }
-  	
-  
-  
-  private void throwEntity(Entity ent, Player player)
-  {
-	  Vector vector = player.getLocation().getDirection();
-	  int pitch = (int)player.getLocation().getPitch();
-	  vector.setY(0.4D);
-	  if (pitch == 0) {
-		  vector.setZ(vector.getZ() + 1.5D);
-	  }
-	  if (pitch == 1) {
-		  vector.setX(vector.getX() - 1.5D);
-	  }
-	  if (pitch == 2) {
-		  vector.setZ(vector.getZ() - 1.5D);
-	  }
-	  if (pitch == 3) {
-		  vector.setX(vector.getX() + 1.5D);
-	  }
-	  ent.setVelocity(vector);
-  }
   
   @SuppressWarnings("deprecation")
   private void doLeftClick(Player player, Entity clicked, EntityDamageByEntityEvent event){
@@ -143,7 +86,7 @@ public class Events implements org.bukkit.event.Listener
 					  NMStools.sendMountPacket();
 				  }
 				  if (plugin.config.throwRider) {
-					  throwEntity(clicked, player);
+					  ThrowEntity.throwEntity(clicked, player);
 					  if(Piggyback.version!="pre1_9"){
 						  NMStools.sendMountPacket();
 					  }
@@ -220,96 +163,65 @@ public class Events implements org.bukkit.event.Listener
 	  }
   }
   
-  @SuppressWarnings("deprecation")
-  private void doRightClick(Player player, Entity clicked){
-	if(plugin.config.requireEmptyHand){
+  	@EventHandler(priority=EventPriority.HIGH, ignoreCancelled=true)
+	public void onEntityThrow(PiggybackThrowEntityEvent event)
+	{		
+		event.getEntity().leaveVehicle();		            		
+		ThrowEntity.throwEntity(event.getEntity(), event.getPlayer());
 		if(Piggyback.version!="pre1_9"){
-			if(player.getInventory().getItemInMainHand().getType()!=Material.AIR){
-				return;
-			}
-		}else{
-			if(player.getItemInHand().getType()!=Material.AIR){
-				return;
-			}
+			try{
+				NMStools.sendMountPacket();
+			}catch(IllegalStateException e){
+		    	return;
+		    } 		
+		}
+		if (plugin.config.send)
+		{
+			if(!((plugin.config.prefix + " " + plugin.config.dropMsg).equals(" "))){
+				 event.getPlayer().sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.config.prefix + " " + plugin.config.dropMsg));
+			}		  
 		}
 	}
-	if(!(player.isEmpty())){
-		if (player.getPassenger().equals(clicked))
-		{
-			if(player.isInsideVehicle()&&player.getVehicle().equals(clicked)){
-				return;
-	        }
-            try{
-            	clicked.leaveVehicle();
-            	if(Piggyback.version!="pre1_9"){
-            		NMStools.sendMountPacket();
-				  }
-            	if (plugin.config.throwRider) 
-				{
-					 throwEntity(clicked, player);
-					 if(Piggyback.version!="pre1_9"){
-						 NMStools.sendMountPacket();
-					  }
-				}
-				if (plugin.config.send)
-				{
-					if(!((plugin.config.prefix + " " + plugin.config.dropMsg).equals(" "))){
-						 player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.config.prefix + " " + plugin.config.dropMsg));
-					}		  
-				}
-			    return;
-			 }catch(IllegalStateException e){
-				 return;
-			 }
+	
+	@EventHandler(priority=EventPriority.HIGH, ignoreCancelled=true)
+	public void onEntityDrop(PiggybackDropEntityEvent event)
+	{		
+		event.getEntity().leaveVehicle();		            		
+		if(Piggyback.version!="pre1_9"){
+			try{
+				NMStools.sendMountPacket();
+			}catch(IllegalStateException e){
+		    	return;
+		    } 		
 		}
-	}else {
-		if((player.isInsideVehicle()&&player.getVehicle().equals(clicked))||(clicked.isInsideVehicle()&&clicked.getVehicle().equals(player))){
-			return;
-        }
-	    if ((clicked.getType() == EntityType.PAINTING) || (clicked.getType() == EntityType.ITEM_FRAME) || (clicked.getType() == EntityType.ARROW) || (plugin.config.disabledEntities.contains(clicked.getType().toString())))
+		if (plugin.config.send)
+		{
+			if(!((plugin.config.prefix + " " + plugin.config.dropMsg).equals(" "))){
+				event.getPlayer().sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.config.prefix + " " + plugin.config.dropMsg));
+			}		  
+		}
+	}
+	
+	@SuppressWarnings("deprecation")
+	@EventHandler(priority=EventPriority.HIGH, ignoreCancelled=true)
+	public void onEntityPickup(PiggybackPickupEntityEvent event)
+	{		
+	    event.getPlayer().setPassenger(event.getEntity());
+	    if(Piggyback.version!="pre1_9"){
+			try{
+				NMStools.sendMountPacket();
+			}catch(IllegalStateException e){
+		    	return;
+		    } 		
+		}
+	    if (plugin.config.send) 
 	    {
-	    	return;
-	    }
-	    if ((clicked.hasMetadata("NPC")) && (!plugin.config.pickupNPC)) {
-	    	if(plugin.config.send){
-	    		if(!((plugin.config.prefix + " " + plugin.config.noPickUpNPC).equals(" "))){
-	    			player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.config.prefix + " " + plugin.config.noPickUpNPC));
+	    	if(event.getPlayer().getPassenger()!=null){
+	    		if(!((plugin.config.prefix + " " + plugin.config.carryMsg).equals(" "))){
+	    			event.getPlayer().sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.config.prefix + " " + plugin.config.carryMsg));
 	    		}
 	    	}
-	    	return;
-	    }
-	    if(plugin.config.disabledWorlds.contains(clicked.getWorld().toString()))
-	    {
-	    	return;
-	    }
-	    if(clicked instanceof Player)
-	    {
-	    	if(plugin.config.disabledPlayers.contains(clicked.getUniqueId().toString())){        	  
-	    		if (plugin.config.send)
-	    		{
-	    			if(!((plugin.config.prefix + " " + plugin.config.noPickUpPlayer).equals(" "))){
-	    				player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.config.prefix + " " + plugin.config.noPickUpPlayer));
-	    			}
-	    		}
-	    		return;
-	    	}
-	    }
-	    try{
-	    	player.setPassenger(clicked);
-	    	if(Piggyback.version!="pre1_9"){
-	    		NMStools.sendMountPacket();
-			  }
-	    	if (plugin.config.send) 
-	    	{
-	    		if(player.getPassenger()!=null){
-	    			if(!((plugin.config.prefix + " " + plugin.config.carryMsg).equals(" "))){
-	    				player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.config.prefix + " " + plugin.config.carryMsg));
-	    			}
-	    		}
-	    	}
-	    }catch(IllegalStateException e){
-	    	return;
-	    }
-	 }	
-  }
+	    }		
+	}
+  
 }

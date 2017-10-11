@@ -6,18 +6,13 @@ import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-public class PiggybackThrowEntityEvent extends Event implements Cancellable
+public class PiggybackDropEntityEvent extends Event implements Cancellable
 {
 
 	private static final HandlerList handlerList = new HandlerList();
     private Entity entity;
     private Player player;
     private boolean cancelled = false;
-    
-    public PiggybackThrowEntityEvent(Entity e, Player p){
-    	entity = e;
-    	this.player = p;
-    }
     
     @Override
     public HandlerList getHandlers() {
@@ -27,16 +22,21 @@ public class PiggybackThrowEntityEvent extends Event implements Cancellable
     public static HandlerList getHandlerList(){
         return handlerList;
     }
-	  
+	
+    public PiggybackDropEntityEvent(Entity e, Player p){
+    	entity = e;
+    	player = p;
+    }
+    
     public Entity getEntity(){
     	return entity;
     }
-
-	public Player getPlayer() {
-		return player;
-	}
-
-	@Override
+    
+    public Player getPlayer(){
+    	return player;
+    }
+    
+    @Override
 	public boolean isCancelled() {
 		return this.cancelled;
 	}
