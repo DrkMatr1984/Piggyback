@@ -15,6 +15,9 @@ import me.blubdalegend.piggyback.Piggyback;
 import me.blubdalegend.piggyback.events.PiggybackDropEntityEvent;
 import me.blubdalegend.piggyback.events.PiggybackPickupEntityEvent;
 import me.blubdalegend.piggyback.events.PiggybackThrowEntityEvent;
+import me.blubdalegend.piggyback.tasks.EmptyHandMessageCooldown;
+import me.blubdalegend.piggyback.tasks.NoPermsMessageCooldown;
+import me.blubdalegend.piggyback.tasks.ToggleMessageCooldown;
 
 public class RightClickListener implements org.bukkit.event.Listener
 {
@@ -48,17 +51,6 @@ public class RightClickListener implements org.bukkit.event.Listener
 				}
 				if(perm)
 				{
-					if(plugin.config.requireEmptyHand){
-						if(Piggyback.version!="pre1_9"){
-							if(player.getInventory().getItemInMainHand().getType()!=Material.AIR){
-								return;
-							}
-						}else{
-							if(player.getItemInHand().getType()!=Material.AIR){
-								return;
-							}
-						}
-					}
 					if(!player.getPassengers().isEmpty()){
 						if (player.getPassengers().contains(clicked))
 						{
@@ -80,9 +72,9 @@ public class RightClickListener implements org.bukkit.event.Listener
 					    	return;
 					    }
 					    if ((clicked.hasMetadata("NPC")) && (!plugin.config.pickupNPC)) {
-					    	if(plugin.config.send){
-					    		if(!((plugin.config.prefix + " " + plugin.config.noPickUpNPC).equals(" "))){
-					    			player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.config.prefix + " " + plugin.config.noPickUpNPC));
+					    	if (plugin.config.send && (!(plugin.lists.messagePlayers.contains(player.getUniqueId().toString())))){
+					    		if(!((plugin.lang.prefix + " " + plugin.lang.noPickUpNPC).equals(" "))){
+					    			player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " " + plugin.lang.noPickUpNPC));
 					    		}
 					    	}
 					    	return;
@@ -91,13 +83,47 @@ public class RightClickListener implements org.bukkit.event.Listener
 					    {
 					    	return;
 					    }
+					    if(plugin.config.requireEmptyHand){
+							if(Piggyback.version!="pre1_9"){
+								if(player.getInventory().getItemInMainHand().getType()!=Material.AIR){
+									if (plugin.config.send && (!(plugin.lists.messagePlayers.contains(player.getUniqueId().toString())))){
+										if(!((plugin.lang.prefix + " " + plugin.lang.emptyHand).equals(" "))){
+											if(!(Piggyback.emptyHandCooldownPlayers.contains(player.getUniqueId()))){
+												player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " " + plugin.lang.emptyHand));
+												Piggyback.emptyHandCooldownPlayers.add(player.getUniqueId());
+												Bukkit.getServer().getScheduler().runTaskLater(plugin, new EmptyHandMessageCooldown(player), plugin.config.cooldown);
+											}	
+										}
+									}								
+									return;
+								}
+							}else{
+								if(player.getItemInHand().getType()!=Material.AIR){
+									if (plugin.config.send && (!(plugin.lists.messagePlayers.contains(player.getUniqueId().toString())))){
+										if(!((plugin.lang.prefix + " " + plugin.lang.emptyHand).equals(" "))){
+											if(!(Piggyback.emptyHandCooldownPlayers.contains(player.getUniqueId()))){
+												player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " " + plugin.lang.emptyHand));
+												Piggyback.emptyHandCooldownPlayers.add(player.getUniqueId());
+												Bukkit.getServer().getScheduler().runTaskLater(plugin, new EmptyHandMessageCooldown(player), plugin.config.cooldown);
+											}
+											
+										}
+									}
+									return;
+								}
+							}
+						}
 					    if(clicked instanceof Player)
 					    {
-					    	if(plugin.config.disabledPlayers.contains(clicked.getUniqueId().toString())){        	  
-					    		if (plugin.config.send)
-					    		{
-					    			if(!((plugin.config.prefix + " " + plugin.config.noPickUpPlayer).equals(" "))){
-					    				player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.config.prefix + " " + plugin.config.noPickUpPlayer));
+					    	if(plugin.lists.disabledPlayers.contains(clicked.getUniqueId().toString())){        	  
+					    		if (plugin.config.send && (!(plugin.lists.messagePlayers.contains(player.getUniqueId().toString())))){
+					    			Player p = (Player)clicked;
+					    			if(!((plugin.lang.prefix + " " + plugin.lang.noPickUpPlayer).equals(" "))){
+					    				if(!(Piggyback.toggleCooldownPlayers.contains(player.getUniqueId()))){
+					    					player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " " + (plugin.lang.noPickUpPlayer).replace("%player%", p.getDisplayName())));
+					    					Piggyback.toggleCooldownPlayers.add(player.getUniqueId());
+					    					Bukkit.getServer().getScheduler().runTaskLater(plugin, new ToggleMessageCooldown(player), plugin.config.cooldown);
+					    				}
 					    			}
 					    		}
 					    		return;
@@ -109,10 +135,13 @@ public class RightClickListener implements org.bukkit.event.Listener
 					    return;
 					}
 				}else{
-					if (plugin.config.send)
-					{
-						if(!((plugin.config.prefix + " " + plugin.config.noPerms).equals(" "))){
-							player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.config.prefix + " " + plugin.config.noPerms));
+					if (plugin.config.send && (!(plugin.lists.messagePlayers.contains(player.getUniqueId().toString())))){
+						if(!((plugin.lang.prefix + " " + plugin.lang.noPerms).equals(" "))){
+							if(!(Piggyback.noPermsCooldownPlayers.contains(player.getUniqueId()))){
+								player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " " + plugin.lang.noPerms));
+								Piggyback.noPermsCooldownPlayers.add(player.getUniqueId());
+								Bukkit.getServer().getScheduler().runTaskLater(plugin, new NoPermsMessageCooldown(player), plugin.config.cooldown);
+							}
 						}			  
 					}
 				}

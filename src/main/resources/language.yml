@@ -1,12 +1,15 @@
 message:
   prefix: '&f[&6Piggyback&f]&r'
-  carry: '&aPicked up the mob&r'
-  drop: '&cDropped the mob&r'
-  throw: '&cThrew the mob&r'
+  carry: '&aPicked up &e%passenger%&r'
+  drop: '&cDropped &e%passenger%&r'
+  throw: '&cThrew &e%passenger%&r'
   toggleOn: '&aYou may now be picked up by other players!'
   toggleOff: '&cYou may no longer be picked up by other players!'
+  messageOn: '&aYou will now receive Piggyback info messages!'
+  messageOff: '&cYou will no longer receive Piggyback info messages!'
   noPickUpNPC: '&cYou can''t pick up NPCs!&r'
-  noPickUpPlayer: '&cSorry, this player cannot be picked up.'
-  noPerms: "&cSorry, you don't have permission to do that. :(&r"
+  emptyHand: '&cYour hands must be free to pick things up'
+  noPickUpPlayer: '&cSorry, &e%player%&c cannot be picked up'
+  noPerms: "&cSorry, you don't have permission to do that :(&r"
   notAPlayer: "&cYou're not a player! You can''t toggle being picked up!&r"
   error: '&4An Error has Occured!&r'

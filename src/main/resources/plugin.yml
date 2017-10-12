@@ -6,14 +6,19 @@ softdepend: [Citizens]
 description: Crouch, Click, Piggyback!
 commands:
   pback:
-    description: Toggle your ability to be picked up
+    description: Main Piggyback command, also displays help
     aliases: [piggyback, piggyb, pb]
-    usage: |
-        /pback(on/off) - Toggles your ability to be picked up
+  pback toggle:
+    description: Toggle your ability to be picked up
+  pback messages:
+    description: Toggle Piggyback messages
 permissions:
     piggyback.use:
         description: The user will be able to pick up entities and players, providing the player being picked up is not toggled off
         default: op
     piggyback.toggle:
         description: Allows the user toggle on/off their ability to be picked up
+        default: op
+    piggyback.messages:
+        description: Allows the user toggle on/off piggyback messages for themselves
         default: op

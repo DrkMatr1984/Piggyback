@@ -10,6 +10,7 @@ import me.blubdalegend.piggyback.events.PiggybackThrowEntityEvent;
 import me.blubdalegend.piggyback.nms.NMStools;
 
 import org.bukkit.ChatColor;
+import org.bukkit.entity.Entity;
 
 public class PiggybackEventsListener implements org.bukkit.event.Listener
 {	
@@ -31,10 +32,10 @@ public class PiggybackEventsListener implements org.bukkit.event.Listener
 		    	return;
 		    } 		
 		}
-		if (plugin.config.send)
+		if (plugin.config.send && (!(plugin.lists.messagePlayers.contains(event.getPlayer().getUniqueId().toString()))))
 		{
-			if(!((plugin.config.prefix + " " + plugin.config.throwMsg).equals(" "))){
-				 event.getPlayer().sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.config.prefix + " " + plugin.config.throwMsg));
+			if(!((plugin.lang.prefix + " " + plugin.lang.throwMsg).equals(" "))){
+				 event.getPlayer().sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " " + (plugin.lang.throwMsg).replace("%passenger%", getEntityName(event.getEntity()))));
 			}		  
 		}
 	}
@@ -50,10 +51,10 @@ public class PiggybackEventsListener implements org.bukkit.event.Listener
 		    	return;
 		    } 		
 		}
-		if (plugin.config.send)
+		if (plugin.config.send && (!(plugin.lists.messagePlayers.contains(event.getPlayer().getUniqueId().toString()))))
 		{
-			if(!((plugin.config.prefix + " " + plugin.config.dropMsg).equals(" "))){
-				event.getPlayer().sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.config.prefix + " " + plugin.config.dropMsg));
+			if(!((plugin.lang.prefix + " " + plugin.lang.dropMsg).equals(" "))){
+				event.getPlayer().sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " " + (plugin.lang.dropMsg).replace("%passenger%", getEntityName(event.getEntity()))));
 			}		  
 		}
 	}
@@ -69,14 +70,25 @@ public class PiggybackEventsListener implements org.bukkit.event.Listener
 		    	return;
 		    } 		
 		}
-	    if (plugin.config.send) 
+	    if (plugin.config.send && (!(plugin.lists.messagePlayers.contains(event.getPlayer().getUniqueId().toString())))) 
 	    {
 	    	if(event.getPlayer().getPassengers().contains(event.getEntity())){
-	    		if(!((plugin.config.prefix + " " + plugin.config.carryMsg).equals(" "))){
-	    			event.getPlayer().sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.config.prefix + " " + plugin.config.carryMsg));
+	    		if(!((plugin.lang.prefix + " " + plugin.lang.carryMsg).equals(" "))){    			
+	    			event.getPlayer().sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " " + (plugin.lang.carryMsg).replace("%passenger%", getEntityName(event.getEntity()))));
 	    		}
 	    	}
 	    }		
+	}
+	
+	public String getEntityName(Entity entity)
+	{
+		if(entity.getCustomName()!=null){
+			return entity.getCustomName();
+		}else if(entity.getName()!=null){
+			return entity.getName();
+		}else{
+			return (entity.getType().toString()).toLowerCase();
+		}
 	}
   
 }
