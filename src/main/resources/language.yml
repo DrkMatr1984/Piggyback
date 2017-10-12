@@ -2,6 +2,7 @@ message:
   prefix: '&f[&6Piggyback&f]&r'
   carry: '&aPicked up the mob&r'
   drop: '&cDropped the mob&r'
+  throw: '&cThrew the mob&r'
   toggleOn: '&aYou may now be picked up by other players!'
   toggleOff: '&cYou may no longer be picked up by other players!'
   noPickUpNPC: '&cYou can''t pick up NPCs!&r'

@@ -34,6 +34,7 @@ public class ConfigAccessor
 	public String prefix;      
 	public String carryMsg;
 	public String dropMsg;
+	public String throwMsg;
 	public String noPickUpNPC;
 	public String noPerms;
 	public String notAPlayer;
@@ -91,11 +92,11 @@ public class ConfigAccessor
 	  }
 	  
 	  public void loadLanguageFile(){
-		  language = YamlConfiguration.loadConfiguration(languageFile);
-		  
+		  language = YamlConfiguration.loadConfiguration(languageFile);	  
 		  prefix = language.getString("message.prefix");      
 	      carryMsg = language.getString("message.carry");
 		  dropMsg = language.getString("message.drop");
+		  throwMsg = language.getString("message.throw");
 		  toggleOn = language.getString("message.toggleOn");
 		  toggleOff = language.getString("message.toggleOff");
 		  noPickUpNPC = language.getString("message.noPickUpNPC");
