@@ -27,7 +27,13 @@ public class Commands implements CommandExecutor
 				}
 				if ((args.length == 0) || (args.equals(null)))
 			    {
-					displayHelp((Player)sender);
+					if(sender.hasPermission("piggyback.help")){
+						displayHelp((Player)sender);
+					}else{
+			       		if(!((plugin.lang.prefix + " " + plugin.lang.noPerms).equals(" "))){
+			       			sender.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " " + plugin.lang.noPerms));
+			       		}	
+			       	}					
 			    }else if(args.length > 0){
 					for(String s : args){
 						if((s.toLowerCase()).equals("toggle")){
@@ -66,10 +72,20 @@ public class Commands implements CommandExecutor
 					               	plugin.lists.messagePlayers.remove(p.getUniqueId().toString());
 					            }
 					       		return true;
-							}
+							}else{
+					       		if(!((plugin.lang.prefix + " " + plugin.lang.noPerms).equals(" "))){
+					       			sender.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " " + plugin.lang.noPerms));
+					       		}	
+					       	}
 						}
 						if((s.toLowerCase()).equals("help")){
-							displayHelp((Player)sender);
+							if(sender.hasPermission("piggyback.help")){
+								displayHelp((Player)sender);
+							}else{
+					       		if(!((plugin.lang.prefix + " " + plugin.lang.noPerms).equals(" "))){
+					       			sender.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " " + plugin.lang.noPerms));
+					       		}	
+					       	}
 						}
 					}
 				}
@@ -83,11 +99,21 @@ public class Commands implements CommandExecutor
 	}
 	
 	public void displayHelp(Player player){
-		if(player.hasPermission("piggyback.use") || player.isOp())
-			player.sendMessage("/pback - Displays this Help");
+		player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&5&o#### &r" + plugin.lang.title + " " + plugin.lang.help + "&r &5&o####"));
+		player.sendMessage("");
+		if(player.hasPermission("piggyback.help") || player.isOp())
+			player.sendMessage(ChatColor.translateAlternateColorCodes('&',"&7/&epback &7- &r" + plugin.lang.helpMain));
 		if(player.hasPermission("piggyback.toggle") || player.isOp())
-			player.sendMessage("/pback toggle - Toggle Ability to be picked up off/on");
+			player.sendMessage(ChatColor.translateAlternateColorCodes('&',"&7/&epback &btoggle &7- &r" + plugin.lang.helpToggle));
 		if(player.hasPermission("piggyback.messages") || player.isOp())
-			player.sendMessage("/pback messages - Toggle Piggyback messages off/on");
+			player.sendMessage(ChatColor.translateAlternateColorCodes('&',"&7/&epback &3messages &7- &r" + plugin.lang.helpMessageToggle));
+		player.sendMessage("");
+		int j = ((plugin.lang.title + " " + plugin.lang.help).length());
+		String s = "";
+		for(int i = 0; i<j; i++){
+			s = s + "#";
+		}
+		player.sendMessage(ChatColor.translateAlternateColorCodes('&',"   &a&lSHIFT+" + (plugin.config.clickType.toString()).toUpperCase() + "-CLICK"));
+		player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&5&o####" + s));	
 	}
 }

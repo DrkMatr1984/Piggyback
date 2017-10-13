@@ -13,6 +13,7 @@ import me.blubdalegend.piggyback.Piggyback;
 public class ToggleLists{
 	
 	private File usersFile;
+	private File dataFolder;
 	private FileConfiguration users;
 	private File messageFile;
 	private FileConfiguration message;
@@ -22,8 +23,9 @@ public class ToggleLists{
 	
 	private Piggyback plugin;
 	
-	public ToggleLists(Piggyback plugin){
+	public ToggleLists(Piggyback plugin){		
 		this.plugin = plugin;
+		dataFolder = new File(this.plugin.getDataFolder().toString()+"/data");
 	}
 		
 	public void initLists(){
@@ -34,19 +36,23 @@ public class ToggleLists{
     ////////////////////////////////////////////////////////////
 	public void saveDefaultUserList() {
 		//pickup toggle users
+		if(!(dataFolder.exists())){
+			dataFolder.mkdir();
+		}
 	    if (usersFile == null) {
-	        usersFile = new File(plugin.getDataFolder(), "toggles.yml");
+	        usersFile = new File(dataFolder, "toggles.yml");
 	    }
 	    if (!usersFile.exists()) {           
-	        plugin.saveResource("toggles.yml", false);
+	        plugin.saveResource("data/toggles.yml", false);
 	    }
 	    // Message toggle users
 	    if (messageFile == null) {
-	        messageFile = new File(plugin.getDataFolder(), "messageToggles.yml");
+	        messageFile = new File(dataFolder, "messageToggles.yml");
 	    }
 	    if (!messageFile.exists()) {           
-	        plugin.saveResource("messageToggles.yml", false);
+	        plugin.saveResource("data/messageToggles.yml", false);
 	    }
+	    
     }
 	  
 	public void loadUserList(){
@@ -100,4 +106,3 @@ public class ToggleLists{
 	}
 	
 }
-

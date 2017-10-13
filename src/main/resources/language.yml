@@ -1,5 +1,5 @@
 message:
-  prefix: '&f[&6Piggyback&f]&r'
+  prefix: '&6Piggyback'
   carry: '&aPicked up &e%passenger%&r'
   drop: '&cDropped &e%passenger%&r'
   throw: '&cThrew &e%passenger%&r'
@@ -11,5 +11,10 @@ message:
   emptyHand: '&cYour hands must be free to pick things up'
   noPickUpPlayer: '&cSorry, &e%player%&c cannot be picked up'
   noPerms: "&cSorry, you don't have permission to do that :(&r"
-  notAPlayer: "&cYou're not a player! You can''t toggle being picked up!&r"
+  notAPlayer: "&cYou're not a player! You can't toggle being picked up!&r"
   error: '&4An Error has Occured!&r'
+help:
+  help: '&aHelp'
+  main: '&fDisplays this Help'
+  toggle: '&fToggle Ability to be picked up &aon&f/&coff'
+  messageToggle: '&fToggle Piggyback messages &aon&f/&coff'

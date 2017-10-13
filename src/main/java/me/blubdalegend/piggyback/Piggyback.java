@@ -14,6 +14,7 @@ import me.blubdalegend.piggyback.listeners.RightClickListener;
 import me.blubdalegend.piggyback.nms.NMStools;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 import me.blubdalegend.piggyback.commands.Commands;
@@ -30,6 +31,7 @@ public class Piggyback extends org.bukkit.plugin.java.JavaPlugin
   public static List<UUID> toggleCooldownPlayers = new ArrayList<UUID>();
   public static List<UUID> emptyHandCooldownPlayers = new ArrayList<UUID>();
   public static List<UUID> noPermsCooldownPlayers = new ArrayList<UUID>();
+  public static HashMap<UUID,Long> piggybackPickupCooldownPlayers = new HashMap<UUID, Long>();
   public static String version;
   public String clazzName;
   public String sendPacket;
@@ -52,7 +54,7 @@ public class Piggyback extends org.bukkit.plugin.java.JavaPlugin
 	  }
 	  this.pm.registerEvents(new BukkitListeners(), plugin);
 	  this.pm.registerEvents(new PiggybackEventsListener(plugin), plugin); //not done
-	  this.log.info("Piggyback enabled!");  
+	  this.log.info("Piggyback v" + plugin.getDescription().getVersion() + " enabled!");  
   }
   
   public void onDisable(){

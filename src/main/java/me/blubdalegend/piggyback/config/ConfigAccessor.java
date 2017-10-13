@@ -21,8 +21,9 @@ public class ConfigAccessor
 	public Clicks clickType; // true for use shift-right-click, false to use shift-left-click
 	public boolean throwRider; // Throw Rider instead of just dropping them
 	public boolean pickupNPC;
+	public long pickupCooldown;
 	public boolean send;
-	public long cooldown;
+	public long messageCooldown;
 	public boolean cancelPickupIfAnotherPlugin;
 	public boolean requireEmptyHand;
 	public List<String> disabledEntities;
@@ -45,10 +46,11 @@ public class ConfigAccessor
 		disabledWorlds.add("");
 		f = plugin.getConfig();
 		f.options().header("PIGGYBACK CONFIGURATION FILE");
-		f.addDefault("clickType", "RIGHT");
-		f.addDefault("throwRiderAway", Boolean.valueOf(true));
-		f.addDefault("pickUpNPCs", Boolean.valueOf(false));
-		f.addDefault("requireEmptyHand", Boolean.valueOf(true));
+		f.addDefault("general.clickType", "RIGHT");
+		f.addDefault("general.throwRiderAway", Boolean.valueOf(true));
+		f.addDefault("general.pickUpNPCs", Boolean.valueOf(false));
+		f.addDefault("general.requireEmptyHand", Boolean.valueOf(true));
+		f.addDefault("general.pickUp.Cooldown", Long.valueOf(10L));
 		f.addDefault("cancelPickup.IfAnotherPluginCancelsEvent", Boolean.valueOf(false));
 		f.addDefault("messages.Send", Boolean.valueOf(true));
 		f.addDefault("messages.Cooldown", Long.valueOf(30L));
@@ -58,13 +60,14 @@ public class ConfigAccessor
 		f.options().copyDefaults(true);
 		plugin.saveConfig();
 	    
-		clickType = Clicks.valueOf((f.getString("clickType")).toUpperCase());
-		throwRider = f.getBoolean("throwRiderAway");
-		pickupNPC = f.getBoolean("pickUpNPCs");
-		requireEmptyHand = f.getBoolean("requireEmptyHand");
+		clickType = Clicks.valueOf((f.getString("general.clickType")).toUpperCase());
+		throwRider = f.getBoolean("general.throwRiderAway");
+		pickupNPC = f.getBoolean("general.pickUpNPCs");
+		pickupCooldown = ((f.getLong("general.pickUp.Cooldown")) * 20);
+		requireEmptyHand = f.getBoolean("general.requireEmptyHand");
 		cancelPickupIfAnotherPlugin = f.getBoolean("cancelPickup.IfAnotherPluginCancelsEvent");		
 		send = f.getBoolean("messages.Send");
-		cooldown = ((f.getLong("messages.Cooldown")) * 20);
+		messageCooldown = ((f.getLong("messages.Cooldown")) * 20);
 		disabledEntities = f.getStringList("blacklists.entityBlacklist");
 		disabledWorlds = f.getStringList("blacklists.worldBlacklist");
 	}

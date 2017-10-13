@@ -98,7 +98,7 @@ public class LeftClickListener implements org.bukkit.event.Listener
 											if(!(Piggyback.emptyHandCooldownPlayers.contains(player.getUniqueId()))){
 												player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " " + plugin.lang.emptyHand));
 												Piggyback.emptyHandCooldownPlayers.add(player.getUniqueId());
-												Bukkit.getServer().getScheduler().runTaskLater(plugin, new EmptyHandMessageCooldown(player), plugin.config.cooldown);
+												Bukkit.getServer().getScheduler().runTaskLater(plugin, new EmptyHandMessageCooldown(player), plugin.config.messageCooldown);
 											}
 										}
 									}								
@@ -111,7 +111,7 @@ public class LeftClickListener implements org.bukkit.event.Listener
 											if(!(Piggyback.emptyHandCooldownPlayers.contains(player.getUniqueId()))){
 												player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " " + plugin.lang.emptyHand));
 												Piggyback.emptyHandCooldownPlayers.add(player.getUniqueId());
-												Bukkit.getServer().getScheduler().runTaskLater(plugin, new EmptyHandMessageCooldown(player), plugin.config.cooldown);
+												Bukkit.getServer().getScheduler().runTaskLater(plugin, new EmptyHandMessageCooldown(player), plugin.config.messageCooldown);
 											}
 										}
 									}
@@ -128,7 +128,7 @@ public class LeftClickListener implements org.bukkit.event.Listener
 					    				if(!(Piggyback.toggleCooldownPlayers.contains(player.getUniqueId()))){
 					    					player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " " + (plugin.lang.noPickUpPlayer).replace("%player%", p.getDisplayName())));
 					    					Piggyback.toggleCooldownPlayers.add(player.getUniqueId());
-					    					Bukkit.getServer().getScheduler().runTaskLater(plugin, new ToggleMessageCooldown(player), plugin.config.cooldown);
+					    					Bukkit.getServer().getScheduler().runTaskLater(plugin, new ToggleMessageCooldown(player), plugin.config.messageCooldown);
 					    				}
 					    			}
 					    		}
@@ -149,7 +149,7 @@ public class LeftClickListener implements org.bukkit.event.Listener
 							if(!(Piggyback.noPermsCooldownPlayers.contains(player.getUniqueId()))){
 								player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " " + plugin.lang.noPerms));
 								Piggyback.noPermsCooldownPlayers.add(player.getUniqueId());
-								Bukkit.getServer().getScheduler().runTaskLater(plugin, new NoPermsMessageCooldown(player), plugin.config.cooldown);
+								Bukkit.getServer().getScheduler().runTaskLater(plugin, new NoPermsMessageCooldown(player), plugin.config.messageCooldown);
 							}
 						}
 					}

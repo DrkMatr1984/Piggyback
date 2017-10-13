@@ -12,6 +12,7 @@ public class LanguageFile
 	private File languageFile;
 	private FileConfiguration language;
 	
+	public String title;
 	public String prefix;      
 	public String carryMsg;
 	public String dropMsg;
@@ -26,6 +27,11 @@ public class LanguageFile
 	public String messageOn;
 	public String messageOff;
 	public String error;
+	
+	public String help;
+	public String helpMain;
+	public String helpToggle;
+	public String helpMessageToggle;
 	
 	private Piggyback plugin;
 	
@@ -48,8 +54,9 @@ public class LanguageFile
 	}
 	  
 	public void loadLanguageFile(){
-		language = YamlConfiguration.loadConfiguration(languageFile);	  
-		prefix = language.getString("message.prefix");      
+		language = YamlConfiguration.loadConfiguration(languageFile);
+		title = language.getString("message.prefix");
+		prefix = "&f[&r" + title + "&f]&r";      
 	    carryMsg = language.getString("message.carry");
 		dropMsg = language.getString("message.drop");
 		throwMsg = language.getString("message.throw");
@@ -63,6 +70,11 @@ public class LanguageFile
 		notAPlayer = language.getString("message.notAPlayer");
 		noPickUpPlayer = language.getString("message.noPickUpPlayer");
 		error = language.getString("message.error");
+		
+		help = language.getString("help.help");
+		helpMain = language.getString("help.main");
+		helpToggle = language.getString("help.toggle");
+		helpMessageToggle = language.getString("help.messageToggle");
 	}
 }
 
