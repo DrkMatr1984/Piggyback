@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.EntityType;
-
 import me.blubdalegend.piggyback.Piggyback;
 
 public class ConfigAccessor
@@ -36,14 +34,11 @@ public class ConfigAccessor
 	public void initConfig()
 	{
 		disabledEntities = new ArrayList<String>();
-		if(Piggyback.version!="pre1_9"){
-			disabledEntities.add(EntityType.ARMOR_STAND.toString());
-			disabledEntities.add(EntityType.BOAT.toString());
-		}else{
-			disabledEntities.add(EntityType.BOAT.toString());
-		}		
+		disabledEntities.add("");
+	
 		disabledWorlds = new ArrayList<String>();
 		disabledWorlds.add("");
+		
 		f = plugin.getConfig();
 		f.options().header("PIGGYBACK CONFIGURATION FILE");
 		f.addDefault("general.clickType", "RIGHT");
@@ -68,8 +63,17 @@ public class ConfigAccessor
 		cancelPickupIfAnotherPlugin = f.getBoolean("cancelPickup.IfAnotherPluginCancelsEvent");		
 		send = f.getBoolean("messages.Send");
 		messageCooldown = ((f.getLong("messages.Cooldown")) * 20);
-		disabledEntities = f.getStringList("blacklists.entityBlacklist");
-		disabledWorlds = f.getStringList("blacklists.worldBlacklist");
+		disabledEntities = uppercaseStringList(f.getStringList("blacklists.entityBlacklist"));
+		disabledWorlds = uppercaseStringList(f.getStringList("blacklists.worldBlacklist"));
+	}
+	
+	public List<String> uppercaseStringList(List<String> list)
+	{
+		List<String> newList = new ArrayList<String>();
+		for(String s : list){
+			newList.add(s.toUpperCase());
+		}
+		return newList;
 	}
 	
 }

@@ -2,7 +2,7 @@ name: PiggyBack
 version: 1.9.9
 main: me.blubdalegend.piggyback.Piggyback
 softdepend: [Citizens]
-
+authors: [DrkMatr1984, BlubDaLegend]
 description: Crouch, Click, Piggyback!
 commands:
     pback:
@@ -17,15 +17,15 @@ commands:
 permissions:
     piggyback.use:
         description: Allows the user to pick up entities and players, providing the player being picked up is not toggled off
-        default: op
+        default: true
     piggyback.help:
         description: Allows the user to view the /pback help
-        default: op
+        default: true
     piggyback.toggle:
-        description: Allows the user toggle on/off their ability to be picked up
+        description: Allows the user to toggle on/off their ability to be picked up
         default: op
     piggyback.messages:
-        description: Allows the user toggle on/off piggyback messages for themselves
+        description: Allows the user to toggle on/off piggyback messages for themselves
         default: op
     piggyback.cooldown.bypass:
         description: Bypass the pickup cooldown

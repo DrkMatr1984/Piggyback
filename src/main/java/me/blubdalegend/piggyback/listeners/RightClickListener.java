@@ -67,8 +67,8 @@ public class RightClickListener implements org.bukkit.event.Listener
 							return;
 						}
 					}else{
-						if (!(clicked instanceof LivingEntity))
-					    {
+						if (!(clicked instanceof LivingEntity) || plugin.config.disabledEntities.contains(clicked.getType().toString().toUpperCase()))
+					    {						
 					    	return;
 					    }
 					    if ((clicked.hasMetadata("NPC")) && (!plugin.config.pickupNPC)) {
@@ -79,7 +79,7 @@ public class RightClickListener implements org.bukkit.event.Listener
 					    	}
 					    	return;
 					    }
-					    if(plugin.config.disabledWorlds.contains(clicked.getWorld().toString()))
+					    if(plugin.config.disabledWorlds.contains(clicked.getWorld().toString().toUpperCase()))
 					    {
 					    	return;
 					    }
@@ -115,9 +115,15 @@ public class RightClickListener implements org.bukkit.event.Listener
 						}
 					    if(clicked instanceof Player)
 					    {
+					    	Player p = (Player)clicked;
+					    	if(plugin.lists.disabledPlayers.contains(player.getUniqueId().toString())){
+					    		if(!((plugin.lang.prefix + " " + plugin.lang.noPickUpPlayerToggle).equals(" "))){
+					    			player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " " + (plugin.lang.noPickUpPlayerToggle).replace("%player%", p.getDisplayName())));
+					    		}
+					    		return;
+					    	}
 					    	if(plugin.lists.disabledPlayers.contains(clicked.getUniqueId().toString())){        	  
-					    		if (plugin.config.send && (!(plugin.lists.messagePlayers.contains(player.getUniqueId().toString())))){
-					    			Player p = (Player)clicked;
+					    		if (plugin.config.send && (!(plugin.lists.messagePlayers.contains(player.getUniqueId().toString())))){    			
 					    			if(!((plugin.lang.prefix + " " + plugin.lang.noPickUpPlayer).equals(" "))){
 					    				if(!(Piggyback.toggleCooldownPlayers.contains(player.getUniqueId()))){
 					    					player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " " + (plugin.lang.noPickUpPlayer).replace("%player%", p.getDisplayName())));

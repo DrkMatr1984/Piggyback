@@ -113,7 +113,7 @@ public class Commands implements CommandExecutor
 		for(int i = 0; i<j; i++){
 			s = s + "#";
 		}
-		player.sendMessage(ChatColor.translateAlternateColorCodes('&',"   &a&lSHIFT+" + (plugin.config.clickType.toString()).toUpperCase() + "-CLICK"));
+		player.sendMessage(ChatColor.translateAlternateColorCodes('&',"  &7&lSHIFT+" + (plugin.config.clickType.toString()).toUpperCase() + "-CLICK"));
 		player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&5&o####" + s));	
 	}
 }

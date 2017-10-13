@@ -23,6 +23,7 @@ public class LanguageFile
 	public String noPerms;
 	public String notAPlayer;
 	public String noPickUpPlayer;
+	public String noPickUpPlayerToggle;
 	public String toggleOn;
 	public String toggleOff;
 	public String messageOn;
@@ -71,8 +72,8 @@ public class LanguageFile
 		noPerms = language.getString("message.noPerms");
 		notAPlayer = language.getString("message.notAPlayer");
 		noPickUpPlayer = language.getString("message.noPickUpPlayer");
-		error = language.getString("message.error");
-		
+		noPickUpPlayerToggle = language.getString("message.noPickUpPlayerToggle");		
+		error = language.getString("message.error");		
 		help = language.getString("help.help");
 		helpMain = language.getString("help.main");
 		helpToggle = language.getString("help.toggle");

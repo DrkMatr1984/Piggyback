@@ -3,7 +3,7 @@ message:
   carry: '&aPicked up &e%passenger%&r'
   drop: '&cDropped &e%passenger%&r'
   throw: '&cThrew &e%passenger%&r'
-  pickupCD: '&cYou can''t pickup anything else for &f%time%&c seconds'
+  pickupCD: '&cYou can''t pick up anything else for &f%time%&c seconds'
   toggleOn: '&aYou may now be picked up by other players!'
   toggleOff: '&cYou may no longer be picked up by other players!'
   messageOn: '&aYou will now receive Piggyback info messages!'
@@ -11,6 +11,7 @@ message:
   noPickUpNPC: '&cYou can''t pick up NPCs!&r'
   emptyHand: '&cYour hands must be free to pick things up'
   noPickUpPlayer: '&cSorry, &e%player%&c cannot be picked up'
+  noPickUpPlayerToggle: '&cSorry, you cannot pick up &e%player%&c while &etoggled &7off'
   noPerms: "&cSorry, you don't have permission to do that :(&r"
   notAPlayer: "&cYou're not a player! You can't toggle being picked up!&r"
   error: '&4An Error has Occured!&r'
