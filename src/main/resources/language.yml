@@ -3,6 +3,7 @@ message:
   carry: '&aPicked up &e%passenger%&r'
   drop: '&cDropped &e%passenger%&r'
   throw: '&cThrew &e%passenger%&r'
+  pickupCD: '&cYou can''t pickup anything else for &f%time%&c seconds'
   toggleOn: '&aYou may now be picked up by other players!'
   toggleOff: '&cYou may no longer be picked up by other players!'
   messageOn: '&aYou will now receive Piggyback info messages!'

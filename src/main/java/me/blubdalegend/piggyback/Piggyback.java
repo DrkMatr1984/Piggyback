@@ -31,6 +31,7 @@ public class Piggyback extends org.bukkit.plugin.java.JavaPlugin
   public static List<UUID> toggleCooldownPlayers = new ArrayList<UUID>();
   public static List<UUID> emptyHandCooldownPlayers = new ArrayList<UUID>();
   public static List<UUID> noPermsCooldownPlayers = new ArrayList<UUID>();
+  public static List<UUID> clickTimerCooldownPlayers = new ArrayList<UUID>();
   public static HashMap<UUID,Long> piggybackPickupCooldownPlayers = new HashMap<UUID, Long>();
   public static String version;
   public String clazzName;

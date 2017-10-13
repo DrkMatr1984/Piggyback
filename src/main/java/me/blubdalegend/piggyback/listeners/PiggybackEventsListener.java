@@ -8,6 +8,7 @@ import me.blubdalegend.piggyback.events.PiggybackDropEntityEvent;
 import me.blubdalegend.piggyback.events.PiggybackPickupEntityEvent;
 import me.blubdalegend.piggyback.events.PiggybackThrowEntityEvent;
 import me.blubdalegend.piggyback.nms.NMStools;
+import me.blubdalegend.piggyback.tasks.PickupClickCooldown;
 import me.blubdalegend.piggyback.tasks.PiggybackPickupCooldown;
 
 import java.text.DecimalFormat;
@@ -15,6 +16,7 @@ import java.text.DecimalFormat;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
 
 public class PiggybackEventsListener implements org.bukkit.event.Listener
 {	
@@ -67,12 +69,32 @@ public class PiggybackEventsListener implements org.bukkit.event.Listener
 	@EventHandler(priority=EventPriority.HIGH, ignoreCancelled=true)
 	public void onEntityPickup(PiggybackPickupEntityEvent event)
 	{
-		if(event.getPlayer().hasPermission("piggyback.cooldown.bypass") || !(Piggyback.piggybackPickupCooldownPlayers.containsKey(event.getPlayer().getUniqueId())) || plugin.config.pickupCooldown==0){
-			if(!(event.getPlayer().hasPermission("piggyback.cooldown.bypass")) || plugin.config.pickupCooldown!=0){
-				Piggyback.piggybackPickupCooldownPlayers.put(event.getPlayer().getUniqueId(), System.currentTimeMillis());
-				Bukkit.getServer().getScheduler().runTaskLater(plugin, new PiggybackPickupCooldown(event.getPlayer()), plugin.config.pickupCooldown);
+		Player player = event.getPlayer();
+		Entity entity = event.getEntity();
+		if(Piggyback.piggybackPickupCooldownPlayers.containsKey(player.getUniqueId())){
+			DecimalFormat df = new DecimalFormat("#.##");
+			double time = ((plugin.config.pickupCooldown/20) - 
+					(((Long)System.currentTimeMillis() - 
+					Piggyback.piggybackPickupCooldownPlayers.get(player.getUniqueId()))
+					/1000));
+			String timeLeft = "";
+			timeLeft = df.format(time);
+			if(timeLeft!="0"){
+				if(!Piggyback.clickTimerCooldownPlayers.contains(player.getUniqueId())){
+					if(!((plugin.lang.prefix + " " + ((plugin.lang.pickupCooldown).replace("%time%", timeLeft))).equals(" "))){
+						player.sendMessage(ChatColor.translateAlternateColorCodes('&',plugin.lang.prefix + " " + ((plugin.lang.pickupCooldown).replace("%time%", timeLeft))));
+					}					
+					Piggyback.clickTimerCooldownPlayers.add(player.getUniqueId());
+					Bukkit.getServer().getScheduler().runTaskLater(plugin, new PickupClickCooldown(player), 20);
+				}				
 			}
-			event.getPlayer().addPassenger(event.getEntity());
+		}
+		if(player.hasPermission("piggyback.cooldown.bypass") || !(Piggyback.piggybackPickupCooldownPlayers.containsKey(player.getUniqueId())) || plugin.config.pickupCooldown==0){
+			if(!(player.hasPermission("piggyback.cooldown.bypass")) || plugin.config.pickupCooldown!=0){
+				Piggyback.piggybackPickupCooldownPlayers.put(player.getUniqueId(), System.currentTimeMillis());
+				Bukkit.getServer().getScheduler().runTaskLater(plugin, new PiggybackPickupCooldown(player), plugin.config.pickupCooldown);
+			}
+			player.addPassenger(entity);
 		    if(Piggyback.version!="pre1_9"){
 				try{
 					NMStools.sendMountPacket();
@@ -80,25 +102,15 @@ public class PiggybackEventsListener implements org.bukkit.event.Listener
 			    	return;
 			    } 		
 			}
-		    if (plugin.config.send && (!(plugin.lists.messagePlayers.contains(event.getPlayer().getUniqueId().toString())))) 
+		    if (plugin.config.send && (!(plugin.lists.messagePlayers.contains(player.getUniqueId().toString())))) 
 		    {
-		    	if(event.getPlayer().getPassengers().contains(event.getEntity())){
+		    	if(player.getPassengers().contains(entity)){
 		    		if(!((plugin.lang.prefix + " " + plugin.lang.carryMsg).equals(" "))){    			
-		    			event.getPlayer().sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " " + (plugin.lang.carryMsg).replace("%passenger%", getEntityName(event.getEntity()))));
+		    			player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " " + (plugin.lang.carryMsg).replace("%passenger%", getEntityName(entity))));
 		    		}
 		    	}
 		    }
-		}
-		if(Piggyback.piggybackPickupCooldownPlayers.containsKey(event.getPlayer().getUniqueId())){
-			DecimalFormat df = new DecimalFormat("#.##");
-			double time = ((plugin.config.pickupCooldown/20) - 
-					(((Long)System.currentTimeMillis() - 
-					Piggyback.piggybackPickupCooldownPlayers.get(event.getPlayer().getUniqueId()))
-					/1000));
-			String timeLeft = df.format(time);
-			//Make spam click cooldown task to prevent too many spam clicks here, maybe one click per second(20 ticks)
-			event.getPlayer().sendMessage("Time Left:: " + timeLeft + " seconds"); //Make this prettier and add to language file
-		}	
+		}		
 	}
 	
 	public String getEntityName(Entity entity)

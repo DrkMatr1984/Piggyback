@@ -17,6 +17,7 @@ public class LanguageFile
 	public String carryMsg;
 	public String dropMsg;
 	public String throwMsg;
+	public String pickupCooldown;
 	public String noPickUpNPC;
 	public String emptyHand;
 	public String noPerms;
@@ -60,6 +61,7 @@ public class LanguageFile
 	    carryMsg = language.getString("message.carry");
 		dropMsg = language.getString("message.drop");
 		throwMsg = language.getString("message.throw");
+		pickupCooldown = language.getString("message.pickupCD");
 		toggleOn = language.getString("message.toggleOn");
 		toggleOff = language.getString("message.toggleOff");
 		messageOn = language.getString("message.messageOn");
