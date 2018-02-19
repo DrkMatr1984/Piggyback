@@ -9,9 +9,9 @@ import me.blubdalegend.piggyback.config.LanguageFile;
 import me.blubdalegend.piggyback.config.ToggleLists;
 import me.blubdalegend.piggyback.listeners.PiggybackEventsListener;
 import me.blubdalegend.piggyback.listeners.BukkitListeners;
-import me.blubdalegend.piggyback.listeners.LeftClickListener;
-import me.blubdalegend.piggyback.listeners.RightClickListener;
+import me.blubdalegend.piggyback.listeners.PickupClickListener;
 import me.blubdalegend.piggyback.nms.NMStools;
+import me.drkmatr1984.customevents.CustomEvents;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -48,13 +48,10 @@ public class Piggyback extends org.bukkit.plugin.java.JavaPlugin
 	  getVersion();
 	  initConfigs();	  
 	  getCommand("pback").setExecutor(new Commands(this));
-	  if(config.clickType.equals(ConfigAccessor.Clicks.RIGHT)){
-		  this.pm.registerEvents(new RightClickListener(plugin), plugin); //done
-	  }else{
-		  this.pm.registerEvents(new LeftClickListener(plugin), plugin);  // not done
-	  }
+	  new CustomEvents(plugin, false, true, false, false).initializeLib();
+	  this.pm.registerEvents(new PickupClickListener(plugin), plugin);
 	  this.pm.registerEvents(new BukkitListeners(), plugin);
-	  this.pm.registerEvents(new PiggybackEventsListener(plugin), plugin); //not done
+	  this.pm.registerEvents(new PiggybackEventsListener(plugin), plugin);
 	  this.log.info("Piggyback v" + plugin.getDescription().getVersion() + " enabled!");  
   }
   

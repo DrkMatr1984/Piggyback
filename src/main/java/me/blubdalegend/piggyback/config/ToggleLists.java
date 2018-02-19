@@ -18,8 +18,8 @@ public class ToggleLists{
 	private File messageFile;
 	private FileConfiguration message;
 	
-	public List<String> disabledPlayers = new ArrayList<String>();
-	public List<String> messagePlayers = new ArrayList<String>();
+	public List<String> disabledPlayers; 
+	public List<String> messagePlayers;
 	
 	private Piggyback plugin;
 	
@@ -57,11 +57,15 @@ public class ToggleLists{
 	  
 	public void loadUserList(){
 		//pickup toggle users
+		disabledPlayers = new ArrayList<String>();
 		users = YamlConfiguration.loadConfiguration(usersFile);
-		disabledPlayers = users.getStringList("DisabledPlayers");
+		if(users.getStringList("DisabledPlayers")!=null && !users.getStringList("DisabledPlayers").isEmpty())
+			disabledPlayers = users.getStringList("DisabledPlayers");
 		//message toggle users
+		messagePlayers = new ArrayList<String>();
 		message = YamlConfiguration.loadConfiguration(messageFile);
-		messagePlayers = users.getStringList("DisabledPlayers");
+		if(message.getStringList("DisabledPlayers") != null && !message.getStringList("DisabledPlayers").isEmpty())
+			messagePlayers = message.getStringList("DisabledPlayers");
 	}
 	  
 	public void saveUserList(){

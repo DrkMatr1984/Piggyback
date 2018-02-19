@@ -13,16 +13,15 @@ public class ConfigAccessor
 	public Piggyback plugin;
 	
 	public static enum Clicks{
-		  RIGHT, LEFT
+		  RIGHT, LEFT, EITHER
 	}
 	
-	public Clicks clickType; // true for use shift-right-click, false to use shift-left-click
+	public Clicks clickType;
 	public boolean throwRider; // Throw Rider instead of just dropping them
 	public boolean pickupNPC;
 	public long pickupCooldown;
 	public boolean send;
 	public long messageCooldown;
-	public boolean cancelPickupIfAnotherPlugin;
 	public boolean requireEmptyHand;
 	public List<String> disabledEntities;
 	public List<String> disabledWorlds;
@@ -46,7 +45,6 @@ public class ConfigAccessor
 		f.addDefault("general.pickUpNPCs", Boolean.valueOf(false));
 		f.addDefault("general.requireEmptyHand", Boolean.valueOf(true));
 		f.addDefault("general.pickUp.Cooldown", Long.valueOf(10L));
-		f.addDefault("cancelPickup.IfAnotherPluginCancelsEvent", Boolean.valueOf(false));
 		f.addDefault("messages.Send", Boolean.valueOf(true));
 		f.addDefault("messages.Cooldown", Long.valueOf(30L));
 		f.addDefault("blacklists.entityBlacklist", disabledEntities);
@@ -59,8 +57,7 @@ public class ConfigAccessor
 		throwRider = f.getBoolean("general.throwRiderAway");
 		pickupNPC = f.getBoolean("general.pickUpNPCs");
 		pickupCooldown = ((f.getLong("general.pickUp.Cooldown")) * 20);
-		requireEmptyHand = f.getBoolean("general.requireEmptyHand");
-		cancelPickupIfAnotherPlugin = f.getBoolean("cancelPickup.IfAnotherPluginCancelsEvent");		
+		requireEmptyHand = f.getBoolean("general.requireEmptyHand");		
 		send = f.getBoolean("messages.Send");
 		messageCooldown = ((f.getLong("messages.Cooldown")) * 20);
 		disabledEntities = uppercaseStringList(f.getStringList("blacklists.entityBlacklist"));
