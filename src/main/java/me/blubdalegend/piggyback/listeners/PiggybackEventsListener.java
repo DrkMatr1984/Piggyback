@@ -6,6 +6,7 @@ import me.blubdalegend.piggyback.Piggyback;
 import me.blubdalegend.piggyback.actions.ThrowEntity;
 import me.blubdalegend.piggyback.events.PiggybackDropEntityEvent;
 import me.blubdalegend.piggyback.events.PiggybackPickupEntityEvent;
+import me.blubdalegend.piggyback.events.PiggybackRideEntityEvent;
 import me.blubdalegend.piggyback.events.PiggybackThrowEntityEvent;
 import me.blubdalegend.piggyback.nms.NMStools;
 import me.blubdalegend.piggyback.tasks.PickupClickCooldown;
@@ -111,6 +112,12 @@ public class PiggybackEventsListener implements org.bukkit.event.Listener
 		    	}
 		    }
 		}		
+	}
+	
+	@EventHandler(priority=EventPriority.HIGH, ignoreCancelled=true)
+	public void onEntityRide(PiggybackRideEntityEvent event)
+	{
+		//Do similar things to above, only with riding the entity this time
 	}
 	
 	public String getEntityName(Entity entity)

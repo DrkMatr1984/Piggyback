@@ -48,7 +48,7 @@ public class Piggyback extends org.bukkit.plugin.java.JavaPlugin
 	  getVersion();
 	  initConfigs();	  
 	  getCommand("pback").setExecutor(new Commands(this));
-	  new CustomEvents(plugin, false, true, false, false).initializeLib();
+	  new CustomEvents(plugin, false, true, false, false, false).initializeLib();
 	  this.pm.registerEvents(new PickupClickListener(plugin), plugin);
 	  this.pm.registerEvents(new BukkitListeners(), plugin);
 	  this.pm.registerEvents(new PiggybackEventsListener(plugin), plugin);

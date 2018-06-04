@@ -16,8 +16,16 @@ public class ConfigAccessor
 		  RIGHT, LEFT, EITHER
 	}
 	
+	public static enum Actions{
+		  RIDE, PICKUP
+	}
+	
 	public Clicks clickType;
-	public boolean throwRider; // Throw Rider instead of just dropping them
+	public Actions actionType;
+	public boolean onlyRidePlayers;
+	public boolean throwRiderRide; // Throw Rider instead of just dropping them
+	public boolean throwRiderPickup; // Throw Rider instead of just dropping them
+	public boolean rideNPC;
 	public boolean pickupNPC;
 	public long pickupCooldown;
 	public boolean send;
@@ -41,10 +49,17 @@ public class ConfigAccessor
 		f = plugin.getConfig();
 		f.options().header("PIGGYBACK CONFIGURATION FILE");
 		f.addDefault("general.clickType", "RIGHT");
-		f.addDefault("general.throwRiderAway", Boolean.valueOf(true));
-		f.addDefault("general.pickUpNPCs", Boolean.valueOf(false));
 		f.addDefault("general.requireEmptyHand", Boolean.valueOf(true));
 		f.addDefault("general.pickUp.Cooldown", Long.valueOf(10L));
+		f.addDefault("general.clickAction", "PICKUP");	
+		//Pickup
+		f.addDefault("pickup.throwRiderAway", Boolean.valueOf(true));
+		f.addDefault("pickup.pickUpNPCs", Boolean.valueOf(false));		
+		//Ride
+		f.addDefault("ride.onlyRidePlayers", Boolean.valueOf(true));
+		f.addDefault("ride.throwRiderAway", Boolean.valueOf(false));
+		f.addDefault("ride.rideNPC", Boolean.valueOf(false));
+		//messages
 		f.addDefault("messages.Send", Boolean.valueOf(true));
 		f.addDefault("messages.Cooldown", Long.valueOf(30L));
 		f.addDefault("blacklists.entityBlacklist", disabledEntities);
@@ -54,10 +69,17 @@ public class ConfigAccessor
 		plugin.saveConfig();
 	    
 		clickType = Clicks.valueOf((f.getString("general.clickType")).toUpperCase());
-		throwRider = f.getBoolean("general.throwRiderAway");
-		pickupNPC = f.getBoolean("general.pickUpNPCs");
+		requireEmptyHand = f.getBoolean("general.requireEmptyHand");
 		pickupCooldown = ((f.getLong("general.pickUp.Cooldown")) * 20);
-		requireEmptyHand = f.getBoolean("general.requireEmptyHand");		
+		actionType = Actions.valueOf((f.getString("general.clickAction")).toUpperCase());
+		//pickup
+		throwRiderPickup = f.getBoolean("pickup.throwRiderAway");
+		pickupNPC = f.getBoolean("pickup.pickUpNPCs");
+		//ride
+		onlyRidePlayers = f.getBoolean("ride.onlyRidePlayers");
+		throwRiderRide = f.getBoolean("ride.throwRiderAway");
+		rideNPC = f.getBoolean("ride.rideNPC");
+		//messages
 		send = f.getBoolean("messages.Send");
 		messageCooldown = ((f.getLong("messages.Cooldown")) * 20);
 		disabledEntities = uppercaseStringList(f.getStringList("blacklists.entityBlacklist"));
