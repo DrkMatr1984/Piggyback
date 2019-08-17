@@ -286,6 +286,6 @@ public class PickupClickListener implements org.bukkit.event.Listener
 				//Ride the Entity instead of pick them up
 			}
 		}
-	}
-
+	}	 
+    
 }

@@ -2,6 +2,7 @@ package me.blubdalegend.piggyback;
 
 import java.util.logging.Logger;
 
+import org.bukkit.entity.Entity;
 import org.bukkit.plugin.PluginManager;
 
 import me.blubdalegend.piggyback.config.ConfigAccessor;
@@ -33,6 +34,7 @@ public class Piggyback extends org.bukkit.plugin.java.JavaPlugin
   public static List<UUID> noPermsCooldownPlayers = new ArrayList<UUID>();
   public static List<UUID> clickTimerCooldownPlayers = new ArrayList<UUID>();
   public static HashMap<UUID,Long> piggybackPickupCooldownPlayers = new HashMap<UUID, Long>();
+  public static HashMap<UUID, List<Entity>> passengers = new HashMap<UUID, List<Entity>>();
   public static String version;
   public String clazzName;
   public String sendPacket;

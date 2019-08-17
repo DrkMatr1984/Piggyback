@@ -1,11 +1,13 @@
 package me.blubdalegend.piggyback.listeners;
 
+import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
+import org.spigotmc.event.entity.EntityDismountEvent;
 
 import me.blubdalegend.piggyback.Piggyback;
 import me.blubdalegend.piggyback.nms.NMStools;
@@ -38,4 +40,17 @@ public class BukkitListeners implements org.bukkit.event.Listener{
 			} 
 		}  
 	}
+	
+	//prevent player from dropping carried passengers underwater
+	@EventHandler(priority=EventPriority.HIGHEST, ignoreCancelled=false)
+	public void preventDismountUnderWater(EntityDismountEvent event) {
+		if(Piggyback.passengers.containsKey(event.getDismounted().getUniqueId())) {
+			if(Piggyback.passengers.get(event.getDismounted().getUniqueId()).contains(event.getEntity())) {
+				if(event.getEntity().getLocation().getBlock().getType()==Material.WATER) {
+					event.getDismounted().addPassenger(event.getEntity());
+			    }				
+			}
+		}	
+	}
+	
 }
