@@ -16,7 +16,6 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -84,7 +83,6 @@ public class PiggybackEventsListener implements org.bukkit.event.Listener
 		}
 	}
 	
-	@SuppressWarnings("deprecation")
 	@EventHandler(priority=EventPriority.HIGH, ignoreCancelled=true)
 	public void onEntityPickup(PiggybackPickupEntityEvent event)
 	{
@@ -104,14 +102,14 @@ public class PiggybackEventsListener implements org.bukkit.event.Listener
 						player.sendMessage(ChatColor.translateAlternateColorCodes('&',plugin.lang.prefix + " " + ((plugin.lang.pickupCooldown).replace("%time%", timeLeft))));
 					}					
 					Piggyback.clickTimerCooldownPlayers.add(player.getUniqueId());
-					Bukkit.getServer().getScheduler().runTaskLater(plugin, new PickupClickCooldown(player), 20);
+					new PickupClickCooldown(player).runTaskLater(plugin, 20);
 				}				
 			}
 		}
 		if(player.hasPermission("piggyback.cooldown.bypass") || !(Piggyback.piggybackPickupCooldownPlayers.containsKey(player.getUniqueId())) || plugin.config.pickupCooldown==0){
 			if(!(player.hasPermission("piggyback.cooldown.bypass")) || plugin.config.pickupCooldown!=0){
 				Piggyback.piggybackPickupCooldownPlayers.put(player.getUniqueId(), System.currentTimeMillis());
-				Bukkit.getServer().getScheduler().runTaskLater(plugin, new PiggybackPickupCooldown(player), plugin.config.pickupCooldown);
+				new PiggybackPickupCooldown(player).runTaskLater(plugin, plugin.config.pickupCooldown);
 			}
 			player.addPassenger(entity);
 			List<Entity> riders = new ArrayList<Entity>();
