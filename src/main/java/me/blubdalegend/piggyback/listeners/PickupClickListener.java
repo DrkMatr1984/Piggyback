@@ -36,14 +36,14 @@ public class PickupClickListener implements org.bukkit.event.Listener
 			boolean perm = false;
 			Player player = event.getPlayer();
 			Entity clicked = event.getClickedEntity();
+			if ((player.hasPermission("piggyback.use")) || (player.isOp()))
+			{
+				perm = true;
+			}
 			//pickup or ride
 			if(this.plugin.config.actionType.equals(Actions.PICKUP) || (this.plugin.config.actionType.equals(Actions.RIDE) && this.plugin.config.onlyRidePlayers && !(clicked instanceof Player))) {
 				if((player.isInsideVehicle()&&player.getVehicle().equals(clicked))){
 					return;
-				}
-				if ((player.hasPermission("piggyback.use")) || (player.isOp()))
-				{
-					perm = true;
 				}
 				if(perm){
 					if(!player.getPassengers().isEmpty()){
@@ -91,7 +91,7 @@ public class PickupClickListener implements org.bukkit.event.Listener
 											if(!(Piggyback.emptyHandCooldownPlayers.contains(player.getUniqueId()))){
 												player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " " + plugin.lang.emptyHand));
 												Piggyback.emptyHandCooldownPlayers.add(player.getUniqueId());
-												Bukkit.getServer().getScheduler().runTaskLater(plugin, new EmptyHandMessageCooldown(player), plugin.config.messageCooldown);
+												new EmptyHandMessageCooldown(player).runTaskLater(plugin, plugin.config.messageCooldown);
 											}
 										}
 									}								
@@ -104,7 +104,7 @@ public class PickupClickListener implements org.bukkit.event.Listener
 											if(!(Piggyback.emptyHandCooldownPlayers.contains(player.getUniqueId()))){
 												player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " " + plugin.lang.emptyHand));
 												Piggyback.emptyHandCooldownPlayers.add(player.getUniqueId());
-												Bukkit.getServer().getScheduler().runTaskLater(plugin, new EmptyHandMessageCooldown(player), plugin.config.messageCooldown);
+												new EmptyHandMessageCooldown(player).runTaskLater(plugin, plugin.config.messageCooldown);
 											}
 										}
 									}
@@ -127,7 +127,7 @@ public class PickupClickListener implements org.bukkit.event.Listener
 					    				if(!(Piggyback.toggleCooldownPlayers.contains(player.getUniqueId()))){
 					    					player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " " + (plugin.lang.noPickUpPlayer).replace("%player%", p.getDisplayName())));
 					    					Piggyback.toggleCooldownPlayers.add(player.getUniqueId());
-					    					Bukkit.getServer().getScheduler().runTaskLater(plugin, new ToggleMessageCooldown(player), plugin.config.messageCooldown);
+					    					new ToggleMessageCooldown(player).runTaskLater(plugin, plugin.config.messageCooldown);
 					    				}
 					    			}
 					    		}
@@ -147,14 +147,15 @@ public class PickupClickListener implements org.bukkit.event.Listener
 							if(!(Piggyback.noPermsCooldownPlayers.contains(player.getUniqueId()))){
 								player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " " + plugin.lang.noPerms));
 								Piggyback.noPermsCooldownPlayers.add(player.getUniqueId());
-								Bukkit.getServer().getScheduler().runTaskLater(plugin, new NoPermsMessageCooldown(player), plugin.config.messageCooldown);
+								new NoPermsMessageCooldown(player).runTaskLater(plugin, plugin.config.messageCooldown);
 							}
 						}
 					}
 				}
-			}else {
+			}else if(this.plugin.config.actionType.equals(Actions.RIDE) && ((this.plugin.config.onlyRidePlayers && clicked instanceof Player) || !this.plugin.config.onlyRidePlayers)){				
 				//Ride the Entity instead of pick them up
-			}		
+				
+			}
 		}
 	}
 	
@@ -221,7 +222,6 @@ public class PickupClickListener implements org.bukkit.event.Listener
 											if(!(Piggyback.emptyHandCooldownPlayers.contains(player.getUniqueId()))){
 												player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " " + plugin.lang.emptyHand));
 												Piggyback.emptyHandCooldownPlayers.add(player.getUniqueId());
-												Bukkit.getServer().getScheduler().runTaskLater(plugin, new EmptyHandMessageCooldown(player), plugin.config.messageCooldown);
 											}
 										}
 									}								
@@ -234,7 +234,7 @@ public class PickupClickListener implements org.bukkit.event.Listener
 											if(!(Piggyback.emptyHandCooldownPlayers.contains(player.getUniqueId()))){
 												player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " " + plugin.lang.emptyHand));
 												Piggyback.emptyHandCooldownPlayers.add(player.getUniqueId());
-												Bukkit.getServer().getScheduler().runTaskLater(plugin, new EmptyHandMessageCooldown(player), plugin.config.messageCooldown);
+												new EmptyHandMessageCooldown(player).runTaskLater(plugin, plugin.config.messageCooldown);
 											}
 										}
 									}
@@ -257,7 +257,7 @@ public class PickupClickListener implements org.bukkit.event.Listener
 					    				if(!(Piggyback.toggleCooldownPlayers.contains(player.getUniqueId()))){
 					    					player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " " + (plugin.lang.noPickUpPlayer).replace("%player%", p.getDisplayName())));
 					    					Piggyback.toggleCooldownPlayers.add(player.getUniqueId());
-					    					Bukkit.getServer().getScheduler().runTaskLater(plugin, new ToggleMessageCooldown(player), plugin.config.messageCooldown);
+					    					new ToggleMessageCooldown(player).runTaskLater(plugin, plugin.config.messageCooldown);
 					    				}
 					    			}
 					    		}
@@ -277,7 +277,7 @@ public class PickupClickListener implements org.bukkit.event.Listener
 							if(!(Piggyback.noPermsCooldownPlayers.contains(player.getUniqueId()))){
 								player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " " + plugin.lang.noPerms));
 								Piggyback.noPermsCooldownPlayers.add(player.getUniqueId());
-								Bukkit.getServer().getScheduler().runTaskLater(plugin, new NoPermsMessageCooldown(player), plugin.config.messageCooldown);
+								new NoPermsMessageCooldown(player).runTaskLater(plugin, plugin.config.messageCooldown);
 							}
 						}
 					}
