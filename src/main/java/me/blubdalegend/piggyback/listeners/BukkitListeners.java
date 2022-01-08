@@ -5,6 +5,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.spigotmc.event.entity.EntityDismountEvent;
@@ -12,7 +13,9 @@ import org.spigotmc.event.entity.EntityDismountEvent;
 import me.blubdalegend.piggyback.Piggyback;
 import me.blubdalegend.piggyback.nms.NMStools;
 
-public class BukkitListeners implements org.bukkit.event.Listener{
+import java.util.Objects;
+
+public class BukkitListeners implements Listener{
 	
 	public BukkitListeners() {
 	}
@@ -21,8 +24,7 @@ public class BukkitListeners implements org.bukkit.event.Listener{
 	public void cancelVehiclePassengerDamage(EntityDamageByEntityEvent event)
 	{
 		//disable damage from Vehicle(Player) to Rider 
-		if(event.getDamager() instanceof Player){
-			Player player = (Player)event.getDamager();
+		if(event.getDamager() instanceof Player player){
 			Entity clicked = event.getEntity();
 			if(player.getPassengers().contains(clicked)){
 				event.setDamage(0.0D);
@@ -31,10 +33,10 @@ public class BukkitListeners implements org.bukkit.event.Listener{
 		}
 	}
 	
-	@EventHandler(priority=EventPriority.NORMAL, ignoreCancelled=false)
+	@EventHandler(priority=EventPriority.NORMAL)
 	public void onPlayerToggleSneakEvent(PlayerToggleSneakEvent event) {
 		Player player = event.getPlayer();
-		if(Piggyback.version!="pre1_9"){
+		if(!Objects.equals(Piggyback.version, "pre1_9")){
 			if(player.getVehicle()!=null){
 				NMStools.sendMountPacket();
 			} 
@@ -42,7 +44,7 @@ public class BukkitListeners implements org.bukkit.event.Listener{
 	}
 	
 	//prevent player from dropping carried passengers underwater
-	@EventHandler(priority=EventPriority.HIGHEST, ignoreCancelled=false)
+	@EventHandler(priority=EventPriority.HIGHEST)
 	public void preventDismountUnderWater(EntityDismountEvent event) {
 		if(Piggyback.passengers.containsKey(event.getDismounted().getUniqueId())) {
 			if(Piggyback.passengers.get(event.getDismounted().getUniqueId()).contains(event.getEntity())) {

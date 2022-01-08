@@ -19,9 +19,11 @@ import me.blubdalegend.piggyback.tasks.ToggleMessageCooldown;
 import me.drkmatr1984.customevents.interactEvents.PlayerInteractEntityCrouchLeftClickEvent;
 import me.drkmatr1984.customevents.interactEvents.PlayerInteractEntityCrouchRightClickEvent;
 
+import java.util.Objects;
+
 public class PickupClickListener implements org.bukkit.event.Listener
 {
-	private Piggyback plugin;
+	private final Piggyback plugin;
 	
 	public PickupClickListener(Piggyback plugin)
 	{
@@ -42,7 +44,7 @@ public class PickupClickListener implements org.bukkit.event.Listener
 			}
 			//pickup or ride
 			if(this.plugin.config.actionType.equals(Actions.PICKUP) || (this.plugin.config.actionType.equals(Actions.RIDE) && this.plugin.config.onlyRidePlayers && !(clicked instanceof Player))) {
-				if((player.isInsideVehicle()&&player.getVehicle().equals(clicked))){
+				if((player.isInsideVehicle()&& Objects.equals(player.getVehicle(), clicked))){
 					return;
 				}
 				if(perm){
@@ -84,7 +86,7 @@ public class PickupClickListener implements org.bukkit.event.Listener
 					    	return;
 					    }
 					    if(plugin.config.requireEmptyHand){
-							if(Piggyback.version!="pre1_9"){
+							if(!Objects.equals(Piggyback.version, "pre1_9")){
 								if(player.getInventory().getItemInMainHand().getType()!=Material.AIR){
 									if (plugin.config.send && (!(plugin.lists.messagePlayers.contains(player.getUniqueId().toString())))){
 										if(!((plugin.lang.prefix + " " + plugin.lang.emptyHand).equals(" "))){
@@ -112,10 +114,9 @@ public class PickupClickListener implements org.bukkit.event.Listener
 								}
 							}
 						}
-					    if(clicked instanceof Player)
+					    if(clicked instanceof Player p)
 					    {
-					    	Player p = (Player)clicked;
-					    	if(plugin.lists.disabledPlayers.contains(player.getUniqueId().toString())){
+							if(plugin.lists.disabledPlayers.contains(player.getUniqueId().toString())){
 					    		if(!((plugin.lang.prefix + " " + plugin.lang.noPickUpPlayerToggle).equals(" "))){
 					    			player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " " + (plugin.lang.noPickUpPlayerToggle).replace("%player%", p.getDisplayName())));
 					    		}
@@ -152,9 +153,13 @@ public class PickupClickListener implements org.bukkit.event.Listener
 						}
 					}
 				}
-			}else if(this.plugin.config.actionType.equals(Actions.RIDE) && ((this.plugin.config.onlyRidePlayers && clicked instanceof Player) || !this.plugin.config.onlyRidePlayers)){				
-				//Ride the Entity instead of pick them up
-				
+			}else if(this.plugin.config.actionType.equals(Actions.RIDE)){				
+				if(!player.getPassengers().isEmpty()){
+					if(clicked.getPassengers().contains(player)){
+						return;
+					}
+				}				
+				//ride player
 			}
 		}
 	}
@@ -167,15 +172,15 @@ public class PickupClickListener implements org.bukkit.event.Listener
 			boolean perm = false;
 			Player player = event.getPlayer();
 			Entity clicked = event.getClickedEntity();
+			if ((player.hasPermission("piggyback.use")) || (player.isOp()))
+		    {
+			    perm = true;
+		    }
 			//pickup or ride
 			if(this.plugin.config.actionType.equals(Actions.PICKUP) || (this.plugin.config.actionType.equals(Actions.RIDE) && this.plugin.config.onlyRidePlayers && !(clicked instanceof Player))) {
-			    if((player.isInsideVehicle()&&player.getVehicle().equals(clicked))){
+			    if((player.isInsideVehicle()&& Objects.equals(player.getVehicle(), clicked))){
 			        return;
-			    }
-			    if ((player.hasPermission("piggyback.use")) || (player.isOp()))
-			    {
-				    perm = true;
-			    }
+			    }		    
 				if(perm){
 					if(!player.getPassengers().isEmpty()){
 						if (player.getPassengers().contains(clicked))
@@ -215,13 +220,14 @@ public class PickupClickListener implements org.bukkit.event.Listener
 					    	return;
 					    }
 					    if(plugin.config.requireEmptyHand){
-							if(Piggyback.version!="pre1_9"){
+							if(!Objects.equals(Piggyback.version, "pre1_9")){
 								if(player.getInventory().getItemInMainHand().getType()!=Material.AIR){
 									if (plugin.config.send && (!(plugin.lists.messagePlayers.contains(player.getUniqueId().toString())))){
 										if(!((plugin.lang.prefix + " " + plugin.lang.emptyHand).equals(" "))){
 											if(!(Piggyback.emptyHandCooldownPlayers.contains(player.getUniqueId()))){
 												player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " " + plugin.lang.emptyHand));
 												Piggyback.emptyHandCooldownPlayers.add(player.getUniqueId());
+												new EmptyHandMessageCooldown(player).runTaskLater(plugin, plugin.config.messageCooldown);
 											}
 										}
 									}								
@@ -242,10 +248,9 @@ public class PickupClickListener implements org.bukkit.event.Listener
 								}
 							}
 						}
-					    if(clicked instanceof Player)
+					    if(clicked instanceof Player p)
 					    {
-					    	Player p = (Player)clicked;
-					    	if(plugin.lists.disabledPlayers.contains(player.getUniqueId().toString())){
+							if(plugin.lists.disabledPlayers.contains(player.getUniqueId().toString())){
 					    		if(!((plugin.lang.prefix + " " + plugin.lang.noPickUpPlayerToggle).equals(" "))){
 					    			player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " " + (plugin.lang.noPickUpPlayerToggle).replace("%player%", p.getDisplayName())));
 					    		}
