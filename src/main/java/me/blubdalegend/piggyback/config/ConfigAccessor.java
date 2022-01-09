@@ -49,8 +49,6 @@ public class ConfigAccessor
 		
 		f = plugin.getConfig();
 		f.options().header("PIGGYBACK CONFIGURATION FILE");
-		
-		f.setComments("general.clickType", disabledEntities);
 		f.addDefault("general.clickType", "RIGHT");
 		f.addDefault("general.requireEmptyHand", Boolean.TRUE);
 		f.addDefault("general.pickUp.Cooldown", 10L);
