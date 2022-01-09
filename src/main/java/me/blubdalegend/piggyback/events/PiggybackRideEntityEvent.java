@@ -10,8 +10,8 @@ public class PiggybackRideEntityEvent extends Event implements Cancellable
 {
 
 	private static final HandlerList handlerList = new HandlerList();
-    private Entity entity;
-    private Player player;
+    private final Entity entity;
+    private final Player player;
     private boolean cancelled = false;
     
     @Override
@@ -28,7 +28,7 @@ public class PiggybackRideEntityEvent extends Event implements Cancellable
     	player = p;
     }
     
-    public Entity getEntity(){
+    public Entity getClicked(){
     	return entity;
     }
     

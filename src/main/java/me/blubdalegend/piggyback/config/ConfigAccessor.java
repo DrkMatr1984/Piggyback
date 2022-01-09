@@ -32,7 +32,7 @@ public class ConfigAccessor
 	public boolean send;
 	public long messageCooldown;
 	public boolean requireEmptyHand;
-	public List<String> disabledEntities = new ArrayList<String>();
+	public List<String> disabledEntities = new ArrayList<>();
 	public List<String> disabledWorlds;
 	
 	public ConfigAccessor(Piggyback plugin){
@@ -48,9 +48,9 @@ public class ConfigAccessor
 		disabledWorlds.add("");
 		
 		f = plugin.getConfig();
-		List<String> list = new ArrayList<>();
-		list.add("PIGGYBACK CONFIGURATION FILE");
-		f.options().setHeader(list);
+		f.options().header("PIGGYBACK CONFIGURATION FILE");
+		
+		f.setComments("general.clickType", disabledEntities);
 		f.addDefault("general.clickType", "RIGHT");
 		f.addDefault("general.requireEmptyHand", Boolean.TRUE);
 		f.addDefault("general.pickUp.Cooldown", 10L);
@@ -60,7 +60,6 @@ public class ConfigAccessor
 		f.addDefault("pickup.pickUpNPCs", Boolean.FALSE);
 		//Ride
 		f.addDefault("ride.onlyRidePlayers", Boolean.TRUE);
-		f.addDefault("ride.throwRiderAway", Boolean.FALSE);
 		f.addDefault("ride.rideNPC", Boolean.FALSE);
 		//messages
 		f.addDefault("messages.Send", Boolean.TRUE);
@@ -80,7 +79,6 @@ public class ConfigAccessor
 		pickupNPC = f.getBoolean("pickup.pickUpNPCs");
 		//ride
 		onlyRidePlayers = f.getBoolean("ride.onlyRidePlayers");
-		throwRiderRide = f.getBoolean("ride.throwRiderAway");
 		rideNPC = f.getBoolean("ride.rideNPC");
 		//messages
 		send = f.getBoolean("messages.Send");

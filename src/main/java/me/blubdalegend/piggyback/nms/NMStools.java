@@ -40,9 +40,7 @@ public class NMStools
 			    sendPacket.invoke(con, packet);
 			}
 		} catch (ClassNotFoundException | NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchFieldException | InstantiationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			Bukkit.getServer().getLogger().info("Can't Assemble Mount Packet");
+			//Only needed for some Verions. Do nothing.
 		} 
 	}
 }

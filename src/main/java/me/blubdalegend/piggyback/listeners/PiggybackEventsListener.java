@@ -15,6 +15,7 @@ import me.blubdalegend.piggyback.tasks.PiggybackPickupCooldown;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Entity;
@@ -22,7 +23,7 @@ import org.bukkit.entity.Player;
 
 public class PiggybackEventsListener implements org.bukkit.event.Listener
 {	
-	private Piggyback plugin;
+	private final Piggyback plugin;
   
 	public PiggybackEventsListener(Piggyback plugin){
 		this.plugin = plugin;
@@ -33,15 +34,14 @@ public class PiggybackEventsListener implements org.bukkit.event.Listener
 	{		
   		Player player = event.getPlayer();
   		player.removePassenger(event.getEntity());
-  		List<Entity> riders = new ArrayList<Entity>();
+  		List<Entity> riders = new ArrayList<>();
 		if(Piggyback.passengers.containsKey(player.getUniqueId())) {
 			riders = Piggyback.passengers.get(player.getUniqueId());
 		}
-		if(riders.contains(event.getEntity()))
-			riders.remove(event.getEntity());
+		riders.remove(event.getEntity());
 		Piggyback.passengers.put(player.getUniqueId(),riders);
 		ThrowEntity.throwEntity(event.getEntity(), event.getPlayer());
-		if(Piggyback.version!="pre1_9"){
+		if(!Objects.equals(Piggyback.version, "pre1_9")){
 			try{
 				NMStools.sendMountPacket();
 			}catch(IllegalStateException e){
@@ -61,14 +61,13 @@ public class PiggybackEventsListener implements org.bukkit.event.Listener
 	{	
 		Player player = event.getPlayer();
 		player.removePassenger(event.getEntity());
-		List<Entity> riders = new ArrayList<Entity>();
+		List<Entity> riders = new ArrayList<>();
 		if(Piggyback.passengers.containsKey(player.getUniqueId())) {
 			riders = Piggyback.passengers.get(player.getUniqueId());
 		}
-		if(riders.contains(event.getEntity()))
-			riders.remove(event.getEntity());
+		riders.remove(event.getEntity());
 		Piggyback.passengers.put(player.getUniqueId(),riders);
-		if(Piggyback.version!="pre1_9"){
+		if(!Objects.equals(Piggyback.version, "pre1_9")){
 			try{
 				NMStools.sendMountPacket();
 			}catch(IllegalStateException e){
@@ -87,16 +86,16 @@ public class PiggybackEventsListener implements org.bukkit.event.Listener
 	public void onEntityPickup(PiggybackPickupEntityEvent event)
 	{
 		Player player = event.getPlayer();
-		Entity entity = event.getEntity();
+		Entity entity = event.getClicked();
 		if(Piggyback.piggybackPickupCooldownPlayers.containsKey(player.getUniqueId()) && !player.hasPermission("piggyback.cooldown.bypass")){
 			DecimalFormat df = new DecimalFormat("#.##");
-			double time = ((plugin.config.pickupCooldown/20) - 
+			double time = ((plugin.config.pickupCooldown/20.0) -
 					(((Long)System.currentTimeMillis() - 
 					Piggyback.piggybackPickupCooldownPlayers.get(player.getUniqueId()))
-					/1000));
-			String timeLeft = "";
+					/1000.0));
+			String timeLeft;
 			timeLeft = df.format(time);
-			if(timeLeft!="0"){
+			if(!Objects.equals(timeLeft, "0")){
 				if(!Piggyback.clickTimerCooldownPlayers.contains(player.getUniqueId())){
 					if(!((plugin.lang.prefix + " " + ((plugin.lang.pickupCooldown).replace("%time%", timeLeft))).equals(" "))){
 						player.sendMessage(ChatColor.translateAlternateColorCodes('&',plugin.lang.prefix + " " + ((plugin.lang.pickupCooldown).replace("%time%", timeLeft))));
@@ -112,14 +111,14 @@ public class PiggybackEventsListener implements org.bukkit.event.Listener
 				new PiggybackPickupCooldown(player).runTaskLater(plugin, plugin.config.pickupCooldown);
 			}
 			player.addPassenger(entity);
-			List<Entity> riders = new ArrayList<Entity>();
+			List<Entity> riders = new ArrayList<>();
 			if(Piggyback.passengers.containsKey(player.getUniqueId())) {
 				riders = Piggyback.passengers.get(player.getUniqueId());
 			}
 			if(!riders.contains(entity))
 				riders.add(entity);
 			Piggyback.passengers.put(player.getUniqueId(),riders);
-		    if(Piggyback.version!="pre1_9"){
+		    if(!Objects.equals(Piggyback.version, "pre1_9")){
 				try{
 					NMStools.sendMountPacket();
 				}catch(IllegalStateException e){
@@ -140,17 +139,63 @@ public class PiggybackEventsListener implements org.bukkit.event.Listener
 	@EventHandler(priority=EventPriority.HIGH, ignoreCancelled=true)
 	public void onEntityRide(PiggybackRideEntityEvent event)
 	{
-		//Do similar things to above, only with riding the entity this time
+		Player player = event.getPlayer();
+		Entity clicked = event.getClicked();
+		if(Piggyback.piggybackPickupCooldownPlayers.containsKey(player.getUniqueId()) && !player.hasPermission("piggyback.cooldown.bypass")){
+			DecimalFormat df = new DecimalFormat("#.##");
+			double time = ((plugin.config.pickupCooldown/20.0) -
+					(((Long)System.currentTimeMillis() - 
+					Piggyback.piggybackPickupCooldownPlayers.get(player.getUniqueId()))
+					/1000.0));
+			String timeLeft;
+			timeLeft = df.format(time);
+			if(!Objects.equals(timeLeft, "0")){
+				if(!Piggyback.clickTimerCooldownPlayers.contains(player.getUniqueId())){
+					if(!((plugin.lang.prefix + " " + ((plugin.lang.rideCooldown).replace("%time%", timeLeft))).equals(" "))){
+						player.sendMessage(ChatColor.translateAlternateColorCodes('&',plugin.lang.prefix + " " + ((plugin.lang.rideCooldown).replace("%time%", timeLeft))));
+					}					
+					Piggyback.clickTimerCooldownPlayers.add(player.getUniqueId());
+					new PickupClickCooldown(player).runTaskLater(plugin, 20);
+				}				
+			}
+		}
+		if(player.hasPermission("piggyback.cooldown.bypass") || !(Piggyback.piggybackPickupCooldownPlayers.containsKey(player.getUniqueId())) || plugin.config.pickupCooldown==0){
+			if(!(player.hasPermission("piggyback.cooldown.bypass")) || plugin.config.pickupCooldown!=0){
+				Piggyback.piggybackPickupCooldownPlayers.put(player.getUniqueId(), System.currentTimeMillis());
+				new PiggybackPickupCooldown(player).runTaskLater(plugin, plugin.config.pickupCooldown);
+			}
+			clicked.addPassenger(player);
+			List<Entity> riders = new ArrayList<>();
+			if(Piggyback.passengers.containsKey(clicked.getUniqueId())) {
+				riders = Piggyback.passengers.get(clicked.getUniqueId());
+			}
+			if(!riders.contains(player))
+				riders.add(player);
+			Piggyback.passengers.put(clicked.getUniqueId(),riders);
+		    if(!Objects.equals(Piggyback.version, "pre1_9")){
+				try{
+					NMStools.sendMountPacket();
+				}catch(IllegalStateException e){
+			    	return;
+			    } 		
+			}
+		    if (plugin.config.send && (!(plugin.lists.messagePlayers.contains(player.getUniqueId().toString())))) 
+		    {
+		    	if(clicked.getPassengers().contains(player)){
+		    		if(!((plugin.lang.prefix + " " + plugin.lang.rideMsg).equals(" "))){    			
+		    			player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " " + (plugin.lang.rideMsg).replace("%clicked%", getEntityName(clicked))));
+		    		}
+		    	}
+		    }
+		}
 	}
 	
 	public String getEntityName(Entity entity)
 	{
 		if(entity.getCustomName()!=null){
 			return entity.getCustomName();
-		}else if(entity.getName()!=null){
+		}else {
 			return entity.getName();
-		}else{
-			return (entity.getType().toString()).toLowerCase();
 		}
 	} 
 }
