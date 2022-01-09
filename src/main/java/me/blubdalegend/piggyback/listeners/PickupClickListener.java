@@ -225,24 +225,24 @@ public class PickupClickListener implements org.bukkit.event.Listener
 			        }
 		            if(clicked instanceof Player p)
 		            {
-			    	    if(plugin.lists.disabledPlayers.contains(player.getUniqueId().toString())){
-		    	        	if(!((plugin.lang.prefix + " " + plugin.lang.noRidePlayerToggle).equals(" "))){
-		    	        		player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " " + (plugin.lang.noRidePlayerToggle).replace("%player%", p.getDisplayName())));
-		    		        }
-		    		        return;
-		    	        }
-		    	        if(plugin.lists.disabledPlayers.contains(clicked.getUniqueId().toString())){        	  
-		    		        if (plugin.config.send && (!(plugin.lists.messagePlayers.contains(player.getUniqueId().toString())))){    			
-		    			        if(!((plugin.lang.prefix + " " + plugin.lang.noRidePlayer).equals(" "))){
-		    				        if(!(Piggyback.toggleCooldownPlayers.contains(player.getUniqueId()))){
-		    					        player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " " + (plugin.lang.noRidePlayer).replace("%player%", p.getDisplayName())));
-		    					        Piggyback.toggleCooldownPlayers.add(player.getUniqueId());
-		    					        new ToggleMessageCooldown(player).runTaskLater(plugin, plugin.config.messageCooldown);
-		    				        }
-		    			        }
-		    		        }
-		    		        return;
-		    	        }
+		            	if(plugin.lists.disabledPlayers.contains(player.getUniqueId().toString())){
+				    		if(!((plugin.lang.prefix + " " + plugin.lang.noRidePlayerToggle).equals(" "))){
+				    			player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " " + (plugin.lang.noRidePlayerToggle).replace("%player%", p.getDisplayName())));
+				    		}
+				    		return;
+				    	}
+				    	if(plugin.lists.disabledPlayers.contains(p.getUniqueId().toString())){        	  
+				    		if (plugin.config.send && (!(plugin.lists.messagePlayers.contains(player.getUniqueId().toString())))){    			
+				    			if(!((plugin.lang.prefix + " " + plugin.lang.noRidePlayer).equals(" "))){
+				    				if(!(Piggyback.toggleCooldownPlayers.contains(player.getUniqueId()))){
+				    					player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " " + (plugin.lang.noRidePlayer).replace("%player%", p.getDisplayName())));
+				    					Piggyback.toggleCooldownPlayers.add(player.getUniqueId());
+				    					new ToggleMessageCooldown(player).runTaskLater(plugin, plugin.config.messageCooldown);
+				    				}
+				    			}
+				    		}
+				    		return;
+				    	}
 		            }
 		            //call my ride event
 		            PiggybackRideEntityEvent rideEnt = new PiggybackRideEntityEvent(clicked, player);
