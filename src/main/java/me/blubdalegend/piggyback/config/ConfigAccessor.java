@@ -2,6 +2,7 @@ package me.blubdalegend.piggyback.config;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import org.bukkit.configuration.file.FileConfiguration;
 import me.blubdalegend.piggyback.Piggyback;
@@ -12,11 +13,11 @@ public class ConfigAccessor
 	
 	public Piggyback plugin;
 	
-	public static enum Clicks{
+	public enum Clicks{
 		  RIGHT, LEFT, EITHER
 	}
 	
-	public static enum Actions{
+	public enum Actions{
 		  RIDE, PICKUP
 	}
 	
@@ -31,7 +32,7 @@ public class ConfigAccessor
 	public boolean send;
 	public long messageCooldown;
 	public boolean requireEmptyHand;
-	public List<String> disabledEntities;
+	public List<String> disabledEntities = new ArrayList<>();
 	public List<String> disabledWorlds;
 	
 	public ConfigAccessor(Piggyback plugin){
@@ -40,44 +41,42 @@ public class ConfigAccessor
 		    
 	public void initConfig()
 	{
-		disabledEntities = new ArrayList<String>();
+		disabledEntities = new ArrayList<>();
 		disabledEntities.add("");
 	
-		disabledWorlds = new ArrayList<String>();
+		disabledWorlds = new ArrayList<>();
 		disabledWorlds.add("");
 		
 		f = plugin.getConfig();
 		f.options().header("PIGGYBACK CONFIGURATION FILE");
 		f.addDefault("general.clickType", "RIGHT");
-		f.addDefault("general.requireEmptyHand", Boolean.valueOf(true));
-		f.addDefault("general.pickUp.Cooldown", Long.valueOf(10L));
+		f.addDefault("general.requireEmptyHand", Boolean.TRUE);
+		f.addDefault("general.pickUp.Cooldown", 10L);
 		f.addDefault("general.clickAction", "PICKUP");	
 		//Pickup
-		f.addDefault("pickup.throwRiderAway", Boolean.valueOf(true));
-		f.addDefault("pickup.pickUpNPCs", Boolean.valueOf(false));		
+		f.addDefault("pickup.throwRiderAway", Boolean.TRUE);
+		f.addDefault("pickup.pickUpNPCs", Boolean.FALSE);
 		//Ride
-		f.addDefault("ride.onlyRidePlayers", Boolean.valueOf(true));
-		f.addDefault("ride.throwRiderAway", Boolean.valueOf(false));
-		f.addDefault("ride.rideNPC", Boolean.valueOf(false));
+		f.addDefault("ride.onlyRidePlayers", Boolean.TRUE);
+		f.addDefault("ride.rideNPC", Boolean.FALSE);
 		//messages
-		f.addDefault("messages.Send", Boolean.valueOf(true));
-		f.addDefault("messages.Cooldown", Long.valueOf(30L));
+		f.addDefault("messages.Send", Boolean.TRUE);
+		f.addDefault("messages.Cooldown", 30L);
 		f.addDefault("blacklists.entityBlacklist", disabledEntities);
 		f.addDefault("blacklists.worldBlacklist", disabledWorlds);
 	    
 		f.options().copyDefaults(true);
 		plugin.saveConfig();
 	    
-		clickType = Clicks.valueOf((f.getString("general.clickType")).toUpperCase());
+		clickType = Clicks.valueOf((Objects.requireNonNull(f.getString("general.clickType"))).toUpperCase());
 		requireEmptyHand = f.getBoolean("general.requireEmptyHand");
 		pickupCooldown = ((f.getLong("general.pickUp.Cooldown")) * 20);
-		actionType = Actions.valueOf((f.getString("general.clickAction")).toUpperCase());
+		actionType = Actions.valueOf((Objects.requireNonNull(f.getString("general.clickAction"))).toUpperCase());
 		//pickup
 		throwRiderPickup = f.getBoolean("pickup.throwRiderAway");
 		pickupNPC = f.getBoolean("pickup.pickUpNPCs");
 		//ride
 		onlyRidePlayers = f.getBoolean("ride.onlyRidePlayers");
-		throwRiderRide = f.getBoolean("ride.throwRiderAway");
 		rideNPC = f.getBoolean("ride.rideNPC");
 		//messages
 		send = f.getBoolean("messages.Send");
@@ -88,7 +87,7 @@ public class ConfigAccessor
 	
 	public List<String> uppercaseStringList(List<String> list)
 	{
-		List<String> newList = new ArrayList<String>();
+		List<String> newList = new ArrayList<>();
 		for(String s : list){
 			newList.add(s.toUpperCase());
 		}

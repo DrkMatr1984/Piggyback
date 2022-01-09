@@ -10,20 +10,24 @@ import me.blubdalegend.piggyback.Piggyback;
 public class LanguageFile
 {
 	private File languageFile;
-	private FileConfiguration language;
-	
+
 	public String title;
 	public String prefix;      
 	public String carryMsg;
 	public String dropMsg;
 	public String throwMsg;
+	public String rideMsg;
 	public String pickupCooldown;
+	public String rideCooldown;
 	public String noPickUpNPC;
+	public String noRideNPC;
 	public String emptyHand;
 	public String noPerms;
 	public String notAPlayer;
 	public String noPickUpPlayer;
 	public String noPickUpPlayerToggle;
+	public String noRidePlayer;
+	public String noRidePlayerToggle;
 	public String toggleOn;
 	public String toggleOff;
 	public String messageOn;
@@ -35,7 +39,7 @@ public class LanguageFile
 	public String helpToggle;
 	public String helpMessageToggle;
 	
-	private Piggyback plugin;
+	private final Piggyback plugin;
 	
 	public LanguageFile(Piggyback plugin){
 		this.plugin = plugin;
@@ -56,23 +60,28 @@ public class LanguageFile
 	}
 	  
 	public void loadLanguageFile(){
-		language = YamlConfiguration.loadConfiguration(languageFile);
+		FileConfiguration language = YamlConfiguration.loadConfiguration(languageFile);
 		title = language.getString("message.prefix");
 		prefix = "&f[&r" + title + "&f]&r";      
 	    carryMsg = language.getString("message.carry");
 		dropMsg = language.getString("message.drop");
 		throwMsg = language.getString("message.throw");
+		rideMsg = language.getString("message.ride");
 		pickupCooldown = language.getString("message.pickupCD");
+		rideCooldown = language.getString("message.rideCD");
 		toggleOn = language.getString("message.toggleOn");
 		toggleOff = language.getString("message.toggleOff");
 		messageOn = language.getString("message.messageOn");
 		messageOff = language.getString("message.messageOff");
 		noPickUpNPC = language.getString("message.noPickUpNPC");
+		noRideNPC = language.getString("message.noRideNPC");
 		emptyHand = language.getString("message.emptyHand");
 		noPerms = language.getString("message.noPerms");
 		notAPlayer = language.getString("message.notAPlayer");
 		noPickUpPlayer = language.getString("message.noPickUpPlayer");
-		noPickUpPlayerToggle = language.getString("message.noPickUpPlayerToggle");		
+		noPickUpPlayerToggle = language.getString("message.noPickUpPlayerToggle");
+		noRidePlayer = language.getString("message.noRidePlayer");
+		noRidePlayerToggle = language.getString("message.noRidePlayerToggle");
 		error = language.getString("message.error");		
 		help = language.getString("help.help");
 		helpMain = language.getString("help.main");
