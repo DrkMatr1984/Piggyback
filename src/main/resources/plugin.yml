@@ -1,8 +1,8 @@
 name: PiggyBack
-version: 2.1
+version: 2.2
 main: me.blubdalegend.piggyback.Piggyback
 api-version: 1.16
-softdepend: [Citizens]
+softdepend: [Citizens, PlaceholderAPI, MVdWPlaceholderAPI]
 authors: [DrkMatr1984, BlubDaLegend]
 description: Crouch, Click, Piggyback!
 commands:
