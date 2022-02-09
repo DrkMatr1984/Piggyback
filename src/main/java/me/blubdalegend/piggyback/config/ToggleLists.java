@@ -4,16 +4,19 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 
 import me.blubdalegend.piggyback.Piggyback;
+import org.jetbrains.annotations.NotNull;
 
 public class ToggleLists{
 	
 	private File usersFile;
-	private File dataFolder;
+	private final File dataFolder;
 	private FileConfiguration users;
 	private File messageFile;
 	private FileConfiguration message;
@@ -21,11 +24,11 @@ public class ToggleLists{
 	public List<String> disabledPlayers; 
 	public List<String> messagePlayers;
 	
-	private Piggyback plugin;
+	private final Piggyback plugin;
 	
 	public ToggleLists(Piggyback plugin){		
 		this.plugin = plugin;
-		dataFolder = new File(this.plugin.getDataFolder().toString()+"/data");
+		dataFolder = new File(this.plugin.getDataFolder() +"/data");
 	}
 		
 	public void initLists(){
@@ -57,12 +60,12 @@ public class ToggleLists{
 	  
 	public void loadUserList(){
 		//pickup toggle users
-		disabledPlayers = new ArrayList<String>();
+		disabledPlayers = new ArrayList<>();
 		users = YamlConfiguration.loadConfiguration(usersFile);
 		if(users.getStringList("DisabledPlayers")!=null && !users.getStringList("DisabledPlayers").isEmpty())
 			disabledPlayers = users.getStringList("DisabledPlayers");
 		//message toggle users
-		messagePlayers = new ArrayList<String>();
+		messagePlayers = new ArrayList<>();
 		message = YamlConfiguration.loadConfiguration(messageFile);
 		if(message.getStringList("DisabledPlayers") != null && !message.getStringList("DisabledPlayers").isEmpty())
 			messagePlayers = message.getStringList("DisabledPlayers");
@@ -107,6 +110,14 @@ public class ToggleLists{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}		
+	}
+
+	public boolean isDisabled(@NotNull Player p) {
+		return this.disabledPlayers.contains(p.getUniqueId().toString());
+	}
+	
+	public boolean isDisabled(@NotNull UUID id) {
+		return this.disabledPlayers.contains(id.toString());
 	}
 	
 }

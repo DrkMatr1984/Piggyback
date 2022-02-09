@@ -20,6 +20,7 @@ import java.util.Objects;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 public class PiggybackEventsListener implements org.bukkit.event.Listener
 {	
@@ -97,9 +98,11 @@ public class PiggybackEventsListener implements org.bukkit.event.Listener
 			timeLeft = df.format(time);
 			if(!Objects.equals(timeLeft, "0")){
 				if(!Piggyback.clickTimerCooldownPlayers.contains(player.getUniqueId())){
-					if(!((plugin.lang.prefix + " " + ((plugin.lang.pickupCooldown).replace("%time%", timeLeft))).equals(" "))){
-						player.sendMessage(ChatColor.translateAlternateColorCodes('&',plugin.lang.prefix + " " + ((plugin.lang.pickupCooldown).replace("%time%", timeLeft))));
-					}					
+					if (plugin.config.send && (!(plugin.lists.messagePlayers.contains(player.getUniqueId().toString())))) {
+						if(!((plugin.lang.prefix + " " + ((plugin.lang.pickupCooldown).replace("%time%", timeLeft))).equals(" "))){
+						    player.sendMessage(ChatColor.translateAlternateColorCodes('&',plugin.lang.prefix + " " + ((plugin.lang.pickupCooldown).replace("%time%", timeLeft))));
+						}
+				    }
 					Piggyback.clickTimerCooldownPlayers.add(player.getUniqueId());
 					new PickupClickCooldown(player).runTaskLater(plugin, 20);
 				}				
@@ -151,9 +154,11 @@ public class PiggybackEventsListener implements org.bukkit.event.Listener
 			timeLeft = df.format(time);
 			if(!Objects.equals(timeLeft, "0")){
 				if(!Piggyback.clickTimerCooldownPlayers.contains(player.getUniqueId())){
-					if(!((plugin.lang.prefix + " " + ((plugin.lang.rideCooldown).replace("%time%", timeLeft))).equals(" "))){
-						player.sendMessage(ChatColor.translateAlternateColorCodes('&',plugin.lang.prefix + " " + ((plugin.lang.rideCooldown).replace("%time%", timeLeft))));
-					}					
+					if (plugin.config.send && (!(plugin.lists.messagePlayers.contains(player.getUniqueId().toString())))) {
+					    if(!((plugin.lang.prefix + " " + ((plugin.lang.rideCooldown).replace("%time%", timeLeft))).equals(" "))){
+						    player.sendMessage(ChatColor.translateAlternateColorCodes('&',plugin.lang.prefix + " " + ((plugin.lang.rideCooldown).replace("%time%", timeLeft))));
+					    }
+					}
 					Piggyback.clickTimerCooldownPlayers.add(player.getUniqueId());
 					new PickupClickCooldown(player).runTaskLater(plugin, 20);
 				}				
@@ -190,7 +195,7 @@ public class PiggybackEventsListener implements org.bukkit.event.Listener
 		}
 	}
 	
-	public String getEntityName(Entity entity)
+	public String getEntityName(@NotNull Entity entity)
 	{
 		if(entity.getCustomName()!=null){
 			return entity.getCustomName();

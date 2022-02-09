@@ -1,7 +1,9 @@
 package me.blubdalegend.piggyback;
 
+import java.util.*;
 import java.util.logging.Logger;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
 import org.bukkit.plugin.PluginManager;
 
@@ -14,27 +16,21 @@ import me.blubdalegend.piggyback.listeners.PickupClickListener;
 import me.blubdalegend.piggyback.nms.NMStools;
 import me.drkmatr1984.customevents.CustomEvents;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
 import me.blubdalegend.piggyback.commands.Commands;
 
 public class Piggyback extends org.bukkit.plugin.java.JavaPlugin
 {
   private static Piggyback plugin;
-  private Logger log;
-  private PluginManager pm;
-  public ConfigAccessor config;
+    public ConfigAccessor config;
   public ToggleLists lists;
   public LanguageFile lang;
   
-  public static List<UUID> toggleCooldownPlayers = new ArrayList<UUID>();
-  public static List<UUID> emptyHandCooldownPlayers = new ArrayList<UUID>();
-  public static List<UUID> noPermsCooldownPlayers = new ArrayList<UUID>();
-  public static List<UUID> clickTimerCooldownPlayers = new ArrayList<UUID>();
-  public static HashMap<UUID,Long> piggybackPickupCooldownPlayers = new HashMap<UUID, Long>();
-  public static HashMap<UUID, List<Entity>> passengers = new HashMap<UUID, List<Entity>>();
+  public static List<UUID> toggleCooldownPlayers = new ArrayList<>();
+  public static List<UUID> emptyHandCooldownPlayers = new ArrayList<>();
+  public static List<UUID> noPermsCooldownPlayers = new ArrayList<>();
+  public static List<UUID> clickTimerCooldownPlayers = new ArrayList<>();
+  public static HashMap<UUID,Long> piggybackPickupCooldownPlayers = new HashMap<>();
+  public static HashMap<UUID, List<Entity>> passengers = new HashMap<>();
   public static String version;
   public String clazzName;
   public String sendPacket;
@@ -44,17 +40,26 @@ public class Piggyback extends org.bukkit.plugin.java.JavaPlugin
   public void onEnable()
   {
 	  plugin = this;
-	  log = getLogger();
-	  pm = getServer().getPluginManager();
+      Logger log = getLogger();
+      PluginManager pm = getServer().getPluginManager();
 	  version = NMStools.getNmsVersion().replace("_", "").toLowerCase();
 	  getVersion();
 	  initConfigs();	  
-	  getCommand("pback").setExecutor(new Commands(this));
+	  Objects.requireNonNull(getCommand("pback")).setExecutor(new Commands(this));
 	  new CustomEvents(plugin, false, true, false, false, false).initializeLib();
-	  this.pm.registerEvents(new PickupClickListener(plugin), plugin);
-	  this.pm.registerEvents(new BukkitListeners(), plugin);
-	  this.pm.registerEvents(new PiggybackEventsListener(plugin), plugin);
-	  this.log.info("Piggyback v" + plugin.getDescription().getVersion() + " enabled!");  
+	  pm.registerEvents(new PickupClickListener(plugin), plugin);
+	  pm.registerEvents(new BukkitListeners(), plugin);
+	  pm.registerEvents(new PiggybackEventsListener(plugin), plugin);
+      new PiggybackAPI(plugin);
+      if(Bukkit.getPluginManager().isPluginEnabled("MVdWPlaceholderAPI")) {
+      	  log.info("Hooked into MVdWPlaceholderAPI!");
+      	  new me.blubdalegend.piggyback.placeholders.mvdwPlaceholderAPI();
+      }
+      if(Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+      	log.info("Hooked into PlaceholderAPI!");
+      	new me.blubdalegend.piggyback.placeholders.PlaceholderAPI(plugin).register();
+      }
+	  log.info("Piggyback v" + plugin.getDescription().getVersion() + " enabled!");
   }
   
   public void onDisable(){
