@@ -1,6 +1,7 @@
 package me.blubdalegend.piggyback.config;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -24,7 +25,6 @@ public class ConfigAccessor
 	public Clicks clickType;
 	public Actions actionType;
 	public boolean onlyRidePlayers;
-	public boolean throwRiderRide; // Throw Rider instead of just dropping them
 	public boolean throwRiderPickup; // Throw Rider instead of just dropping them
 	public boolean rideNPC;
 	public boolean pickupNPC;
@@ -32,27 +32,32 @@ public class ConfigAccessor
 	public boolean send;
 	public long messageCooldown;
 	public boolean requireEmptyHand;
-	public List<String> disabledEntities = new ArrayList<>();
+	public List<String> disabledEntities;
+	public List<String> disabledCustomEntities;
 	public List<String> disabledWorlds;
 	
 	public ConfigAccessor(Piggyback plugin){
 		this.plugin = plugin;
 	}
 		    
+	@SuppressWarnings("deprecation")
 	public void initConfig()
 	{
 		disabledEntities = new ArrayList<>();
 		disabledEntities.add("");
-	
+		disabledCustomEntities = new ArrayList<>();
+		disabledCustomEntities.add("");
 		disabledWorlds = new ArrayList<>();
 		disabledWorlds.add("");
 		
 		f = plugin.getConfig();
-		f.options().header("PIGGYBACK CONFIGURATION FILE");
+		f.options().header("PIGGYBACK CONFIGURATION FILE");		
 		f.addDefault("general.clickType", "RIGHT");
+		f.setInlineComments("general.clickType", Arrays.asList("Possible options are RIGHT, LEFT, or EITHER"));
 		f.addDefault("general.requireEmptyHand", Boolean.TRUE);
 		f.addDefault("general.pickUp.Cooldown", 10L);
-		f.addDefault("general.clickAction", "PICKUP");	
+		f.addDefault("general.clickAction", "PICKUP");
+		f.setInlineComments("general.clickAction", Arrays.asList("Possible options are PICKUP or RIDE"));
 		//Pickup
 		f.addDefault("pickup.throwRiderAway", Boolean.TRUE);
 		f.addDefault("pickup.pickUpNPCs", Boolean.FALSE);
@@ -63,6 +68,9 @@ public class ConfigAccessor
 		f.addDefault("messages.Send", Boolean.TRUE);
 		f.addDefault("messages.Cooldown", 30L);
 		f.addDefault("blacklists.entityBlacklist", disabledEntities);
+		
+		f.addDefault("blacklists.customEntityBlacklist", disabledCustomEntities);
+		
 		f.addDefault("blacklists.worldBlacklist", disabledWorlds);
 	    
 		f.options().copyDefaults(true);
@@ -83,6 +91,7 @@ public class ConfigAccessor
 		messageCooldown = ((f.getLong("messages.Cooldown")) * 20);
 		disabledEntities = uppercaseStringList(f.getStringList("blacklists.entityBlacklist"));
 		disabledWorlds = uppercaseStringList(f.getStringList("blacklists.worldBlacklist"));
+		disabledCustomEntities = uppercaseStringList(f.getStringList("blacklists.customEntityBlacklist"));
 	}
 	
 	public List<String> uppercaseStringList(List<String> list)

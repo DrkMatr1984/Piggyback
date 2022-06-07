@@ -2,6 +2,8 @@ package me.blubdalegend.piggyback.listeners;
 
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.scheduler.BukkitRunnable;
+
 import me.blubdalegend.piggyback.Piggyback;
 import me.blubdalegend.piggyback.actions.ThrowEntity;
 import me.blubdalegend.piggyback.events.PiggybackDropEntityEvent;
@@ -21,10 +23,12 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import org.spigotmc.event.entity.EntityDismountEvent;
 
 public class PiggybackEventsListener implements org.bukkit.event.Listener
 {	
 	private final Piggyback plugin;
+	private List<Player> playersRiding = new ArrayList<Player>();
   
 	public PiggybackEventsListener(Piggyback plugin){
 		this.plugin = plugin;
@@ -177,6 +181,12 @@ public class PiggybackEventsListener implements org.bukkit.event.Listener
 			if(!riders.contains(player))
 				riders.add(player);
 			Piggyback.passengers.put(clicked.getUniqueId(),riders);
+			playersRiding.add(player);
+			new BukkitRunnable() {
+				@Override
+				public void run() {
+					playersRiding.remove(player);		
+				}}.runTaskLater(plugin, 25);
 		    if(!Objects.equals(Piggyback.version, "pre1_9")){
 				try{
 					NMStools.sendMountPacket();
@@ -192,6 +202,16 @@ public class PiggybackEventsListener implements org.bukkit.event.Listener
 		    		}
 		    	}
 		    }
+		}
+	}
+	
+	@EventHandler(priority=EventPriority.HIGHEST)
+	public void onEntityRideDismount(EntityDismountEvent event)
+	{
+		if(event.getEntity() instanceof Player) {
+			if(!playersRiding.isEmpty())
+				if(playersRiding.contains((Player) event.getEntity()))
+					event.setCancelled(true);
 		}
 	}
 	

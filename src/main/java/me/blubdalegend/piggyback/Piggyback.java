@@ -4,6 +4,7 @@ import java.util.*;
 import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Entity;
 import org.bukkit.plugin.PluginManager;
 
@@ -14,6 +15,9 @@ import me.blubdalegend.piggyback.listeners.PiggybackEventsListener;
 import me.blubdalegend.piggyback.listeners.BukkitListeners;
 import me.blubdalegend.piggyback.listeners.PickupClickListener;
 import me.blubdalegend.piggyback.nms.NMStools;
+import me.blubdalegend.piggyback.compatibility.Console;
+import me.blubdalegend.piggyback.compatibility.DenyPiggybackFlag;
+import me.blubdalegend.piggyback.compatibility.WorldGuardHook;
 import me.drkmatr1984.customevents.CustomEvents;
 
 import me.blubdalegend.piggyback.commands.Commands;
@@ -32,6 +36,8 @@ public class Piggyback extends org.bukkit.plugin.java.JavaPlugin
   public static HashMap<UUID,Long> piggybackPickupCooldownPlayers = new HashMap<>();
   public static HashMap<UUID, List<Entity>> passengers = new HashMap<>();
   public static String version;
+  private WorldGuardHook wgHook;
+  private DenyPiggybackFlag plotSquared;
   public String clazzName;
   public String sendPacket;
   public int Version;
@@ -59,7 +65,22 @@ public class Piggyback extends org.bukkit.plugin.java.JavaPlugin
       	log.info("Hooked into PlaceholderAPI!");
       	new me.blubdalegend.piggyback.placeholders.PlaceholderAPI(plugin).register();
       }
+      if(Bukkit.getPluginManager().isPluginEnabled("PlotSquared")) {
+    	  plotSquared = new DenyPiggybackFlag(false);
+    	  com.plotsquared.core.plot.flag.GlobalFlagContainer.getInstance().addFlag(plotSquared);
+    	  log.info("Hooked into PlotSquared! Flag is deny-piggyback");
+      }
 	  log.info("Piggyback v" + plugin.getDescription().getVersion() + " enabled!");
+  }
+  
+  @Override
+  public void onLoad() {
+  	// Worldguard Hook
+      if (Bukkit.getServer().getPluginManager().getPlugin("WorldGuard") != null) {
+          wgHook = new WorldGuardHook();
+          Console.sendConsoleMessage(String.format(ChatColor.GRAY + "[" + ChatColor.YELLOW + "Piggyback" + ChatColor.GRAY + "]" 
+          + ChatColor.GREEN + " hooked into worldguard! Flag trails-flag registered. Set \"allow-piggyback = DENY\" = DENY to deny piggyback in regions."));
+      }
   }
   
   public void onDisable(){
@@ -88,5 +109,13 @@ public class Piggyback extends org.bukkit.plugin.java.JavaPlugin
   public static Piggyback getPlugin()
   {
 	  return plugin;
+  }
+
+  public WorldGuardHook getWgHook() {
+	  return wgHook;
+  }
+  
+  public DenyPiggybackFlag getPlotSquared() {
+	  return plotSquared;
   }
 }

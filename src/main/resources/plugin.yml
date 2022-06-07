@@ -1,8 +1,8 @@
 name: PiggyBack
-version: 2.2
+version: 2.3
 main: me.blubdalegend.piggyback.Piggyback
 api-version: 1.16
-softdepend: [Citizens, PlaceholderAPI, MVdWPlaceholderAPI]
+softdepend: [Citizens, PlaceholderAPI, MVdWPlaceholderAPI, WorldGuard]
 authors: [DrkMatr1984, BlubDaLegend]
 description: Crouch, Click, Piggyback!
 commands:
@@ -17,13 +17,13 @@ commands:
         description: Toggle Piggyback messages
 permissions:
     piggyback.use:
-        description: Allows the user to pick up entities and players, providing the player being picked up is not toggled off
+        description: Allows the user to pick up/ride entities and players, providing the player being picked up/ridden is not toggled off
         default: true
     piggyback.help:
         description: Allows the user to view the /pback help
         default: true
     piggyback.toggle:
-        description: Allows the user to toggle on/off their ability to be picked up
+        description: Allows the user to toggle on/off their ability to be picked up/ridden
         default: op
     piggyback.messages:
         description: Allows the user to toggle on/off piggyback messages for themselves
