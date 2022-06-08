@@ -3,6 +3,7 @@ package me.blubdalegend.piggyback;
 import java.util.*;
 import java.util.logging.Logger;
 
+import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Entity;
@@ -25,7 +26,7 @@ import me.blubdalegend.piggyback.commands.Commands;
 public class Piggyback extends org.bukkit.plugin.java.JavaPlugin
 {
   private static Piggyback plugin;
-    public ConfigAccessor config;
+  public ConfigAccessor config;
   public ToggleLists lists;
   public LanguageFile lang;
   
@@ -70,7 +71,11 @@ public class Piggyback extends org.bukkit.plugin.java.JavaPlugin
     	  com.plotsquared.core.plot.flag.GlobalFlagContainer.getInstance().addFlag(plotSquared);
     	  log.info("Hooked into PlotSquared! Flag is deny-piggyback");
       }
-	  log.info("Piggyback v" + plugin.getDescription().getVersion() + " enabled!");
+      if(this.config.bStats) {
+          new Metrics(this, 15398);
+          log.info("Starting bStats...");
+      }      
+      log.info("Piggyback v" + plugin.getDescription().getVersion() + " enabled!");
   }
   
   @Override

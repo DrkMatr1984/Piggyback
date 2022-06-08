@@ -33,6 +33,8 @@ public class LanguageFile
 	public String messageOn;
 	public String messageOff;
 	public String error;
+	public String reload;
+	public String helpReload;
 	
 	public String help;
 	public String helpMain;
@@ -82,11 +84,13 @@ public class LanguageFile
 		noPickUpPlayerToggle = language.getString("message.noPickUpPlayerToggle");
 		noRidePlayer = language.getString("message.noRidePlayer");
 		noRidePlayerToggle = language.getString("message.noRidePlayerToggle");
-		error = language.getString("message.error");		
+		error = language.getString("message.error");
+		reload = language.getString("message.reload");
 		help = language.getString("help.help");
 		helpMain = language.getString("help.main");
 		helpToggle = language.getString("help.toggle");
 		helpMessageToggle = language.getString("help.messageToggle");
+		helpReload = language.getString("help.reload");
 	}
 }
 

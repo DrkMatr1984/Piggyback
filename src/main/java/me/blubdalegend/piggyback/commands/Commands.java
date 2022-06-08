@@ -27,13 +27,7 @@ public class Commands implements CommandExecutor
 				}
 				if ((args.length == 0) || (args.equals(null)))
 			    {
-					if(sender.hasPermission("piggyback.help")){
-						displayHelp((Player)sender);
-					}else{
-			       		if(!((plugin.lang.prefix + " " + plugin.lang.noPerms).equals(" "))){
-			       			sender.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " " + plugin.lang.noPerms));
-			       		}	
-			       	}					
+					displayHelp((Player)sender);			
 			    }else if(args.length > 0){
 					for(String s : args){
 						if((s.toLowerCase()).equals("toggle")){
@@ -79,8 +73,15 @@ public class Commands implements CommandExecutor
 					       	}
 						}
 						if((s.toLowerCase()).equals("help")){
-							if(sender.hasPermission("piggyback.help")){
-								displayHelp((Player)sender);
+							displayHelp((Player)sender);
+						}
+						if((s.toLowerCase()).equals("reload")){
+							if(sender.hasPermission("piggyback.reload")){
+								plugin.lang.loadLanguageFile();
+								plugin.config.loadConfig();
+								if(!((plugin.lang.prefix + " " + plugin.lang.reload).equals(" "))){
+					       			sender.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " " + plugin.lang.reload));
+					       		}
 							}else{
 					       		if(!((plugin.lang.prefix + " " + plugin.lang.noPerms).equals(" "))){
 					       			sender.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " " + plugin.lang.noPerms));
@@ -107,6 +108,8 @@ public class Commands implements CommandExecutor
 			player.sendMessage(ChatColor.translateAlternateColorCodes('&',"&7/&epback &btoggle &7- &r" + plugin.lang.helpToggle));
 		if(player.hasPermission("piggyback.messages") || player.isOp())
 			player.sendMessage(ChatColor.translateAlternateColorCodes('&',"&7/&epback &3messages &7- &r" + plugin.lang.helpMessageToggle));
+		if(player.hasPermission("piggyback.reload") || player.isOp())
+			player.sendMessage(ChatColor.translateAlternateColorCodes('&',"&7/&epback &8reload &7- &r" + plugin.lang.helpReload));
 		player.sendMessage("");
 		int j = ((plugin.lang.title + " " + plugin.lang.help).length());
 		String s = "";

@@ -24,6 +24,7 @@ public class ConfigAccessor
 	
 	public Clicks clickType;
 	public Actions actionType;
+	public boolean bStats;
 	public boolean onlyRidePlayers;
 	public boolean throwRiderPickup; // Throw Rider instead of just dropping them
 	public boolean rideNPC;
@@ -51,7 +52,8 @@ public class ConfigAccessor
 		disabledWorlds.add("");
 		
 		f = plugin.getConfig();
-		f.options().header("PIGGYBACK CONFIGURATION FILE");		
+		f.options().header("PIGGYBACK CONFIGURATION FILE");
+		f.addDefault("general.bStatsMetrics", Boolean.TRUE);
 		f.addDefault("general.clickType", "RIGHT");
 		f.setInlineComments("general.clickType", Arrays.asList("Possible options are RIGHT, LEFT, or EITHER"));
 		f.addDefault("general.requireEmptyHand", Boolean.TRUE);
@@ -75,7 +77,12 @@ public class ConfigAccessor
 	    
 		f.options().copyDefaults(true);
 		plugin.saveConfig();
-	    
+		
+	    loadConfig();		
+	}
+	
+	public void loadConfig() {
+		bStats = f.getBoolean("general.bStatsMetrics");
 		clickType = Clicks.valueOf((Objects.requireNonNull(f.getString("general.clickType"))).toUpperCase());
 		requireEmptyHand = f.getBoolean("general.requireEmptyHand");
 		pickupCooldown = ((f.getLong("general.pickUp.Cooldown")) * 20);
@@ -94,7 +101,7 @@ public class ConfigAccessor
 		disabledCustomEntities = uppercaseStringList(f.getStringList("blacklists.customEntityBlacklist"));
 	}
 	
-	public List<String> uppercaseStringList(List<String> list)
+	private List<String> uppercaseStringList(List<String> list)
 	{
 		List<String> newList = new ArrayList<>();
 		for(String s : list){

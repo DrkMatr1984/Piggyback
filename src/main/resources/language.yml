@@ -20,8 +20,10 @@ message:
   noPerms: "&cSorry, you don't have permission to do that :(&r"
   notAPlayer: "&cYou're not a player! You can't toggle being picked up!&r"
   error: '&4An Error has Occured!&r'
+  reload: "&aConfigs and Language file have been reloaded successfully"
 help:
   help: '&aHelp'
   main: '&fDisplays this Help'
   toggle: '&fToggle Ability to be picked up &aon&f/&coff'
   messageToggle: '&fToggle Piggyback messages &aon&f/&coff'
+  reload: "&fReload Piggyback Configs and Language file"

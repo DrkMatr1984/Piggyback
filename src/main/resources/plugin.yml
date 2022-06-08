@@ -15,12 +15,11 @@ commands:
         description: Toggle your ability to be picked up
     pback messages:
         description: Toggle Piggyback messages
+    pback reload:
+        description: Reload Piggyback config and language file
 permissions:
     piggyback.use:
         description: Allows the user to pick up/ride entities and players, providing the player being picked up/ridden is not toggled off
-        default: true
-    piggyback.help:
-        description: Allows the user to view the /pback help
         default: true
     piggyback.toggle:
         description: Allows the user to toggle on/off their ability to be picked up/ridden
@@ -30,4 +29,7 @@ permissions:
         default: op
     piggyback.cooldown.bypass:
         description: Bypass the pickup cooldown
+        default: op
+    piggyback.reload:
+        description: Reload Piggyback config and language file
         default: op
