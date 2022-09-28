@@ -24,12 +24,12 @@ public class PiggybackAPI
 		return plugin.lists.isDisabled(id);
 	}
 	
-	public static void setDisabled(Player p) {
-		plugin.lists.setDisabled(p);
+	public static void setDisabled(Player p, boolean b) {
+		plugin.lists.setDisabled(p, b);
 	}
 	
-	public static void setDisabled(UUID id) {
-		plugin.lists.setDisabled(id);
+	public static void setDisabled(UUID id, boolean b) {
+		plugin.lists.setDisabled(id, b);
 	}
 	
 	public static boolean hasMessagesDisabled(@NotNull Player p) {
@@ -40,12 +40,24 @@ public class PiggybackAPI
 		return plugin.lists.messagePlayers.contains(id.toString());
 	}
 	
-	public static void setMessagesDisabled(@NotNull Player p) {
-		plugin.lists.messagePlayers.add(p.getUniqueId().toString());
+	public static void setMessagesDisabled(@NotNull Player p, boolean b) {
+		if(b) {
+			if(!plugin.lists.messagePlayers.contains(p.getUniqueId().toString()))
+		        plugin.lists.messagePlayers.add(p.getUniqueId().toString());
+		}else {
+			if(plugin.lists.messagePlayers.contains(p.getUniqueId().toString()))
+		        plugin.lists.messagePlayers.remove(p.getUniqueId().toString());
+		}
 	}
 	
-	public static void setMessagesDisabled(@NotNull UUID id) {
-		plugin.lists.messagePlayers.add(id.toString());
+	public static void setMessagesDisabled(@NotNull UUID id, boolean b) {
+		if(b) {
+			if(!plugin.lists.messagePlayers.contains(id.toString()))
+		        plugin.lists.messagePlayers.add(id.toString());
+		}else {
+			if(plugin.lists.messagePlayers.contains(id.toString()))
+		        plugin.lists.messagePlayers.remove(id.toString());
+		}
 	}
 	
 	public static double getCurrentPickupCooldown(UUID id) {

@@ -120,12 +120,24 @@ public class ToggleLists{
 		return this.disabledPlayers.contains(id.toString());
 	}
 	
-	public void setDisabled(@NotNull Player p) {
-		this.disabledPlayers.add(p.getUniqueId().toString());
+	public void setDisabled(@NotNull Player p, boolean b) {
+		if(b) {
+			if(!this.disabledPlayers.contains(p.getUniqueId().toString()))
+		        this.disabledPlayers.add(p.getUniqueId().toString());
+		}else {
+			if(this.disabledPlayers.contains(p.getUniqueId().toString()))
+				this.disabledPlayers.remove(p.getUniqueId().toString());
+		}
 	}
 	
-	public void setDisabled(@NotNull UUID id) {
-		this.disabledPlayers.add(id.toString());
+	public void setDisabled(@NotNull UUID id, boolean b) {
+		if(b) {
+			if(!this.disabledPlayers.contains(id.toString()))
+		        this.disabledPlayers.add(id.toString());
+		}else {
+			if(this.disabledPlayers.contains(id.toString()))
+				this.disabledPlayers.remove(id.toString());
+		}
 	}
 	
 }

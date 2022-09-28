@@ -95,7 +95,7 @@ public class Piggyback extends org.bukkit.plugin.java.JavaPlugin
       if (Bukkit.getServer().getPluginManager().getPlugin("WorldGuard") != null) {
           wgHook = new WorldGuardHook();
           Console.sendConsoleMessage(String.format(ChatColor.GRAY + "[" + ChatColor.YELLOW + "Piggyback" + ChatColor.GRAY + "]" 
-          + ChatColor.GREEN + " hooked into worldguard! Flag allow-piggyback registered. Set \"allow-piggyback = DENY\" = DENY to deny piggyback in regions."));
+          + ChatColor.GREEN + " hooked into worldguard! Flag allow-piggyback registered. Set \"allow-piggyback = DENY\" to deny piggyback in regions."));
       }
   }
   
