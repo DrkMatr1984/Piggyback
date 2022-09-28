@@ -1,3 +1,9 @@
+## Placeholders
+## %passenger% - The passenger being picked up
+## %clicked% - The person clicked upon
+## %time% - time for cooldowns
+## %player% - player being referred to
+command: 'pback'
 message:
   prefix: '&6Piggyback'
   carry: '&aPicked up &e%passenger%&r'
@@ -8,8 +14,12 @@ message:
   rideCD: '&cYou can''t ride anything else for &f%time%&c seconds'
   toggleOn: '&aYou may now be picked up by other players!'
   toggleOff: '&cYou may no longer be picked up by other players!'
+  toggleOnOther: "&e%player% &amay now be picked up by other players!"
+  toggleOffOther: "&e%player% &cmay no longer be picked up by other players!"
   messageOn: '&aYou will now receive Piggyback info messages!'
   messageOff: '&cYou will no longer receive Piggyback info messages!'
+  messageOnOther: '&e%player% &awill now receive Piggyback info messages!'
+  messageOffOther: '&e%player% &cwill no longer receive Piggyback info messages!'
   noPickUpNPC: '&cYou can''t pick up NPCs!&r'
   noRideNPC: '&cYou can''t ride NPCs!&r'
   emptyHand: '&cYour hands must be free to pick things up'
@@ -19,11 +29,14 @@ message:
   noRidePlayerToggle: '&cSorry, you cannot ride &e%player%&c while &etoggled &7off'
   noPerms: "&cSorry, you don't have permission to do that :(&r"
   notAPlayer: "&cYou're not a player! You can't toggle being picked up!&r"
+  hasNotPlayed: "%player% has not played on this server before."
   error: '&4An Error has Occured!&r'
   reload: "&aConfigs and Language file have been reloaded successfully"
 help:
   help: '&aHelp'
   main: '&fDisplays this Help'
   toggle: '&fToggle Ability to be picked up &aon&f/&coff'
+  toggleOther: '&fToggle Ability to be picked up &aon&f/&coff for other players'
   messageToggle: '&fToggle Piggyback messages &aon&f/&coff'
+  messageToggleOther: '&fToggle Piggyback messages &aon&f/&coff for other players'
   reload: "&fReload Piggyback Configs and Language file"

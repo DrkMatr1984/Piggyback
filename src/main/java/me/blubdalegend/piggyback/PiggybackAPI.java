@@ -24,12 +24,28 @@ public class PiggybackAPI
 		return plugin.lists.isDisabled(id);
 	}
 	
+	public static void setDisabled(Player p) {
+		plugin.lists.setDisabled(p);
+	}
+	
+	public static void setDisabled(UUID id) {
+		plugin.lists.setDisabled(id);
+	}
+	
 	public static boolean hasMessagesDisabled(@NotNull Player p) {
 		return plugin.lists.messagePlayers.contains(p.getUniqueId().toString());
 	}
 	
 	public static boolean hasMessagesDisabled(@NotNull UUID id) {
 		return plugin.lists.messagePlayers.contains(id.toString());
+	}
+	
+	public static void setMessagesDisabled(@NotNull Player p) {
+		plugin.lists.messagePlayers.add(p.getUniqueId().toString());
+	}
+	
+	public static void setMessagesDisabled(@NotNull UUID id) {
+		plugin.lists.messagePlayers.add(id.toString());
 	}
 	
 	public static double getCurrentPickupCooldown(UUID id) {

@@ -11,6 +11,7 @@ public class LanguageFile
 {
 	private File languageFile;
 
+	public String command;
 	public String title;
 	public String prefix;      
 	public String carryMsg;
@@ -30,16 +31,23 @@ public class LanguageFile
 	public String noRidePlayerToggle;
 	public String toggleOn;
 	public String toggleOff;
+	public String toggleOnOther;
+	public String toggleOffOther;
 	public String messageOn;
 	public String messageOff;
+	public String messageOnOther;
+	public String messageOffOther;
 	public String error;
+	public String hasNotPlayed;
 	public String reload;
 	public String helpReload;
 	
 	public String help;
 	public String helpMain;
 	public String helpToggle;
+	public String helpToggleOther;
 	public String helpMessageToggle;
+	public String helpMessageToggleOther;
 	
 	private final Piggyback plugin;
 	
@@ -63,6 +71,7 @@ public class LanguageFile
 	  
 	public void loadLanguageFile(){
 		FileConfiguration language = YamlConfiguration.loadConfiguration(languageFile);
+		command = language.getString("command");
 		title = language.getString("message.prefix");
 		prefix = "&f[&r" + title + "&f]&r";      
 	    carryMsg = language.getString("message.carry");
@@ -73,8 +82,12 @@ public class LanguageFile
 		rideCooldown = language.getString("message.rideCD");
 		toggleOn = language.getString("message.toggleOn");
 		toggleOff = language.getString("message.toggleOff");
+		toggleOnOther = language.getString("message.toggleOnOther");
+		toggleOffOther = language.getString("message.toggleOffOther");
 		messageOn = language.getString("message.messageOn");
 		messageOff = language.getString("message.messageOff");
+		messageOnOther = language.getString("message.messageOnOther");
+		messageOffOther = language.getString("message.messageOffOther");
 		noPickUpNPC = language.getString("message.noPickUpNPC");
 		noRideNPC = language.getString("message.noRideNPC");
 		emptyHand = language.getString("message.emptyHand");
@@ -85,11 +98,14 @@ public class LanguageFile
 		noRidePlayer = language.getString("message.noRidePlayer");
 		noRidePlayerToggle = language.getString("message.noRidePlayerToggle");
 		error = language.getString("message.error");
+		hasNotPlayed = language.getString("message.hasNotPlayed");
 		reload = language.getString("message.reload");
 		help = language.getString("help.help");
 		helpMain = language.getString("help.main");
 		helpToggle = language.getString("help.toggle");
+		helpToggleOther = language.getString("help.toggleOther");
 		helpMessageToggle = language.getString("help.messageToggle");
+		helpMessageToggleOther = language.getString("help.messageToggleOther");
 		helpReload = language.getString("help.reload");
 	}
 }

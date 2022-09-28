@@ -5,18 +5,7 @@ api-version: 1.16
 softdepend: [Citizens, PlaceholderAPI, MVdWPlaceholderAPI, WorldGuard]
 authors: [DrkMatr1984, BlubDaLegend]
 description: Crouch, Click, Piggyback!
-commands:
-    pback:
-        description: Main Piggyback command, also displays help
-        aliases: [piggyback, piggyb, pb]
-    pback help:
-        description: Displays the help page
-    pback toggle:
-        description: Toggle your ability to be picked up
-    pback messages:
-        description: Toggle Piggyback messages
-    pback reload:
-        description: Reload Piggyback config and language file
+
 permissions:
     piggyback.use:
         description: Allows the user to pick up/ride entities and players, providing the player being picked up/ridden is not toggled off
@@ -24,8 +13,14 @@ permissions:
     piggyback.toggle:
         description: Allows the user to toggle on/off their ability to be picked up/ridden
         default: op
+    piggyback.toggle.other:
+        description: Allows the user to toggle on/off other users' ability to be picked up/ridden
+        default: op
     piggyback.messages:
         description: Allows the user to toggle on/off piggyback messages for themselves
+        default: op
+    piggyback.messages.other:
+        description: Allows the user to toggle on/off piggyback messages for others
         default: op
     piggyback.cooldown.bypass:
         description: Bypass the pickup cooldown

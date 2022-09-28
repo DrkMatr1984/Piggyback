@@ -52,14 +52,15 @@ public class ConfigAccessor
 		disabledWorlds.add("");
 		
 		f = plugin.getConfig();
-		f.options().header("PIGGYBACK CONFIGURATION FILE");
+		f.options().header("PIGGYBACK CONFIGURATION FILE");	
 		f.addDefault("general.bStatsMetrics", Boolean.TRUE);
+		f.setComments("general.bStatsMetrics", Arrays.asList("Enable bStats metrics"));
 		f.addDefault("general.clickType", "RIGHT");
-		f.setInlineComments("general.clickType", Arrays.asList("Possible options are RIGHT, LEFT, or EITHER"));
+		f.setComments("general.clickType", Arrays.asList("Possible options are RIGHT, LEFT, or EITHER"));
 		f.addDefault("general.requireEmptyHand", Boolean.TRUE);
 		f.addDefault("general.pickUp.Cooldown", 10L);
 		f.addDefault("general.clickAction", "PICKUP");
-		f.setInlineComments("general.clickAction", Arrays.asList("Possible options are PICKUP or RIDE"));
+		f.setComments("general.clickAction", Arrays.asList("Possible options are PICKUP or RIDE"));
 		//Pickup
 		f.addDefault("pickup.throwRiderAway", Boolean.TRUE);
 		f.addDefault("pickup.pickUpNPCs", Boolean.FALSE);

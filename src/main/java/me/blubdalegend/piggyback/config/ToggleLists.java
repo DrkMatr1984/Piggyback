@@ -120,4 +120,12 @@ public class ToggleLists{
 		return this.disabledPlayers.contains(id.toString());
 	}
 	
+	public void setDisabled(@NotNull Player p) {
+		this.disabledPlayers.add(p.getUniqueId().toString());
+	}
+	
+	public void setDisabled(@NotNull UUID id) {
+		this.disabledPlayers.add(id.toString());
+	}
+	
 }

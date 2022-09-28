@@ -181,12 +181,17 @@ public class PiggybackEventsListener implements org.bukkit.event.Listener
 			if(!riders.contains(player))
 				riders.add(player);
 			Piggyback.passengers.put(clicked.getUniqueId(),riders);
+			
+			//Disallow dismount for a time so riding players don't fall right off
 			playersRiding.add(player);
 			new BukkitRunnable() {
 				@Override
 				public void run() {
-					playersRiding.remove(player);		
+					if(playersRiding.contains(player))
+						playersRiding.remove(player);		
 				}}.runTaskLater(plugin, 25);
+				
+			//send mount packet for some older versions
 		    if(!Objects.equals(Piggyback.version, "pre1_9")){
 				try{
 					NMStools.sendMountPacket();

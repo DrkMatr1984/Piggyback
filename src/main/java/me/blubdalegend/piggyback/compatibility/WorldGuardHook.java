@@ -1,7 +1,6 @@
 package me.blubdalegend.piggyback.compatibility;
 
 import org.bukkit.Location;
-import org.bukkit.World;
 import org.bukkit.entity.Player;
 
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
@@ -42,17 +41,7 @@ public class WorldGuardHook
 	public boolean canPickup(Player player, Location location) {
 		RegionQuery query = WorldGuard.getInstance().getPlatform().getRegionContainer().createQuery();
 		com.sk89q.worldedit.util.Location loc = BukkitAdapter.adapt(location);
-		if (hasBypass(player, location)) {
-			return true;
-		}else  {
-			return query.testState(loc, getLocalPlayer(player), PIGGYBACK_FLAG);
-		}
-	}
-
-	// technically the bypass check inst needed but if it doesnt function properly it can be removed with no issues
-	public boolean hasBypass(Player player, Location location) {
-		World world = location.getWorld();
-		return WorldGuard.getInstance().getPlatform().getSessionManager().hasBypass(getLocalPlayer(player), BukkitAdapter.adapt(world));
+		return query.testState(loc, getLocalPlayer(player), PIGGYBACK_FLAG);
 	}
 
 	private LocalPlayer getLocalPlayer(Player player) {

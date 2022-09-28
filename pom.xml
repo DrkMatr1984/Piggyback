@@ -52,12 +52,12 @@
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
-            <version>1.18.1-R0.1-SNAPSHOT</version>
+            <version>1.18.2-R0.1-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot</artifactId>
-            <version>1.18.1-R0.1-SNAPSHOT</version>
+            <version>1.18.2-R0.1-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>me.drkmatr1984</groupId>
@@ -143,7 +143,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>3.2.0</version>
+                <version>3.3.0</version>
                 <executions>
                     <execution>
                         <phase>package</phase>
@@ -151,10 +151,18 @@
                             <goal>shade</goal>
                         </goals>
                         <configuration>
+                            <relocations>
+                                <relocation>
+                                    <pattern>org.bstats</pattern>
+                                    <!-- Replace this with your package! -->
+                                    <shadedPattern>me.blubdalegend.piggyback</shadedPattern>
+                                </relocation>
+                            </relocations>
                             <artifactSet>
                                 <includes>
                                     <include>me.drkmatr1984:customevents</include>
                                     <include>org.bstats:bstats-bukkit</include>
+                                    <include>org.bstats:bstats-base</include>
                                 </includes>
                             </artifactSet>
                         </configuration>
