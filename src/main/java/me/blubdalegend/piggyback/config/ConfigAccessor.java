@@ -1,5 +1,6 @@
 package me.blubdalegend.piggyback.config;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -36,6 +37,8 @@ public class ConfigAccessor
 	public List<String> disabledEntities;
 	public List<String> disabledCustomEntities;
 	public List<String> disabledWorlds;
+	public String storageType;
+	public String sqliteFilename = "pback.db";
 	
 	public ConfigAccessor(Piggyback plugin){
 		this.plugin = plugin;

@@ -1,0 +1,28 @@
+# PIGGYBACK CONFIGURATION FILE
+
+pickup:
+  throwRiderAway: true
+  pickUpNPCs: false
+ride:
+  onlyRidePlayers: true
+  rideNPC: false
+messages:
+  Send: true
+  Cooldown: 30
+blacklists:
+  entityBlacklist:
+  - ''
+  customEntityBlacklist:
+  - ''
+  worldBlacklist:
+  - ''
+general:
+  # Enable bStats metrics
+  bStatsMetrics: true
+  # Possible options are RIGHT, LEFT, or EITHER
+  clickType: RIGHT
+  requireEmptyHand: true
+  pickUp:
+    Cooldown: 10
+  # Possible options are PICKUP or RIDE
+  clickAction: PICKUP

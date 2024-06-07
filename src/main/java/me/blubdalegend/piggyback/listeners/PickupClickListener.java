@@ -91,32 +91,17 @@ public class PickupClickListener implements org.bukkit.event.Listener
 					    	return;
 					    }
 					    if(plugin.config.requireEmptyHand){
-							if(!Objects.equals(Piggyback.version, "pre1_9")){
-								if(player.getInventory().getItemInMainHand().getType()!=Material.AIR){
-									if (plugin.config.send && (!(plugin.lists.messagePlayers.contains(player.getUniqueId().toString())))){
-										if(!((plugin.lang.prefix + " " + plugin.lang.emptyHand).equals(" "))){
-											if(!(Piggyback.emptyHandCooldownPlayers.contains(player.getUniqueId()))){
-												player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " " + plugin.lang.emptyHand));
-												Piggyback.emptyHandCooldownPlayers.add(player.getUniqueId());
-												new EmptyHandMessageCooldown(player).runTaskLater(plugin, plugin.config.messageCooldown);
-											}
-										}
-									}								
-									return;
-								}
-							}else{
-								if(player.getItemInHand().getType()!=Material.AIR){
-									if (plugin.config.send && (!(plugin.lists.messagePlayers.contains(player.getUniqueId().toString())))){
-										if(!((plugin.lang.prefix + " " + plugin.lang.emptyHand).equals(" "))){
-											if(!(Piggyback.emptyHandCooldownPlayers.contains(player.getUniqueId()))){
-												player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " " + plugin.lang.emptyHand));
-												Piggyback.emptyHandCooldownPlayers.add(player.getUniqueId());
-												new EmptyHandMessageCooldown(player).runTaskLater(plugin, plugin.config.messageCooldown);
-											}
+							if(player.getItemInHand().getType()!=Material.AIR){
+								if (plugin.config.send && (!(plugin.lists.messagePlayers.contains(player.getUniqueId().toString())))){
+									if(!((plugin.lang.prefix + " " + plugin.lang.emptyHand).equals(" "))){
+										if(!(Piggyback.emptyHandCooldownPlayers.contains(player.getUniqueId()))){
+											player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " " + plugin.lang.emptyHand));
+											Piggyback.emptyHandCooldownPlayers.add(player.getUniqueId());
+											new EmptyHandMessageCooldown(player).runTaskLater(plugin, plugin.config.messageCooldown);
 										}
 									}
-									return;
 								}
+								return;
 							}
 						}
 					    if(clicked instanceof Player p)
@@ -143,9 +128,9 @@ public class PickupClickListener implements org.bukkit.event.Listener
 					    if(plugin.getWgHook()!=null)
 						    if(!plugin.getWgHook().canPickup(player, clicked.getLocation()))
 						    	return;
-					    if(plugin.getPlotSquared()!=null)
+					   /* if(plugin.getPlotSquared()!=null)
 						    if(!plugin.getPlotSquared().canPiggyback(clicked.getLocation()))
-						    	return;
+						    	return; */
 					    //call my pickup event
 					    PiggybackPickupEntityEvent pickupEnt = new PiggybackPickupEntityEvent(clicked, player);
 					    Bukkit.getServer().getPluginManager().callEvent(pickupEnt);
@@ -230,34 +215,19 @@ public class PickupClickListener implements org.bukkit.event.Listener
 					    	return;
 					    }
 					    if(plugin.config.requireEmptyHand){
-							if(!Objects.equals(Piggyback.version, "pre1_9")){
-								if(player.getInventory().getItemInMainHand().getType()!=Material.AIR){
-									if (plugin.config.send && (!(plugin.lists.messagePlayers.contains(player.getUniqueId().toString())))){
-										if(!((plugin.lang.prefix + " " + plugin.lang.emptyHand).equals(" "))){
-											if(!(Piggyback.emptyHandCooldownPlayers.contains(player.getUniqueId()))){
-												player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " " + plugin.lang.emptyHand));
-												Piggyback.emptyHandCooldownPlayers.add(player.getUniqueId());
-												new EmptyHandMessageCooldown(player).runTaskLater(plugin, plugin.config.messageCooldown);
-											}
-										}
-									}								
-									return;
-								}
-							}else{
-								if(player.getItemInHand().getType()!=Material.AIR){
-									if (plugin.config.send && (!(plugin.lists.messagePlayers.contains(player.getUniqueId().toString())))){
-										if(!((plugin.lang.prefix + " " + plugin.lang.emptyHand).equals(" "))){
-											if(!(Piggyback.emptyHandCooldownPlayers.contains(player.getUniqueId()))){
-												player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " " + plugin.lang.emptyHand));
-												Piggyback.emptyHandCooldownPlayers.add(player.getUniqueId());
-												new EmptyHandMessageCooldown(player).runTaskLater(plugin, plugin.config.messageCooldown);
-											}
+							if(player.getItemInHand().getType()!=Material.AIR){
+								if (plugin.config.send && (!(plugin.lists.messagePlayers.contains(player.getUniqueId().toString())))){
+									if(!((plugin.lang.prefix + " " + plugin.lang.emptyHand).equals(" "))){
+										if(!(Piggyback.emptyHandCooldownPlayers.contains(player.getUniqueId()))){
+											player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " " + plugin.lang.emptyHand));
+											Piggyback.emptyHandCooldownPlayers.add(player.getUniqueId());
+											new EmptyHandMessageCooldown(player).runTaskLater(plugin, plugin.config.messageCooldown);
 										}
 									}
-									return;
 								}
+								return;
 							}
-						}
+						}						
 					    if(clicked instanceof Player p)
 			            {
 			            	if(plugin.lists.disabledPlayers.contains(player.getUniqueId().toString())){
@@ -279,9 +249,9 @@ public class PickupClickListener implements org.bukkit.event.Listener
 					    		return;
 					    	}
 			            }
-					    if(plugin.getPlotSquared()!=null)
+					   /* if(plugin.getPlotSquared()!=null)
 						    if(!plugin.getPlotSquared().canPiggyback(clicked.getLocation()))
-						    	return;
+						    	return; */
 					    if(plugin.getWgHook()!=null)
 						    if(!plugin.getWgHook().canPickup(player, clicked.getLocation()))
 						    	return;
@@ -349,34 +319,19 @@ public class PickupClickListener implements org.bukkit.event.Listener
 		        	    return;
 		            }
 		            if(plugin.config.requireEmptyHand){
-				        if(!Objects.equals(Piggyback.version, "pre1_9")){
-					        if(player.getInventory().getItemInMainHand().getType()!=Material.AIR){
-					        	if (plugin.config.send && (!(plugin.lists.messagePlayers.contains(player.getUniqueId().toString())))){
-						        	if(!((plugin.lang.prefix + " " + plugin.lang.emptyHand).equals(" "))){
-							        	if(!(Piggyback.emptyHandCooldownPlayers.contains(player.getUniqueId()))){
-						    		    	player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " " + plugin.lang.emptyHand));
-							    	    	Piggyback.emptyHandCooldownPlayers.add(player.getUniqueId());
-							    	    	new EmptyHandMessageCooldown(player).runTaskLater(plugin, plugin.config.messageCooldown);
-							    	    }
-							        }
-						        }								
-						        return;
-					        }
-				        }else{
-					        if(player.getItemInHand().getType()!=Material.AIR){
-					    	    if (plugin.config.send && (!(plugin.lists.messagePlayers.contains(player.getUniqueId().toString())))){
-						    	    if(!((plugin.lang.prefix + " " + plugin.lang.emptyHand).equals(" "))){
-							    	    if(!(Piggyback.emptyHandCooldownPlayers.contains(player.getUniqueId()))){
-								    	    player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " " + plugin.lang.emptyHand));
-								    	    Piggyback.emptyHandCooldownPlayers.add(player.getUniqueId());
-								    	    new EmptyHandMessageCooldown(player).runTaskLater(plugin, plugin.config.messageCooldown);
-								        }
+				        if(player.getItemInHand().getType()!=Material.AIR){
+					        if (plugin.config.send && (!(plugin.lists.messagePlayers.contains(player.getUniqueId().toString())))){
+						   	    if(!((plugin.lang.prefix + " " + plugin.lang.emptyHand).equals(" "))){
+						    	    if(!(Piggyback.emptyHandCooldownPlayers.contains(player.getUniqueId()))){
+							    	    player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " " + plugin.lang.emptyHand));
+							    	    Piggyback.emptyHandCooldownPlayers.add(player.getUniqueId());
+							    	    new EmptyHandMessageCooldown(player).runTaskLater(plugin, plugin.config.messageCooldown);
 							        }
 						        }
-						        return;
-					        }
-				        }
-			        }
+						    }
+						    return;
+					    }
+				    }
 		            if(clicked instanceof Player p)
 		            {
 		            	if(plugin.lists.disabledPlayers.contains(player.getUniqueId().toString())){
@@ -401,9 +356,9 @@ public class PickupClickListener implements org.bukkit.event.Listener
 		            if(plugin.getWgHook()!=null)
 					    if(!plugin.getWgHook().canPickup(player, clicked.getLocation()))
 					    	return;
-		            if(plugin.getPlotSquared()!=null)
+		            /*if(plugin.getPlotSquared()!=null)
 					    if(!plugin.getPlotSquared().canPiggyback(clicked.getLocation()))
-					    	return;
+					    	return; */
 		            //call my ride event
 		            PiggybackRideEntityEvent rideEnt = new PiggybackRideEntityEvent(clicked, player);
 		            Bukkit.getServer().getPluginManager().callEvent(rideEnt);
@@ -486,32 +441,17 @@ public class PickupClickListener implements org.bukkit.event.Listener
 					    	return;
 					    }
 					    if(plugin.config.requireEmptyHand){
-							if(!Objects.equals(Piggyback.version, "pre1_9")){
-								if(player.getInventory().getItemInMainHand().getType()!=Material.AIR){
-									if (plugin.config.send && (!(plugin.lists.messagePlayers.contains(player.getUniqueId().toString())))){
-										if(!((plugin.lang.prefix + " " + plugin.lang.emptyHand).equals(" "))){
-											if(!(Piggyback.emptyHandCooldownPlayers.contains(player.getUniqueId()))){
-												player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " " + plugin.lang.emptyHand));
-												Piggyback.emptyHandCooldownPlayers.add(player.getUniqueId());
-												new EmptyHandMessageCooldown(player).runTaskLater(plugin, plugin.config.messageCooldown);
-											}
-										}
-									}								
-									return;
-								}
-							}else{
-								if(player.getItemInHand().getType()!=Material.AIR){
-									if (plugin.config.send && (!(plugin.lists.messagePlayers.contains(player.getUniqueId().toString())))){
-										if(!((plugin.lang.prefix + " " + plugin.lang.emptyHand).equals(" "))){
-											if(!(Piggyback.emptyHandCooldownPlayers.contains(player.getUniqueId()))){
-												player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " " + plugin.lang.emptyHand));
-												Piggyback.emptyHandCooldownPlayers.add(player.getUniqueId());
-												new EmptyHandMessageCooldown(player).runTaskLater(plugin, plugin.config.messageCooldown);
-											}
+							if(player.getItemInHand().getType()!=Material.AIR){
+								if (plugin.config.send && (!(plugin.lists.messagePlayers.contains(player.getUniqueId().toString())))){
+									if(!((plugin.lang.prefix + " " + plugin.lang.emptyHand).equals(" "))){
+										if(!(Piggyback.emptyHandCooldownPlayers.contains(player.getUniqueId()))){
+											player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " " + plugin.lang.emptyHand));
+											Piggyback.emptyHandCooldownPlayers.add(player.getUniqueId());
+											new EmptyHandMessageCooldown(player).runTaskLater(plugin, plugin.config.messageCooldown);
 										}
 									}
-									return;
 								}
+								return;
 							}
 						}
 					    if(clicked instanceof Player p)
@@ -535,9 +475,9 @@ public class PickupClickListener implements org.bukkit.event.Listener
 					    		return;
 					    	}
 					    }
-					    if(plugin.getPlotSquared()!=null)
+					   /* if(plugin.getPlotSquared()!=null)
 						    if(!plugin.getPlotSquared().canPiggyback(clicked.getLocation()))
-						    	return;
+						    	return; */
 					    if(plugin.getWgHook()!=null)
 						    if(!plugin.getWgHook().canPickup(player, clicked.getLocation()))
 						    	return;

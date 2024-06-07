@@ -20,9 +20,8 @@ import me.blubdalegend.piggyback.config.ToggleLists;
 import me.blubdalegend.piggyback.listeners.PiggybackEventsListener;
 import me.blubdalegend.piggyback.listeners.BukkitListeners;
 import me.blubdalegend.piggyback.listeners.PickupClickListener;
-import me.blubdalegend.piggyback.nms.NMStools;
 import me.blubdalegend.piggyback.compatibility.Console;
-import me.blubdalegend.piggyback.compatibility.DenyPiggybackFlag;
+//import me.blubdalegend.piggyback.compatibility.DenyPiggybackFlag;
 import me.blubdalegend.piggyback.compatibility.WorldGuardHook;
 import me.drkmatr1984.customevents.CustomEvents;
 
@@ -41,12 +40,10 @@ public class Piggyback extends org.bukkit.plugin.java.JavaPlugin
   public static List<UUID> clickTimerCooldownPlayers = new ArrayList<>();
   public static HashMap<UUID,Long> piggybackPickupCooldownPlayers = new HashMap<>();
   public static HashMap<UUID, List<Entity>> passengers = new HashMap<>();
-  public static String version;
   private WorldGuardHook wgHook;
-  private DenyPiggybackFlag plotSquared;
+  //private DenyPiggybackFlag plotSquared;
   public String clazzName;
   public String sendPacket;
-  public int Version;
   public static Class<?> clazz;
   private Logger log;
   private Commands commands;
@@ -59,8 +56,6 @@ public class Piggyback extends org.bukkit.plugin.java.JavaPlugin
 	  plugin = this;
       log = getLogger();
       PluginManager pm = getServer().getPluginManager();
-	  version = NMStools.getNmsVersion().replace("_", "").toLowerCase();
-	  getVersion();
 	  initConfigs();
 	  commands = new Commands(this);
 	  this.RegisterCommands();
@@ -100,7 +95,10 @@ public class Piggyback extends org.bukkit.plugin.java.JavaPlugin
   }
   
   public void onDisable(){
-	  lists.saveUserList();
+	  lists.saveData();
+	  if(!lists.isYML()) {
+		  lists.closeMySQLConnection();
+	  }
 	  this.unRegisterCommands();
 	  plugin.getPluginLoader().disablePlugin(plugin);
   }
@@ -109,18 +107,8 @@ public class Piggyback extends org.bukkit.plugin.java.JavaPlugin
 	  config = new ConfigAccessor(plugin);
 	  config.initConfig();
 	  lists = new ToggleLists(plugin);
-	  lists.initLists();
 	  lang = new LanguageFile(plugin);
 	  lang.initLanguageFile();
-  }
-  
-  private void getVersion()
-  {
-	  String baseVersion = version.substring(1 ,3);
-	  Version = Integer.parseInt(baseVersion);
-	  if(this.Version < 19 && this.Version > 11){
-		  version = "pre1_9";
-	  }    
   }
   
   public CommandMap getCommandMap() {
@@ -202,7 +190,7 @@ public class Piggyback extends org.bukkit.plugin.java.JavaPlugin
 	  return wgHook;
   }
   
-  public DenyPiggybackFlag getPlotSquared() {
+  /*public DenyPiggybackFlag getPlotSquared() {
 	  return plotSquared;
-  }
+  }*/
 }

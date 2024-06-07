@@ -10,7 +10,6 @@ import me.blubdalegend.piggyback.events.PiggybackDropEntityEvent;
 import me.blubdalegend.piggyback.events.PiggybackPickupEntityEvent;
 import me.blubdalegend.piggyback.events.PiggybackRideEntityEvent;
 import me.blubdalegend.piggyback.events.PiggybackThrowEntityEvent;
-import me.blubdalegend.piggyback.nms.NMStools;
 import me.blubdalegend.piggyback.tasks.PickupClickCooldown;
 import me.blubdalegend.piggyback.tasks.PiggybackPickupCooldown;
 
@@ -23,7 +22,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
-import org.spigotmc.event.entity.EntityDismountEvent;
+import org.bukkit.event.entity.EntityDismountEvent;
 
 public class PiggybackEventsListener implements org.bukkit.event.Listener
 {	
@@ -46,13 +45,6 @@ public class PiggybackEventsListener implements org.bukkit.event.Listener
 		riders.remove(event.getEntity());
 		Piggyback.passengers.put(player.getUniqueId(),riders);
 		ThrowEntity.throwEntity(event.getEntity(), event.getPlayer());
-		if(!Objects.equals(Piggyback.version, "pre1_9")){
-			try{
-				NMStools.sendMountPacket();
-			}catch(IllegalStateException e){
-		    	return;
-		    } 		
-		}
 		if (plugin.config.send && (!(plugin.lists.messagePlayers.contains(event.getPlayer().getUniqueId().toString()))))
 		{
 			if(!((plugin.lang.prefix + " " + plugin.lang.throwMsg).equals(" "))){
@@ -72,13 +64,6 @@ public class PiggybackEventsListener implements org.bukkit.event.Listener
 		}
 		riders.remove(event.getEntity());
 		Piggyback.passengers.put(player.getUniqueId(),riders);
-		if(!Objects.equals(Piggyback.version, "pre1_9")){
-			try{
-				NMStools.sendMountPacket();
-			}catch(IllegalStateException e){
-		    	return;
-		    } 		
-		}
 		if (plugin.config.send && (!(plugin.lists.messagePlayers.contains(event.getPlayer().getUniqueId().toString()))))
 		{
 			if(!((plugin.lang.prefix + " " + plugin.lang.dropMsg).equals(" "))){
@@ -125,13 +110,6 @@ public class PiggybackEventsListener implements org.bukkit.event.Listener
 			if(!riders.contains(entity))
 				riders.add(entity);
 			Piggyback.passengers.put(player.getUniqueId(),riders);
-		    if(!Objects.equals(Piggyback.version, "pre1_9")){
-				try{
-					NMStools.sendMountPacket();
-				}catch(IllegalStateException e){
-			    	return;
-			    } 		
-			}
 		    if (plugin.config.send && (!(plugin.lists.messagePlayers.contains(player.getUniqueId().toString())))) 
 		    {
 		    	if(player.getPassengers().contains(entity)){
@@ -191,14 +169,6 @@ public class PiggybackEventsListener implements org.bukkit.event.Listener
 						playersRiding.remove(player);		
 				}}.runTaskLater(plugin, 25);
 				
-			//send mount packet for some older versions
-		    if(!Objects.equals(Piggyback.version, "pre1_9")){
-				try{
-					NMStools.sendMountPacket();
-				}catch(IllegalStateException e){
-			    	return;
-			    } 		
-			}
 		    if (plugin.config.send && (!(plugin.lists.messagePlayers.contains(player.getUniqueId().toString())))) 
 		    {
 		    	if(clicked.getPassengers().contains(player)){

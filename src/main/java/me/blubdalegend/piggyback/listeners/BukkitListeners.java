@@ -7,13 +7,9 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.player.PlayerToggleSneakEvent;
-import org.spigotmc.event.entity.EntityDismountEvent;
+import org.bukkit.event.entity.EntityDismountEvent;
 
 import me.blubdalegend.piggyback.Piggyback;
-import me.blubdalegend.piggyback.nms.NMStools;
-
-import java.util.Objects;
 
 public class BukkitListeners implements Listener{
 	
@@ -31,16 +27,6 @@ public class BukkitListeners implements Listener{
 				event.setCancelled(true);
 			}
 		}
-	}
-	
-	@EventHandler(priority=EventPriority.NORMAL)
-	public void onPlayerToggleSneakEvent(PlayerToggleSneakEvent event) {
-		Player player = event.getPlayer();
-		if(!Objects.equals(Piggyback.version, "pre1_9")){
-			if(player.getVehicle()!=null){
-				NMStools.sendMountPacket();
-			} 
-		}  
 	}
 	
 	//prevent player from dropping carried passengers underwater

@@ -33,31 +33,19 @@ public class PiggybackAPI
 	}
 	
 	public static boolean hasMessagesDisabled(@NotNull Player p) {
-		return plugin.lists.messagePlayers.contains(p.getUniqueId().toString());
+		return plugin.lists.hasMessagesDisabled(p);
 	}
 	
 	public static boolean hasMessagesDisabled(@NotNull UUID id) {
-		return plugin.lists.messagePlayers.contains(id.toString());
+		return plugin.lists.hasMessagesDisabled(id);
 	}
 	
 	public static void setMessagesDisabled(@NotNull Player p, boolean b) {
-		if(b) {
-			if(!plugin.lists.messagePlayers.contains(p.getUniqueId().toString()))
-		        plugin.lists.messagePlayers.add(p.getUniqueId().toString());
-		}else {
-			if(plugin.lists.messagePlayers.contains(p.getUniqueId().toString()))
-		        plugin.lists.messagePlayers.remove(p.getUniqueId().toString());
-		}
+		plugin.lists.setMessagesDisabled(p, b);
 	}
 	
 	public static void setMessagesDisabled(@NotNull UUID id, boolean b) {
-		if(b) {
-			if(!plugin.lists.messagePlayers.contains(id.toString()))
-		        plugin.lists.messagePlayers.add(id.toString());
-		}else {
-			if(plugin.lists.messagePlayers.contains(id.toString()))
-		        plugin.lists.messagePlayers.remove(id.toString());
-		}
+		plugin.lists.setMessagesDisabled(id, b);
 	}
 	
 	public static double getCurrentPickupCooldown(UUID id) {

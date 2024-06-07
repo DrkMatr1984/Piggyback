@@ -45,24 +45,32 @@
             <id>enginehub-repo</id>
             <url>https://maven.enginehub.org/repo/</url>
         </repository>
-        
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
     </repositories>
     <!-- Dependencies -->
     <dependencies>
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
-            <version>1.18.2-R0.1-SNAPSHOT</version>
+            <version>1.20.6-R0.1-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot</artifactId>
-            <version>1.18.2-R0.1-SNAPSHOT</version>
+            <version>1.20.6-R0.1-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>me.drkmatr1984</groupId>
             <artifactId>customevents</artifactId>
             <version>0.15</version>   
+        </dependency>
+        <dependency>
+            <groupId>com.zaxxer</groupId>
+            <artifactId>HikariCP</artifactId>
+            <version>5.0.1</version>
         </dependency>
         <dependency>
             <groupId>me.clip</groupId>
@@ -161,6 +169,7 @@
                             <artifactSet>
                                 <includes>
                                     <include>me.drkmatr1984:customevents</include>
+                                    <include>com.zaxxer:HikariCP</include>
                                     <include>org.bstats:bstats-bukkit</include>
                                     <include>org.bstats:bstats-base</include>
                                 </includes>

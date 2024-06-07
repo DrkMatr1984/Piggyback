@@ -1,7 +1,6 @@
 package me.blubdalegend.piggyback.placeholders;
 
 import be.maximvdw.placeholderapi.PlaceholderAPI;
-import be.maximvdw.placeholderapi.PlaceholderReplaceEvent;
 import be.maximvdw.placeholderapi.PlaceholderReplacer;
 import me.blubdalegend.piggyback.Piggyback;
 import me.blubdalegend.piggyback.PiggybackAPI;
