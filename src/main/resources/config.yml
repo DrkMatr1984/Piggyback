@@ -1,28 +1,153 @@
-# PIGGYBACK CONFIGURATION FILE
+################################################################################################
+#######################           PIGGYBACK CONFIGURATION FILE            ######################
+################################################################################################
 
-pickup:
-  throwRiderAway: true
-  pickUpNPCs: false
-ride:
-  onlyRidePlayers: true
-  rideNPC: false
-messages:
-  Send: true
-  Cooldown: 30
-blacklists:
-  entityBlacklist:
-  - ''
-  customEntityBlacklist:
-  - ''
-  worldBlacklist:
-  - ''
-general:
-  # Enable bStats metrics
-  bStatsMetrics: true
-  # Possible options are RIGHT, LEFT, or EITHER
-  clickType: RIGHT
-  requireEmptyHand: true
-  pickUp:
-    Cooldown: 10
+#################################
+###### Main Config Section ######
+#################################
+
+# These are the main configs that control the core features of PiggyBack
+# Default config is to pick-up entities when crouching and right clicking
+# Players will not be able to pick-up/ride other players or mobs if they disable
+# piggyback with their own toggle comand. This is default behavior
+
+main:
+  # This determines PiggyBack's main mode of function
   # Possible options are PICKUP or RIDE
   clickAction: PICKUP
+  # You must always crouch before picking up an entity. This determines which click
+  # you use to pick up/ride an entity,
+  # Possible options are RIGHT, LEFT, or EITHER
+  clickType: RIGHT
+  # Whether the player must have an empty hand or not when attempting to
+  # ride/pick up an entity
+  requireEmptyHand: false
+  # Whether to ride/pick-up players only (*This will TOTALLY DISABLE picking-up/riding any mob
+  # other than players!*)
+  onlyPlayers: false
+  # Whether to ride/pick-up mobs only (*This will TOTALLY DISABLE picking-up/riding any player!*)
+  onlyMobs: false
+  # Whether to allow players to Ride/Pick-up NPCs from Citizens 2 
+  allowNPCs: false
+
+##################################
+###### Pickup Configuration ######
+##################################
+
+# These configs control picking-up of the mobs/players (If some ride settings are changed below in Ride Configuration 
+# while clickAction: RIDE is set above then some of these settings would also take effect)
+
+pickup:
+  # Cooldown in seconds before being able to pick-up players/mobs (set to 0 to disable)
+  cooldown: 10
+  # Whether to 'throw' the rider when looking at them and re-clicking on them
+  # when they are riding you.
+  throwRiderAway: true
+  # If the above setting and this is also true, the player will perform a "far throw" when running
+  # and performing the 'normal' throw above. 
+  farThrowRider: false
+  
+##################################
+####### Ride Configuration #######
+##################################
+
+# These configs control riding of the mobs/players (If some ride settings are changed below in Ride Configuration 
+# while clickAction: RIDE is set above then some of the pick-up settings above would also take effect)
+
+ride:
+  # Cooldown in seconds before being able to ride players/mobs (set to 0 to disable)
+  cooldown: 10
+  ## WARNING: If you set both settings below to true unexpected results may occur.
+  ## THEY ARE SUPPOSED TO BE MUTUALLY EXCLUSIVE
+  # If this is true, players will still obey normal pick-up rules for mobs and
+  # only ride players 
+  pickupOnlyMobs: false
+  # If this is true, players will still obey normal pick-up rules for players and
+  # only ride mobs
+  pickupOnlyPlayers: false
+
+##################################
+##### Message Configuration ######
+##################################
+
+# These settings control the messages from the language file
+# that are sent to the players
+
+messages:
+  # Whether to send any plugin messages at all to players
+  # (Maybe you want this false for immersion?)
+  # Players may also toggle messages off in game if given permission with a command
+  Send: true
+  # Cooldown in seconds between getting different plugin messages 
+  # (This will help prevent chat spam for the player if they are doing
+  # something like spam clicking after a cooldown) (set to 0 to disable)
+  Cooldown: 30
+
+##################################
+##### Blacklist Configuration ####
+##################################
+
+# These configs control the different blacklists/whitelists
+
+blacklists:
+ 
+  # Configures the entity blacklists/whitelists
+  entities:
+    # If this is true the list becomes a whitelist instead
+    whitelist: false
+    # Entities must be in the format from
+    # https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/entity/EntityType.html
+    entityBlacklist:
+    - ''
+    
+  # Configures the custom entity blacklists/whitelists
+  customEntities:
+    # If this is true the list becomes a whitelist instead
+    whitelist: false
+    # This works by checking the display name of an entity,
+    # and is case insensitive, but is largely untested. Please report bugs.
+    # (You will have to know the name of the mob)
+    customEntityBlacklist:
+    - ''  
+ 
+  # Configures the world blacklists/whitelists
+  worldBlacklist:
+    # If this is true the list becomes a whitelist instead
+    whitelist: false
+    # This works by checking the world name, and is case insensitive
+    worlds:
+    - ''
+    
+##################################
+##### Storage Configuration ######
+##################################
+
+# These configs control where the data for the message toggles and
+# piggyback toggles are stored. Default is .yml in the piggyback/data
+# folder. 
+
+storage:
+  # Storage Type. Possible values: YML, H2, MYSQL, POSTGRE, SQLITE
+  # Case-Insensitive
+  type: 'yml'
+  sqliteFilename: 'pback.db'
+  # Url of the server, with port, if using H2, MYSQL, or POSTGRE
+  url: 'mysql://127.0.0.1:3306/'
+  # The Name of the Database to use
+  database: 'piggyback'
+  # Boolean to use SSL in case of mysql database
+  useSSL: false
+  # Whether to use the autoReconnect feature of MYSQL
+  autoReconnect: true
+  # Username for database. Not needed when using SQLITE or YML
+  username: 'root'
+  # Password for database. Not needed when using SQLITE or YML
+  password: 'password'
+    
+##################################
+##### Metrics Configuration ######
+##################################
+    
+metrics:
+  # Enable bStats metrics
+  bStatsMetrics: true

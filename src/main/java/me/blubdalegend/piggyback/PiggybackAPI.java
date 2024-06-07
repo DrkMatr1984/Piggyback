@@ -72,4 +72,8 @@ public class PiggybackAPI
 		ThrowEntity.throwEntity(ent, player);
 	}
 	
+	public static void farThrowEntity(Entity ent, Player player) {
+		ThrowEntity.farThrowEntity(ent, player);
+	}
+	
 }

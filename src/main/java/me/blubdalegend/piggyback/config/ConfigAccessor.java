@@ -7,13 +7,18 @@ import java.util.List;
 import java.util.Objects;
 
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
+
 import me.blubdalegend.piggyback.Piggyback;
 
 public class ConfigAccessor
 {	
-	public FileConfiguration f;
+	private FileConfiguration f;
+	private File file = null;
+	private File dataFolder;
+	private FileConfiguration config;
 	
-	public Piggyback plugin;
+	private Piggyback plugin;
 	
 	public enum Clicks{
 		  RIGHT, LEFT, EITHER
@@ -42,50 +47,19 @@ public class ConfigAccessor
 	
 	public ConfigAccessor(Piggyback plugin){
 		this.plugin = plugin;
+		this.dataFolder = new File(this.plugin.getDataFolder().toString());
+	    if (!this.dataFolder.exists())
+	        this.dataFolder.mkdir(); 
+		if (this.file == null)
+	        this.file = new File(this.dataFolder, "config.yml"); 
+	      if (!this.file.exists())
+	        this.plugin.saveResource("config.yml", false);
+	    this.config = YamlConfiguration.loadConfiguration(file);
+	    initConfig();
 	}
 		    
-	@SuppressWarnings("deprecation")
-	public void initConfig()
+	private void initConfig()
 	{
-		disabledEntities = new ArrayList<>();
-		disabledEntities.add("");
-		disabledCustomEntities = new ArrayList<>();
-		disabledCustomEntities.add("");
-		disabledWorlds = new ArrayList<>();
-		disabledWorlds.add("");
-		
-		f = plugin.getConfig();
-		f.options().header("PIGGYBACK CONFIGURATION FILE");	
-		f.addDefault("general.bStatsMetrics", Boolean.TRUE);
-		f.setComments("general.bStatsMetrics", Arrays.asList("Enable bStats metrics"));
-		f.addDefault("general.clickType", "RIGHT");
-		f.setComments("general.clickType", Arrays.asList("Possible options are RIGHT, LEFT, or EITHER"));
-		f.addDefault("general.requireEmptyHand", Boolean.TRUE);
-		f.addDefault("general.pickUp.Cooldown", 10L);
-		f.addDefault("general.clickAction", "PICKUP");
-		f.setComments("general.clickAction", Arrays.asList("Possible options are PICKUP or RIDE"));
-		//Pickup
-		f.addDefault("pickup.throwRiderAway", Boolean.TRUE);
-		f.addDefault("pickup.pickUpNPCs", Boolean.FALSE);
-		//Ride
-		f.addDefault("ride.onlyRidePlayers", Boolean.TRUE);
-		f.addDefault("ride.rideNPC", Boolean.FALSE);
-		//messages
-		f.addDefault("messages.Send", Boolean.TRUE);
-		f.addDefault("messages.Cooldown", 30L);
-		f.addDefault("blacklists.entityBlacklist", disabledEntities);
-		
-		f.addDefault("blacklists.customEntityBlacklist", disabledCustomEntities);
-		
-		f.addDefault("blacklists.worldBlacklist", disabledWorlds);
-	    
-		f.options().copyDefaults(true);
-		plugin.saveConfig();
-		
-	    loadConfig();		
-	}
-	
-	public void loadConfig() {
 		bStats = f.getBoolean("general.bStatsMetrics");
 		clickType = Clicks.valueOf((Objects.requireNonNull(f.getString("general.clickType"))).toUpperCase());
 		requireEmptyHand = f.getBoolean("general.requireEmptyHand");
@@ -102,7 +76,7 @@ public class ConfigAccessor
 		messageCooldown = ((f.getLong("messages.Cooldown")) * 20);
 		disabledEntities = uppercaseStringList(f.getStringList("blacklists.entityBlacklist"));
 		disabledWorlds = uppercaseStringList(f.getStringList("blacklists.worldBlacklist"));
-		disabledCustomEntities = uppercaseStringList(f.getStringList("blacklists.customEntityBlacklist"));
+		disabledCustomEntities = uppercaseStringList(f.getStringList("blacklists.customEntityBlacklist"));		
 	}
 	
 	private List<String> uppercaseStringList(List<String> list)

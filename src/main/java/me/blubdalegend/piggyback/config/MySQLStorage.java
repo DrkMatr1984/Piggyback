@@ -58,8 +58,6 @@ public class MySQLStorage {
                 	if (conn==null) {
                         throw new SQLException("Couldn't connect to the database");
                     }
-
-                    // Create table
                 	createTable("disabledPlayers");
                 	createTable("messagePlayers");
             	}catch (Exception e) {
@@ -73,8 +71,7 @@ public class MySQLStorage {
                     }
                     e.printStackTrace();
                     return;
-            	}     	
-                
+            	}     	             
             }else{
             	if(plugin.getConfig().getString("storage.database.autoReconnect").equalsIgnoreCase("true"))
             		this.url = "jdbc:" + plugin.getConfig().getString("storage.database.url") + plugin.getConfig().getString("storage.database.database") + "?useSSL=" + plugin.getConfig().getString("storage.database.useSSL") + "&autoReconnect=true";
@@ -401,9 +398,8 @@ public class MySQLStorage {
     
     private void deleteTable(String tableName){
     	if (isConnected()) {
-    		PreparedStatement statement;
 			try {
-				statement = conn.prepareStatement("DROP TABLE IF EXISTS " + tableName);
+				PreparedStatement statement = conn.prepareStatement("DROP TABLE IF EXISTS " + tableName);
 				statement.executeUpdate();
 				System.out.println(tableName + " table deleted successfully.");
 			} catch (SQLException e) {
@@ -415,16 +411,12 @@ public class MySQLStorage {
     
     private void clearTable(String tableName) {
         try {
-
             // Delete the table
             deleteTable(tableName);
-
             // Wait for a second
             Thread.sleep(1000);
-
             // Recreate the table
             createTable(tableName);
-
         } catch (SQLException | InterruptedException e) {
             e.printStackTrace();
         }
