@@ -8,3 +8,13 @@ Ever wanted to CARRY pigs around like a BADASS?! Ever wanted a SLIME as PET?! TI
 
 https://www.spigotmc.org/resources/piggyback-more-than-just-a-stacker.14130/
 https://dev.bukkit.org/projects/piggyback
+
+![fallingCat](https://github.com/DrkMatr1984/Piggyback/assets/5105448/6c180351-e134-48a3-a27a-c8b2c6794106)
+
+
+Bugs?
+
+=========
+
+Report above at issues:
+
