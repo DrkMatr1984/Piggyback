@@ -15,10 +15,10 @@ public class ThrowEntity
 			vector.setZ(vector.getZ() + 1.5D);
 		}
 		if (pitch == 1) {
-			vector.setX(vector.getX() - 1.5D);
+			vector.setX(vector.getX() + 1.5D);
 		}
 		if (pitch == 2) {
-			vector.setZ(vector.getZ() - 1.5D);
+			vector.setZ(vector.getZ() + 1.5D);
 		}
 		if (pitch == 3) {
 			vector.setX(vector.getX() + 1.5D);

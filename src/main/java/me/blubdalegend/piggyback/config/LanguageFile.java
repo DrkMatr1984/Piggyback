@@ -9,9 +9,15 @@ import me.blubdalegend.piggyback.Piggyback;
 
 public class LanguageFile
 {
+	private final File languageFolder;
 	private File languageFile;
 
 	public String command;
+	public String reloadCommand;
+	public String toggleCommand; 
+	public String messagesCommand;
+	public String helpCommand;
+	
 	public String title;
 	public String prefix;      
 	public String carryMsg;
@@ -53,25 +59,28 @@ public class LanguageFile
 	
 	public LanguageFile(Piggyback plugin){
 		this.plugin = plugin;
+		languageFolder = new File(this.plugin.getDataFolder() +"/lang");
+		if(!(languageFolder.exists())){
+			languageFolder.mkdir();
+	   	}
+		if (languageFile == null) {
+			languageFile = new File(languageFolder, plugin.config.langfile);
+	    }
+	    if (!languageFile.exists()) {           
+	    	plugin.saveResource(("lang/"+plugin.config.langfile), false);
+	    }
+	    initLanguageFile();
 	}
 	
 	public void initLanguageFile(){
-		saveDefaultLanguageFile();
-		loadLanguageFile();
-	}
-	
-	public void saveDefaultLanguageFile() {
-		if (languageFile == null) {
-			languageFile = new File(plugin.getDataFolder(), "language.yml");
-	    }
-	    if (!languageFile.exists()) {           
-	    	plugin.saveResource("language.yml", false);
-	    }   
-	}
-	  
-	public void loadLanguageFile(){
 		FileConfiguration language = YamlConfiguration.loadConfiguration(languageFile);
-		command = language.getString("command");
+		// Commands - make them all "to lowercase"
+		command = (language.getString("commands.main")).toLowerCase();
+		reloadCommand = (language.getString("commands.reload")).toLowerCase();
+		toggleCommand = (language.getString("commands.toggle")).toLowerCase();
+		messagesCommand = (language.getString("commands.main")).toLowerCase();
+		helpCommand = (language.getString("commands.help")).toLowerCase();
+		
 		title = language.getString("message.prefix");
 		prefix = "&f[&r" + title + "&f]&r";      
 	    carryMsg = language.getString("message.carry");
@@ -108,5 +117,6 @@ public class LanguageFile
 		helpMessageToggleOther = language.getString("help.messageToggleOther");
 		helpReload = language.getString("help.reload");
 	}
+	
 }
 

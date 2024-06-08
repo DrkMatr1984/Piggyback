@@ -105,9 +105,8 @@ public class Piggyback extends org.bukkit.plugin.java.JavaPlugin
   
   public void initConfigs(){
 	  config = new ConfigAccessor(plugin);
-	  lists = new ToggleLists(plugin);
 	  lang = new LanguageFile(plugin);
-	  lang.initLanguageFile();
+	  lists = new ToggleLists(plugin);
   }
   
   public CommandMap getCommandMap() {

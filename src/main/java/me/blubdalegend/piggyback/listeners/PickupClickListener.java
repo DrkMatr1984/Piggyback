@@ -43,7 +43,7 @@ public class PickupClickListener implements org.bukkit.event.Listener
 				perm = true;
 			}
 			//pickup
-			if(this.plugin.config.actionType.equals(Actions.PICKUP) || (this.plugin.config.actionType.equals(Actions.RIDE) && this.plugin.config.onlyRidePlayers && !(clicked instanceof Player))) {
+			if(this.plugin.config.clickAction.equals(Actions.PICKUP) || (this.plugin.config.clickAction.equals(Actions.RIDE) && this.plugin.config.pickupOnlyMobs && !(clicked instanceof Player))) {
 				if((player.isInsideVehicle()&& Objects.equals(player.getVehicle(), clicked))){
 					return;
 				}
@@ -51,7 +51,7 @@ public class PickupClickListener implements org.bukkit.event.Listener
 					if(!player.getPassengers().isEmpty()){
 						if (player.getPassengers().contains(clicked))
 						{
-							if (plugin.config.throwRiderPickup) 
+							if (plugin.config.throwRiderAway) 
 							{
 				            	//call my throw event
 				            	PiggybackThrowEntityEvent throwEnt = new PiggybackThrowEntityEvent(clicked, player);
@@ -78,7 +78,7 @@ public class PickupClickListener implements org.bukkit.event.Listener
 							{						
 								return;
 							}
-					    if ((clicked.hasMetadata("NPC")) && (!plugin.config.pickupNPC)) {
+					    if ((clicked.hasMetadata("NPC")) && (!plugin.config.allowNPCs)) {
 					    	if (plugin.config.send && (!(plugin.lists.messagePlayers.contains(player.getUniqueId().toString())))){
 					    		if(!((plugin.lang.prefix + " " + plugin.lang.noPickUpNPC).equals(" "))){
 					    			player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " " + plugin.lang.noPickUpNPC));
@@ -166,8 +166,8 @@ public class PickupClickListener implements org.bukkit.event.Listener
 				perm = true;
 			}
 			//ride
-			if(this.plugin.config.actionType.equals(Actions.RIDE) && !this.plugin.config.onlyRidePlayers 
-	        		|| (this.plugin.config.actionType.equals(Actions.RIDE) && this.plugin.config.onlyRidePlayers && clicked instanceof Player)){
+			if(this.plugin.config.clickAction.equals(Actions.RIDE) && !this.plugin.config.pickupOnlyMobs 
+	        		|| (this.plugin.config.clickAction.equals(Actions.RIDE) && this.plugin.config.pickupOnlyMobs && clicked instanceof Player)){
 				if((player.isInsideVehicle()&& Objects.equals(player.getVehicle(), clicked))){
 					return;
 				}
@@ -175,7 +175,7 @@ public class PickupClickListener implements org.bukkit.event.Listener
 					if(!player.getPassengers().isEmpty()){
 						if (player.getPassengers().contains(clicked))
 						{
-							if (plugin.config.throwRiderPickup) 
+							if (plugin.config.throwRiderAway) 
 							{
 				            	//call my throw event
 				            	PiggybackThrowEntityEvent throwEnt = new PiggybackThrowEntityEvent(clicked, player);
@@ -202,7 +202,7 @@ public class PickupClickListener implements org.bukkit.event.Listener
 							{						
 								return;
 							}
-						if ((clicked.hasMetadata("NPC")) && (!plugin.config.rideNPC)) {
+						if ((clicked.hasMetadata("NPC")) && (!plugin.config.allowNPCs)) {
 			            	if (plugin.config.send && (!(plugin.lists.messagePlayers.contains(player.getUniqueId().toString())))){
 			             		if(!((plugin.lang.prefix + " " + plugin.lang.noRideNPC).equals(" "))){
 			        	    		player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " " + plugin.lang.noRideNPC));
@@ -290,8 +290,8 @@ public class PickupClickListener implements org.bukkit.event.Listener
 			    perm = true;
 		    }
 			if(perm) {
-		        if(this.plugin.config.actionType.equals(Actions.RIDE) && !this.plugin.config.onlyRidePlayers 
-		        		|| (this.plugin.config.actionType.equals(Actions.RIDE) && this.plugin.config.onlyRidePlayers && clicked instanceof Player)){
+		        if(this.plugin.config.clickAction.equals(Actions.RIDE) && !this.plugin.config.pickupOnlyMobs 
+		        		|| (this.plugin.config.clickAction.equals(Actions.RIDE) && this.plugin.config.pickupOnlyMobs && clicked instanceof Player)){
 			        if(!clicked.getPassengers().isEmpty()){
 			        	if(clicked.getPassengers().contains(player)){
 			    		    return;
@@ -306,7 +306,7 @@ public class PickupClickListener implements org.bukkit.event.Listener
 						{						
 							return;
 						}
-		            if ((clicked.hasMetadata("NPC")) && (!plugin.config.rideNPC)) {
+		            if ((clicked.hasMetadata("NPC")) && (!plugin.config.allowNPCs)) {
 		            	if (plugin.config.send && (!(plugin.lists.messagePlayers.contains(player.getUniqueId().toString())))){
 		             		if(!((plugin.lang.prefix + " " + plugin.lang.noRideNPC).equals(" "))){
 		        	    		player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " " + plugin.lang.noRideNPC));
@@ -393,7 +393,7 @@ public class PickupClickListener implements org.bukkit.event.Listener
 			    perm = true;
 		    }
 			//pickup or ride
-			if(this.plugin.config.actionType.equals(Actions.PICKUP) || (this.plugin.config.actionType.equals(Actions.RIDE) && this.plugin.config.onlyRidePlayers && !(clicked instanceof Player))) {
+			if(this.plugin.config.clickAction.equals(Actions.PICKUP) || (this.plugin.config.clickAction.equals(Actions.RIDE) && this.plugin.config.pickupOnlyMobs && !(clicked instanceof Player))) {
 			    if((player.isInsideVehicle()&& Objects.equals(player.getVehicle(), clicked))){
 			        return;
 			    }		    
@@ -401,7 +401,7 @@ public class PickupClickListener implements org.bukkit.event.Listener
 					if(!player.getPassengers().isEmpty()){
 						if (player.getPassengers().contains(clicked))
 						{
-							if (plugin.config.throwRiderPickup) 
+							if (plugin.config.throwRiderAway) 
 							{
 				            	//call my throw event
 				            	PiggybackThrowEntityEvent throwEnt = new PiggybackThrowEntityEvent(clicked, player);
@@ -428,7 +428,7 @@ public class PickupClickListener implements org.bukkit.event.Listener
 							{						
 								return;
 							}
-					    if ((clicked.hasMetadata("NPC")) && (!plugin.config.pickupNPC)) {
+					    if ((clicked.hasMetadata("NPC")) && (!plugin.config.allowNPCs)) {
 					    	if (plugin.config.send && (!(plugin.lists.messagePlayers.contains(player.getUniqueId().toString())))){
 					    		if(!((plugin.lang.prefix + " " + plugin.lang.noPickUpNPC).equals(" "))){
 					    			player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " " + plugin.lang.noPickUpNPC));

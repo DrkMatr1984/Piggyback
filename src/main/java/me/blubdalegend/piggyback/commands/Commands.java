@@ -36,8 +36,8 @@ public class Commands implements CommandExecutor
 					}
 					if((s.toLowerCase()).equals("reload")){
 						if(sender.hasPermission("piggyback.reload") || sender.isOp() || !(sender instanceof Player)){
-							plugin.lang.loadLanguageFile();
-							plugin.config.loadConfig();
+							plugin.lang.initLanguageFile();
+							plugin.config.initConfig();
 							if(!((plugin.lang.prefix + " " + plugin.lang.reload).equals(" "))){
 					    		sender.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " " + plugin.lang.reload));
 					    	}
@@ -200,7 +200,7 @@ public class Commands implements CommandExecutor
 	public void displayHelp(CommandSender sender){
 		sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&5&o#### &r" + plugin.lang.title + " " + plugin.lang.help + "&r &5&o####"));
 		sender.sendMessage("");
-		if(sender.hasPermission("piggyback.help") || sender.isOp())
+		if(sender.hasPermission("piggyback.use") || sender.isOp())
 			sender.sendMessage(ChatColor.translateAlternateColorCodes('&',"&7/&e" + plugin.lang.command + " &7- &r" + plugin.lang.helpMain));
 		if(sender.hasPermission("piggyback.toggle") || sender.isOp())
 			sender.sendMessage(ChatColor.translateAlternateColorCodes('&',"&7/&e" + plugin.lang.command + " &btoggle &7- &r" + plugin.lang.helpToggle));

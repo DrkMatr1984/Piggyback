@@ -40,8 +40,8 @@ public class MySQLStorage {
     public MySQLStorage(Piggyback plugin) {
     	this.plugin = plugin;
         this.driver = DatabaseType.match(plugin.config.storageType);
-        this.username = plugin.getConfig().getString("storage.database.username");
-        this.password = plugin.getConfig().getString("storage.database.password");
+        this.username = plugin.config.username;
+        this.password = plugin.config.password;
         if(this.driver!=null) {
         	if(this.driver.equals(DatabaseType.SQLITE)){	
         		if(!(dataFolder.exists())){
@@ -73,10 +73,10 @@ public class MySQLStorage {
                     return;
             	}     	             
             }else{
-            	if(plugin.getConfig().getString("storage.database.autoReconnect").equalsIgnoreCase("true"))
-            		this.url = "jdbc:" + plugin.getConfig().getString("storage.database.url") + plugin.getConfig().getString("storage.database.database") + "?useSSL=" + plugin.getConfig().getString("storage.database.useSSL") + "&autoReconnect=true";
+            	if(plugin.config.autoReconnect)
+            		this.url = "jdbc:" + plugin.config.url + plugin.config.database + "?useSSL=" + plugin.config.useSSL + "&autoReconnect=true";
             	else
-            		this.url = "jdbc:" + plugin.getConfig().getString("storage.database.url") + plugin.getConfig().getString("storage.database.database") + "?useSSL=" + plugin.getConfig().getString("storage.database.useSSL");
+            		this.url = "jdbc:" + plugin.config.url + plugin.config.database + "?useSSL=" + plugin.config.useSSL;
             	config = new HikariConfig();
             	config.setJdbcUrl(this.url);
                 config.setUsername(this.username);
@@ -388,7 +388,7 @@ public class MySQLStorage {
     private void createTable(String tableName) throws SQLException {
  		if (isConnected()) {
  			try {
- 	        	PreparedStatement ps = conn.prepareStatement("CREATE TABLE IF NOT EXISTS " + tableName + " (`uuid` VARCHAR(64) NOT NULL PRIMARY KEY, 'disabled' BIT NOT NULL);");
+ 	        	PreparedStatement ps = conn.prepareStatement("CREATE TABLE IF NOT EXISTS " + tableName + " (`uuid` VARCHAR(64) NOT NULL PRIMARY KEY");
  		 			ps.executeUpdate();
  	        } catch (SQLException e) {
  	            throw e;

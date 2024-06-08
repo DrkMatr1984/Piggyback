@@ -1,10 +1,18 @@
+## Here you can change the actual names of the commands.
+## Don't use colors
+commands:
+  main: 'pback'
+  reload: 'reload'
+  toggle: 'toggle'
+  messages: 'messages'
+  help: 'help'
+message:
+## Colors are fine here
 ## Placeholders
 ## %passenger% - The passenger being picked up
 ## %clicked% - The person clicked upon
 ## %time% - time for cooldowns
 ## %player% - player being referred to
-command: 'pback'
-message:
   prefix: '&6Piggyback'
   carry: '&aPicked up &e%passenger%&r'
   drop: '&cDropped &e%passenger%&r'
@@ -34,9 +42,9 @@ message:
   reload: "&aConfigs and Language file have been reloaded successfully"
 help:
   help: '&aHelp'
-  main: '&fDisplays this Help'
+  main: '&fDisplays this Help, and is the main plugin command'
   toggle: '&fToggle Ability to be picked up &aon&f/&coff'
-  toggleOther: '&fToggle Ability to be picked up &aon&f/&coff for other players'
+  toggleOther: '<playerName>&7 - &fToggle Ability to be picked up &aon&f/&coff for other players'
   messageToggle: '&fToggle Piggyback messages &aon&f/&coff'
-  messageToggleOther: '&fToggle Piggyback messages &aon&f/&coff for other players'
+  messageToggleOther: '<playerName>&7 - &fToggle Piggyback messages &aon&f/&coff for other players'
   reload: "&fReload Piggyback Configs and Language file"

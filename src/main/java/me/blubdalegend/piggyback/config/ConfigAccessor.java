@@ -2,7 +2,6 @@ package me.blubdalegend.piggyback.config;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -13,7 +12,6 @@ import me.blubdalegend.piggyback.Piggyback;
 
 public class ConfigAccessor
 {	
-	private FileConfiguration f;
 	private File file = null;
 	private File dataFolder;
 	private FileConfiguration config;
@@ -29,21 +27,41 @@ public class ConfigAccessor
 	}
 	
 	public Clicks clickType;
-	public Actions actionType;
-	public boolean bStats;
-	public boolean onlyRidePlayers;
-	public boolean throwRiderPickup; // Throw Rider instead of just dropping them
-	public boolean rideNPC;
-	public boolean pickupNPC;
+	public Actions clickAction;
+	public boolean requireEmptyHand;
+	public boolean onlyPlayers;
+	public boolean onlyMobs;
+	public boolean allowNPCs;
+
 	public long pickupCooldown;
+	public boolean throwRiderAway;
+	public boolean farThrowRider;
+	
+	public long rideCooldown;
+	public boolean pickupOnlyMobs;
+	public boolean pickupOnlyPlayers;
+	
+	public String langfile;
 	public boolean send;
 	public long messageCooldown;
-	public boolean requireEmptyHand;
+	
+	public boolean whitelistEntities;
 	public List<String> disabledEntities;
+	public boolean whitelistCustomEntities;
 	public List<String> disabledCustomEntities;
+	public boolean whitelistWorlds;
 	public List<String> disabledWorlds;
+	
 	public String storageType;
 	public String sqliteFilename = "pback.db";
+	public String url;
+	public String database;
+	public boolean useSSL;
+	public boolean autoReconnect;
+	public String username;
+	public String password;
+	
+	public boolean bStats;
 	
 	public ConfigAccessor(Piggyback plugin){
 		this.plugin = plugin;
@@ -54,29 +72,54 @@ public class ConfigAccessor
 	        this.file = new File(this.dataFolder, "config.yml"); 
 	      if (!this.file.exists())
 	        this.plugin.saveResource("config.yml", false);
-	    this.config = YamlConfiguration.loadConfiguration(file);
 	    initConfig();
 	}
 		    
-	private void initConfig()
+	public void initConfig()
 	{
-		bStats = f.getBoolean("general.bStatsMetrics");
-		clickType = Clicks.valueOf((Objects.requireNonNull(f.getString("general.clickType"))).toUpperCase());
-		requireEmptyHand = f.getBoolean("general.requireEmptyHand");
-		pickupCooldown = ((f.getLong("general.pickUp.Cooldown")) * 20);
-		actionType = Actions.valueOf((Objects.requireNonNull(f.getString("general.clickAction"))).toUpperCase());
-		//pickup
-		throwRiderPickup = f.getBoolean("pickup.throwRiderAway");
-		pickupNPC = f.getBoolean("pickup.pickUpNPCs");
-		//ride
-		onlyRidePlayers = f.getBoolean("ride.onlyRidePlayers");
-		rideNPC = f.getBoolean("ride.rideNPC");
-		//messages
-		send = f.getBoolean("messages.Send");
-		messageCooldown = ((f.getLong("messages.Cooldown")) * 20);
-		disabledEntities = uppercaseStringList(f.getStringList("blacklists.entityBlacklist"));
-		disabledWorlds = uppercaseStringList(f.getStringList("blacklists.worldBlacklist"));
-		disabledCustomEntities = uppercaseStringList(f.getStringList("blacklists.customEntityBlacklist"));		
+		this.config = YamlConfiguration.loadConfiguration(file);
+		// main config section
+		clickAction = Actions.valueOf((Objects.requireNonNull(config.getString("main.clickAction"))).toUpperCase());
+		clickType = Clicks.valueOf((Objects.requireNonNull(config.getString("main.clickType"))).toUpperCase());	
+		requireEmptyHand = config.getBoolean("main.requireEmptyHand");
+		onlyPlayers = config.getBoolean("main.onlyPlayers");
+		onlyMobs = config.getBoolean("main.onlyMobs");
+		allowNPCs = config.getBoolean("main.allowNPCs");
+		
+		// pickup configuration
+		pickupCooldown = ((config.getLong("pickup.cooldown")) * 20);
+		throwRiderAway = config.getBoolean("pickup.throwRiderAway");
+		farThrowRider = config.getBoolean("pickup.farThrowRider");
+		
+		// ride
+		rideCooldown = ((config.getLong("ride.cooldown")) * 20);
+		pickupOnlyMobs = config.getBoolean("ride.pickupOnlyMobs");
+		pickupOnlyPlayers = config.getBoolean("ride.pickupOnlyPlayers");
+		
+		// messages
+		langfile = ((config.getString("messages.language")) + ".yml");
+		send = config.getBoolean("messages.send");
+		messageCooldown = ((config.getLong("messages.cooldown")) * 20);
+		
+		// blacklists
+		whitelistEntities = config.getBoolean("blacklists.entities.whitelist");
+		disabledEntities = uppercaseStringList(config.getStringList("blacklists.entities.entityBlacklist"));
+		whitelistCustomEntities = config.getBoolean("blacklists.customEntities.whitelist");
+		disabledCustomEntities = uppercaseStringList(config.getStringList("blacklists.customEntities.customEntityBlacklist"));
+		whitelistWorlds = config.getBoolean("blacklists.worldBlacklist.whitelist");
+		disabledWorlds = uppercaseStringList(config.getStringList("blacklists.worldBlacklist.worlds"));
+		
+		// storage
+		storageType = config.getString("storage.type");
+		sqliteFilename = config.getString("storage.sqliteFilename");
+		url = config.getString("storage.url");
+		database = config.getString("storage.database");
+		useSSL = config.getBoolean("storage.useSSL");
+		autoReconnect = config.getBoolean("storage.autoReconnect");
+		username = config.getString("storage.username");
+		password = config.getString("storage.password");
+		
+		bStats = config.getBoolean("general.bStatsMetrics");
 	}
 	
 	private List<String> uppercaseStringList(List<String> list)

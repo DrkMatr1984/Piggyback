@@ -1,5 +1,5 @@
 name: PiggyBack
-version: 2.4
+version: 2.5
 main: me.blubdalegend.piggyback.Piggyback
 api-version: 1.16
 softdepend: [Citizens, PlaceholderAPI, MVdWPlaceholderAPI, WorldGuard]
@@ -24,6 +24,9 @@ permissions:
         default: op
     piggyback.cooldown.bypass:
         description: Bypass the pickup cooldown
+        default: op
+    piggyback.no:
+        description: Other players cannot pick-up or ride the user
         default: op
     piggyback.reload:
         description: Reload Piggyback config and language file

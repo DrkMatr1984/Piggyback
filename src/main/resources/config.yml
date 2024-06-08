@@ -74,14 +74,19 @@ ride:
 # that are sent to the players
 
 messages:
+  ## Language files are located in /plugins/piggyback/lang. Default is en-US.yml. If you edit one into a new language, try to rename the file with a language code from
+  ## https://www.alchemysoftware.com/livedocs/ezscript/Topics/Catalyst/Language.htm such as zh.yml or zh-CHS.yml for simplified Chinese for example. You can then set 
+  ## this setting here in this file to zh or zh-CHS and it will load properly. If you create a new language file, please send it to me so I can include it in future
+  ## updates of the project for all to enjoy! (Email: DrkMatr1984@aol.com)
+  language: en-US
   # Whether to send any plugin messages at all to players
   # (Maybe you want this false for immersion?)
   # Players may also toggle messages off in game if given permission with a command
-  Send: true
+  send: true
   # Cooldown in seconds between getting different plugin messages 
   # (This will help prevent chat spam for the player if they are doing
   # something like spam clicking after a cooldown) (set to 0 to disable)
-  Cooldown: 30
+  cooldown: 30
 
 ##################################
 ##### Blacklist Configuration ####
@@ -130,6 +135,8 @@ storage:
   # Storage Type. Possible values: YML, H2, MYSQL, POSTGRE, SQLITE
   # Case-Insensitive
   type: 'yml'
+  # Filename of sqlite database file if sqlite is chosen. Location is
+  # in piggyback/data
   sqliteFilename: 'pback.db'
   # Url of the server, with port, if using H2, MYSQL, or POSTGRE
   url: 'mysql://127.0.0.1:3306/'
