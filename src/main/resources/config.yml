@@ -22,6 +22,11 @@ main:
   # Whether the player must have an empty hand or not when attempting to
   # ride/pick up an entity
   requireEmptyHand: false
+  # Whether the player is required to have a certain item in their hand before being allowed
+  # to pick-up/ride entities. If set to NONE the plugin will function as normal. If require empty hand
+  # is true then this will also have no effect. Items must be in the format as listed here:
+  # https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Material.html
+  requireItem: NONE
   # Whether to ride/pick-up players only (*This will TOTALLY DISABLE picking-up/riding any mob
   # other than players!*)
   onlyPlayers: false
@@ -95,7 +100,6 @@ messages:
 # These configs control the different blacklists/whitelists
 
 blacklists:
- 
   # Configures the entity blacklists/whitelists
   entities:
     # If this is true the list becomes a whitelist instead
@@ -104,7 +108,6 @@ blacklists:
     # https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/entity/EntityType.html
     entityBlacklist:
     - ''
-    
   # Configures the custom entity blacklists/whitelists
   customEntities:
     # If this is true the list becomes a whitelist instead
@@ -114,7 +117,6 @@ blacklists:
     # (You will have to know the name of the mob)
     customEntityBlacklist:
     - ''  
- 
   # Configures the world blacklists/whitelists
   worldBlacklist:
     # If this is true the list becomes a whitelist instead
@@ -128,13 +130,16 @@ blacklists:
 ##################################
 
 # These configs control where the data for the message toggles and
-# piggyback toggles are stored. Default is .yml in the piggyback/data
+# piggyback toggles are stored. Default is .yml in the PiggyBack/data
 # folder. 
 
 storage:
   # Storage Type. Possible values: YML, H2, MYSQL, POSTGRE, SQLITE
   # Case-Insensitive
   type: 'yml'
+  # Amount of time in seconds before saving data when using SQLite
+  # or YML
+  saveTimer: 600
   # Filename of sqlite database file if sqlite is chosen. Location is
   # in piggyback/data
   sqliteFilename: 'pback.db'

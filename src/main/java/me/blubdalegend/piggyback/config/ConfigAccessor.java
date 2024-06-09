@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -29,6 +30,7 @@ public class ConfigAccessor
 	public Clicks clickType;
 	public Actions clickAction;
 	public boolean requireEmptyHand;
+	public Material requireItem;
 	public boolean onlyPlayers;
 	public boolean onlyMobs;
 	public boolean allowNPCs;
@@ -53,6 +55,7 @@ public class ConfigAccessor
 	public List<String> disabledWorlds;
 	
 	public String storageType;
+	public long saveTimer;
 	public String sqliteFilename = "pback.db";
 	public String url;
 	public String database;
@@ -79,12 +82,13 @@ public class ConfigAccessor
 	{
 		this.config = YamlConfiguration.loadConfiguration(file);
 		// main config section
-		clickAction = Actions.valueOf((Objects.requireNonNull(config.getString("main.clickAction"))).toUpperCase());
-		clickType = Clicks.valueOf((Objects.requireNonNull(config.getString("main.clickType"))).toUpperCase());	
-		requireEmptyHand = config.getBoolean("main.requireEmptyHand");
-		onlyPlayers = config.getBoolean("main.onlyPlayers");
-		onlyMobs = config.getBoolean("main.onlyMobs");
-		allowNPCs = config.getBoolean("main.allowNPCs");
+		clickAction = Actions.valueOf((Objects.requireNonNull(config.getString("main.clickAction"))).toUpperCase()); //DONE
+		clickType = Clicks.valueOf((Objects.requireNonNull(config.getString("main.clickType"))).toUpperCase());	// DONE
+		requireEmptyHand = config.getBoolean("main.requireEmptyHand"); //DONE
+		requireItem = Material.matchMaterial(config.getString(("main.requireItem").toUpperCase())); //is null if cannot match
+		onlyPlayers = config.getBoolean("main.onlyPlayers"); // DONE
+		onlyMobs = config.getBoolean("main.onlyMobs"); // DONE
+		allowNPCs = config.getBoolean("main.allowNPCs"); // DONE
 		
 		// pickup configuration
 		pickupCooldown = ((config.getLong("pickup.cooldown")) * 20);
@@ -111,6 +115,7 @@ public class ConfigAccessor
 		
 		// storage
 		storageType = config.getString("storage.type");
+		saveTimer = ((config.getLong("storage.saveTimer")) * 20);
 		sqliteFilename = config.getString("storage.sqliteFilename");
 		url = config.getString("storage.url");
 		database = config.getString("storage.database");

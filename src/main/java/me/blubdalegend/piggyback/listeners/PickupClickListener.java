@@ -43,7 +43,10 @@ public class PickupClickListener implements org.bukkit.event.Listener
 				perm = true;
 			}
 			//pickup
-			if(this.plugin.config.clickAction.equals(Actions.PICKUP) || (this.plugin.config.clickAction.equals(Actions.RIDE) && this.plugin.config.pickupOnlyMobs && !(clicked instanceof Player))) {
+			if(this.plugin.config.clickAction.equals(Actions.PICKUP) || (this.plugin.config.clickAction.equals(Actions.RIDE) && this.plugin.config.pickupOnlyMobs && !(clicked instanceof Player)) || 
+					(this.plugin.config.clickAction.equals(Actions.RIDE) && this.plugin.config.pickupOnlyPlayers && clicked instanceof Player)) {
+				if((this.plugin.config.onlyMobs && clicked instanceof Player) || (this.plugin.config.onlyPlayers && !(clicked instanceof Player)))
+					return;
 				if((player.isInsideVehicle()&& Objects.equals(player.getVehicle(), clicked))){
 					return;
 				}
@@ -168,6 +171,8 @@ public class PickupClickListener implements org.bukkit.event.Listener
 			//ride
 			if(this.plugin.config.clickAction.equals(Actions.RIDE) && !this.plugin.config.pickupOnlyMobs 
 	        		|| (this.plugin.config.clickAction.equals(Actions.RIDE) && this.plugin.config.pickupOnlyMobs && clicked instanceof Player)){
+				if((this.plugin.config.onlyMobs && clicked instanceof Player) || (this.plugin.config.onlyPlayers && !(clicked instanceof Player)))
+					return;
 				if((player.isInsideVehicle()&& Objects.equals(player.getVehicle(), clicked))){
 					return;
 				}
@@ -292,6 +297,8 @@ public class PickupClickListener implements org.bukkit.event.Listener
 			if(perm) {
 		        if(this.plugin.config.clickAction.equals(Actions.RIDE) && !this.plugin.config.pickupOnlyMobs 
 		        		|| (this.plugin.config.clickAction.equals(Actions.RIDE) && this.plugin.config.pickupOnlyMobs && clicked instanceof Player)){
+		        	if((this.plugin.config.onlyMobs && clicked instanceof Player) || (this.plugin.config.onlyPlayers && !(clicked instanceof Player)))
+						return;
 			        if(!clicked.getPassengers().isEmpty()){
 			        	if(clicked.getPassengers().contains(player)){
 			    		    return;
@@ -393,7 +400,10 @@ public class PickupClickListener implements org.bukkit.event.Listener
 			    perm = true;
 		    }
 			//pickup or ride
-			if(this.plugin.config.clickAction.equals(Actions.PICKUP) || (this.plugin.config.clickAction.equals(Actions.RIDE) && this.plugin.config.pickupOnlyMobs && !(clicked instanceof Player))) {
+			if(this.plugin.config.clickAction.equals(Actions.PICKUP) || (this.plugin.config.clickAction.equals(Actions.RIDE) && this.plugin.config.pickupOnlyMobs && !(clicked instanceof Player)) || 
+					(this.plugin.config.clickAction.equals(Actions.RIDE) && this.plugin.config.pickupOnlyPlayers && clicked instanceof Player)){
+				if((this.plugin.config.onlyMobs && clicked instanceof Player) || (this.plugin.config.onlyPlayers && !(clicked instanceof Player)))
+					return;
 			    if((player.isInsideVehicle()&& Objects.equals(player.getVehicle(), clicked))){
 			        return;
 			    }		    

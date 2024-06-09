@@ -1,0 +1,124 @@
+== Crouch, click, Piggyback! ==
+[ATTACH=full]705790[/ATTACH]
+*** OVER 1000 DOWNLOADS ON BUKKIT! ***
+http://dev.bukkit.org/bukkit-plugins/piggyback/
+
+Ever wanted to CARRY pigs around like a BADASS?! Ever wanted a SLIME as PET?! TIRED of Wheat and Leads?! Your FRIEND doesn't want to come with YOU?!
+Then this is the Plugin for you!
+
+Piggyback has been around for 8 years now, and as a result, is probably more stable, and more complete, than most other stackers! Piggyback is fully configurable and can be used in Survival mode as well as Lobbies, and actually started out as a survival stacker.
+
+English Plugin Showcase (by GreenArrow99)
+[MEDIA=youtube]Gj4aww8qv9g[/MEDIA]
+
+German Plugin Showcase (by SzukaćHD)
+[MEDIA=youtube]3brsjMBWFx4[/MEDIA]
+
+=== How to Use ===
+
+Search for a mob you want to carry.
+Come close to the mob (at least 5 blocks).
+Crouch and right click/left click(configurable) on the mob!(Players may turn off ability to be picked up, and config option to turn off for NPCs)
+To stop carrying the mob or player, you just crouch and right click/left click on the mob again
+
+Players with their toggle off may not be picked up by other players or pick up other players, but can still pick up Mobs. You can use this plugin in survival, or use it as a Stacker plugin for a lobby! All of the messages are customizable, and can even be completely disabled or toggled off by the user for an immersive experience!
+
+=== Features ===
+
+Pick up other players and mobs without commands
+Drop or throw(configurable) other players and mobs without commands
+Sends messages notifying player the mob has been picked up, dropped, or thrown
+Sends spam-free messages notifying player when their actions have been denied
+Players may toggle off Piggyback's messages
+Set a cooldown for piggybacking
+Require players to have empty hands before piggybacking
+Players may toggle off their ability to be picked up. However, while toggled off, they will be unable to pick up other players
+Server owner may customize the plugin's command
+Block certain entities from being picked up entirely, or block Piggyback use in certain worlds
+Worldguard support (Set "allow-piggyback = DENY" to deny piggyback in regions)
+PlotSquared support? (needs tested)
+Non-living entities are automatically blocked from being picked up
+=== Commands ===
+
+/pback - Displays the help page
+/pback help - Also displays the help page
+/pback toggle <none/playerName> - Toggle ability to be picked up by other players on/off for yourself or others (if you have permission)
+/pback messages <none/playerName>- Toggle Piggyback messages on/off for yourself or others (if you have permission)
+/pback reload - Reload Piggyback configs and language file
+
+=== Permissions ===
+
+piggyback.use (default) - Allows the user to pick up entities and players, providing the player being picked up is not toggled off
+piggyback.toggle (op) - Allows the user to toggle on/off their ability to be picked up/ridden
+piggyback.toggle.other (op) - Allows the user to toggle on/off other users' ability to be picked up/ridden
+piggyback.messages (op) - Allows the user to toggle on/off piggyback messages for themselves
+piggyback.messages.other (op) -  Allows the user to toggle on/off piggyback messages for others
+piggyback.cooldown.bypass (op) - Bypass the pickup cooldown
+piggyback.reload (op) - Reload Piggyback configs and language file
+
+=== WorldGuard ===
+[SPOILER]Set "allow-piggyback = DENY" to deny piggyback in regions[/SPOILER][SPOILER][/SPOILER]
+=== Placeholders ===
+[SPOILER]
+mdvwPlaceholderAPI support -
+• {Piggyback_is_disabled} - Whether or not player has being picked up toggled off
+• {Piggyback_is_messages_disabled} - Whether or not player has piggyback messages toggled off
+• {Piggyback_cooldown_integer} - The player's current cooldown down in integer seconds
+• {Piggyback_cooldown_decimal} - The player's current cooldown down in decimals to two places in seconds
+PlaceholderAPI by clip support -
+• %Piggyback_is_disabled% - Whether or not player has being picked up toggled off
+• %Piggyback_is_messages_disabled% - Whether or not player has piggyback messages toggled off
+• %Piggyback_cooldown_integer% - The player's current cooldown down in integer seconds
+• %Piggyback_cooldown_decimal% - The player's current cooldown down in decimals to two places in seconds
+[/SPOILER]
+=== Example Config ===
+
+Config has changed drastically in this update(v 1.9.9). If upgrading, please delete your existing Piggyback plugin folder and let a new one generate.
+[SPOILER]
+[CODE]
+# PIGGYBACK CONFIGURATION FILE
+general:
+  # Enable bStats metrics
+  bStatsMetrics: true
+  # Possible options are RIGHT, LEFT, or EITHER
+  clickType: RIGHT
+  requireEmptyHand: true
+  pickUp:
+    Cooldown: 10
+  # Possible options are PICKUP or RIDE
+  clickAction: PICKUP
+pickup:
+  throwRiderAway: true
+  pickUpNPCs: false
+ride:
+  onlyRidePlayers: true
+  rideNPC: false
+messages:
+  Send: true
+  Cooldown: 30
+blacklists:
+  entityBlacklist:
+  - ''
+  customEntityBlacklist:
+  - ''
+  worldBlacklist:
+  - ''
+[/CODE][/SPOILER]
+
+=== Developer API ===
+[SPOILER]
+PiggybackAPI - https://github.com/DrkMatr1984/Piggyback/blob/master/src/main/java/me/blubdalegend/piggyback/PiggybackAPI.java
+Piggyback Events
+- https://github.com/DrkMatr1984/Piggyback/tree/master/src/main/java/me/blubdalegend/piggyback/events
+[/SPOILER]
+
+=== ToDo ===
+
+* Config - ItemInHand: true/false - if this is true, players can pick entities up while holding something. If it's false, you must have an empty hand when picking entities up.
+* Config - Allowed entities list
+* Config - Custom displayname of entities Exclusion list
+
+=== How you can help ===
+
+I'll try to keep this list updated. ;)
+

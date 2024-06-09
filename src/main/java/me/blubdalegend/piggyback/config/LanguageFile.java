@@ -1,11 +1,15 @@
 package me.blubdalegend.piggyback.config;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.List;
 
+import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import me.blubdalegend.piggyback.Piggyback;
+import me.blubdalegend.piggyback.compatibility.ResourceUtils;
 
 public class LanguageFile
 {
@@ -66,56 +70,77 @@ public class LanguageFile
 		if (languageFile == null) {
 			languageFile = new File(languageFolder, plugin.config.langfile);
 	    }
-	    if (!languageFile.exists()) {           
-	    	plugin.saveResource(("lang/"+plugin.config.langfile), false);
-	    }
+		if (!languageFile.exists()) {
+			plugin.getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&e[Piggyback] &aSaving default language files..."));
+	    	List<String> files;
+			try {
+				files = ResourceUtils.listFiles(plugin.getClass(), "/lang");
+				if(files!=null) {
+					for(String file : files) {
+						plugin.saveResource("lang/" + file, false);
+						plugin.getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&e[Piggyback] " + "&aPiggyBack/lang/" + file + " saved"));
+			    	}
+				}				
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}		
 	    initLanguageFile();
 	}
 	
 	public void initLanguageFile(){
-		FileConfiguration language = YamlConfiguration.loadConfiguration(languageFile);
-		// Commands - make them all "to lowercase"
-		command = (language.getString("commands.main")).toLowerCase();
-		reloadCommand = (language.getString("commands.reload")).toLowerCase();
-		toggleCommand = (language.getString("commands.toggle")).toLowerCase();
-		messagesCommand = (language.getString("commands.main")).toLowerCase();
-		helpCommand = (language.getString("commands.help")).toLowerCase();
-		
-		title = language.getString("message.prefix");
-		prefix = "&f[&r" + title + "&f]&r";      
-	    carryMsg = language.getString("message.carry");
-		dropMsg = language.getString("message.drop");
-		throwMsg = language.getString("message.throw");
-		rideMsg = language.getString("message.ride");
-		pickupCooldown = language.getString("message.pickupCD");
-		rideCooldown = language.getString("message.rideCD");
-		toggleOn = language.getString("message.toggleOn");
-		toggleOff = language.getString("message.toggleOff");
-		toggleOnOther = language.getString("message.toggleOnOther");
-		toggleOffOther = language.getString("message.toggleOffOther");
-		messageOn = language.getString("message.messageOn");
-		messageOff = language.getString("message.messageOff");
-		messageOnOther = language.getString("message.messageOnOther");
-		messageOffOther = language.getString("message.messageOffOther");
-		noPickUpNPC = language.getString("message.noPickUpNPC");
-		noRideNPC = language.getString("message.noRideNPC");
-		emptyHand = language.getString("message.emptyHand");
-		noPerms = language.getString("message.noPerms");
-		notAPlayer = language.getString("message.notAPlayer");
-		noPickUpPlayer = language.getString("message.noPickUpPlayer");
-		noPickUpPlayerToggle = language.getString("message.noPickUpPlayerToggle");
-		noRidePlayer = language.getString("message.noRidePlayer");
-		noRidePlayerToggle = language.getString("message.noRidePlayerToggle");
-		error = language.getString("message.error");
-		hasNotPlayed = language.getString("message.hasNotPlayed");
-		reload = language.getString("message.reload");
-		help = language.getString("help.help");
-		helpMain = language.getString("help.main");
-		helpToggle = language.getString("help.toggle");
-		helpToggleOther = language.getString("help.toggleOther");
-		helpMessageToggle = language.getString("help.messageToggle");
-		helpMessageToggleOther = language.getString("help.messageToggleOther");
-		helpReload = language.getString("help.reload");
+		if(languageFile.exists() && YamlConfiguration.loadConfiguration(languageFile)!=null) {
+			FileConfiguration language = YamlConfiguration.loadConfiguration(languageFile);
+			// comands
+			command = (language.getString("commands.main")).toLowerCase();
+			reloadCommand = (language.getString("commands.reload")).toLowerCase();
+			toggleCommand = (language.getString("commands.toggle")).toLowerCase();
+			messagesCommand = (language.getString("commands.main")).toLowerCase();
+			helpCommand = (language.getString("commands.help")).toLowerCase();
+			// feedback
+			title = language.getString("message.prefix");
+			prefix = "&f[&r" + title + "&f]&r";      
+		    carryMsg = language.getString("message.carry");
+			dropMsg = language.getString("message.drop");
+			throwMsg = language.getString("message.throw");
+			rideMsg = language.getString("message.ride");
+			pickupCooldown = language.getString("message.pickupCD");
+			rideCooldown = language.getString("message.rideCD");
+			toggleOn = language.getString("message.toggleOn");
+			toggleOff = language.getString("message.toggleOff");
+			toggleOnOther = language.getString("message.toggleOnOther");
+			toggleOffOther = language.getString("message.toggleOffOther");
+			messageOn = language.getString("message.messageOn");
+			messageOff = language.getString("message.messageOff");
+			messageOnOther = language.getString("message.messageOnOther");
+			messageOffOther = language.getString("message.messageOffOther");
+			noPickUpNPC = language.getString("message.noPickUpNPC");
+			noRideNPC = language.getString("message.noRideNPC");
+			emptyHand = language.getString("message.emptyHand");
+			noPerms = language.getString("message.noPerms");
+			notAPlayer = language.getString("message.notAPlayer");
+			noPickUpPlayer = language.getString("message.noPickUpPlayer");
+			noPickUpPlayerToggle = language.getString("message.noPickUpPlayerToggle");
+			noRidePlayer = language.getString("message.noRidePlayer");
+			noRidePlayerToggle = language.getString("message.noRidePlayerToggle");
+			error = language.getString("message.error");
+			hasNotPlayed = language.getString("message.hasNotPlayed");
+			reload = language.getString("message.reload");
+			// help
+			help = language.getString("help.help");
+			helpMain = language.getString("help.main");
+			helpToggle = language.getString("help.toggle");
+			helpToggleOther = language.getString("help.toggleOther");
+			helpMessageToggle = language.getString("help.messageToggle");
+			helpMessageToggleOther = language.getString("help.messageToggleOther");
+			helpReload = language.getString("help.reload");
+		}else {
+			plugin.getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&e[Piggyback] &cCannot find " + languageFile.getName()));
+			plugin.getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&e[Piggyback] &cCheck PiggyBack/lang/ folder and make sure that"));
+			plugin.getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&e[Piggyback] &cyou have a filename in that folder that matches"));
+			plugin.getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&e[Piggyback] &cLanguage setting in config.yml"));
+		}
+	
 	}
 	
 }

@@ -37,6 +37,7 @@ public class PiggybackEventsListener implements org.bukkit.event.Listener
 	public void onEntityThrow(PiggybackThrowEntityEvent event)
 	{		
   		Player player = event.getPlayer();
+  		player.sendMessage("Got to PiggybackThrowEntityEvent");
   		player.removePassenger(event.getEntity());
   		List<Entity> riders = new ArrayList<>();
 		if(Piggyback.passengers.containsKey(player.getUniqueId())) {
@@ -57,6 +58,7 @@ public class PiggybackEventsListener implements org.bukkit.event.Listener
 	public void onEntityDrop(PiggybackDropEntityEvent event)
 	{	
 		Player player = event.getPlayer();
+		player.sendMessage("Got to PiggyBackDropEntityEvent");
 		player.removePassenger(event.getEntity());
 		List<Entity> riders = new ArrayList<>();
 		if(Piggyback.passengers.containsKey(player.getUniqueId())) {

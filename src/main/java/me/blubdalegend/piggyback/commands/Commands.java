@@ -30,11 +30,11 @@ public class Commands implements CommandExecutor
 					return true;
 			    }else if(args.length == 1){
 					String s = args[0];					
-					if((s.toLowerCase()).equals("help")){
+					if((s.toLowerCase()).equals(plugin.lang.helpCommand)){
 						displayHelp(sender);
 						return true;
 					}
-					if((s.toLowerCase()).equals("reload")){
+					if((s.toLowerCase()).equals(plugin.lang.reloadCommand)){
 						if(sender.hasPermission("piggyback.reload") || sender.isOp() || !(sender instanceof Player)){
 							plugin.lang.initLanguageFile();
 							plugin.config.initConfig();
@@ -49,7 +49,7 @@ public class Commands implements CommandExecutor
 					   		return true;
 					   	}
 					}	
-					if((s.toLowerCase()).equals("toggle")){
+					if((s.toLowerCase()).equals(plugin.lang.toggleCommand)){
 						if(sender.hasPermission("piggyback.toggle") || sender.isOp()){
 							if(sender instanceof Player) {
 								Player p = (Player)sender;
@@ -78,7 +78,7 @@ public class Commands implements CommandExecutor
 					    	return true;
 					    }
 					}
-					if((s.toLowerCase()).equals("messages")){
+					if((s.toLowerCase()).equals(plugin.lang.messagesCommand)){
 						if(sender.hasPermission("piggyback.messages") || sender.isOp()){
 							if(sender instanceof Player) {
 								Player p = (Player)sender;
@@ -107,7 +107,7 @@ public class Commands implements CommandExecutor
 						}
 					}
 				}else if(args.length > 1) {
-					if(args[0].toLowerCase().equals("toggle")) {
+					if(args[0].toLowerCase().equals(plugin.lang.toggleCommand)) {
 						if(sender.hasPermission("piggyback.toggle.other") || sender.isOp() || !(sender instanceof Player)){
 							for(String s : args){
 								if(s!=args[0]) {
@@ -147,7 +147,7 @@ public class Commands implements CommandExecutor
 					       	}	
 					    }
 					}
-				    if(args[0].toLowerCase().equals("messages")) {
+				    if(args[0].toLowerCase().equals(plugin.lang.messagesCommand)) {
 				    	if(sender.hasPermission("piggyback.messages.other") || sender.isOp() || !(sender instanceof Player)){
 							for(String s : args){
 								if(s!=args[0]) {
@@ -203,15 +203,15 @@ public class Commands implements CommandExecutor
 		if(sender.hasPermission("piggyback.use") || sender.isOp())
 			sender.sendMessage(ChatColor.translateAlternateColorCodes('&',"&7/&e" + plugin.lang.command + " &7- &r" + plugin.lang.helpMain));
 		if(sender.hasPermission("piggyback.toggle") || sender.isOp())
-			sender.sendMessage(ChatColor.translateAlternateColorCodes('&',"&7/&e" + plugin.lang.command + " &btoggle &7- &r" + plugin.lang.helpToggle));
+			sender.sendMessage(ChatColor.translateAlternateColorCodes('&',"&7/&e" + plugin.lang.command + " &b" + plugin.lang.toggleCommand +  " &7- &r" + plugin.lang.helpToggle));
 		if(sender.hasPermission("piggyback.toggle.other") || sender.isOp() || !(sender instanceof Player))
-			sender.sendMessage(ChatColor.translateAlternateColorCodes('&',"&7/&e" + plugin.lang.command + " &btoggle <playerName>&7- &r" + plugin.lang.helpToggleOther));
+			sender.sendMessage(ChatColor.translateAlternateColorCodes('&',"&7/&e" + plugin.lang.command + " &b" + plugin.lang.toggleCommand + " " + plugin.lang.helpToggleOther));
 		if(sender.hasPermission("piggyback.messages") || sender.isOp())
-			sender.sendMessage(ChatColor.translateAlternateColorCodes('&',"&7/&e" + plugin.lang.command + " &3messages &7- &r" + plugin.lang.helpMessageToggle));
+			sender.sendMessage(ChatColor.translateAlternateColorCodes('&',"&7/&e" + plugin.lang.command + " &3" + plugin.lang.messagesCommand + " &7- &r" + plugin.lang.helpMessageToggle));
 		if(sender.hasPermission("piggyback.messages.other") || sender.isOp() || !(sender instanceof Player))
-			sender.sendMessage(ChatColor.translateAlternateColorCodes('&',"&7/&e" + plugin.lang.command + " &3messages <playerName>&7- &r" + plugin.lang.helpMessageToggleOther));
+			sender.sendMessage(ChatColor.translateAlternateColorCodes('&',"&7/&e" + plugin.lang.command + " &3" + plugin.lang.messagesCommand + " " + plugin.lang.helpMessageToggleOther));
 		if(sender.hasPermission("piggyback.reload") || sender.isOp() || !(sender instanceof Player))
-			sender.sendMessage(ChatColor.translateAlternateColorCodes('&',"&7/&e" + plugin.lang.command + " &8reload &7- &r" + plugin.lang.helpReload));
+			sender.sendMessage(ChatColor.translateAlternateColorCodes('&',"&7/&e" + plugin.lang.command + " &8" + plugin.lang.reloadCommand + " &7- &r" + plugin.lang.helpReload));
 		sender.sendMessage("");
 		int j = ((plugin.lang.title + " " + plugin.lang.help).length());
 		String s = "";
