@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
+// Credit goes to alexey-va for this code
+
 public final class ResourceUtils {
 
 		  public static List<String> listFiles(Class<?> clazz, String path) throws IOException {

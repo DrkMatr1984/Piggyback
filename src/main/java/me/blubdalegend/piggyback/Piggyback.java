@@ -23,7 +23,6 @@ import me.blubdalegend.piggyback.listeners.PickupClickListener;
 import me.blubdalegend.piggyback.compatibility.Console;
 //import me.blubdalegend.piggyback.compatibility.DenyPiggybackFlag;
 import me.blubdalegend.piggyback.compatibility.WorldGuardHook;
-import me.drkmatr1984.customevents.CustomEvents;
 
 import me.blubdalegend.piggyback.commands.Commands;
 
@@ -37,8 +36,8 @@ public class Piggyback extends org.bukkit.plugin.java.JavaPlugin
   public static List<UUID> toggleCooldownPlayers = new ArrayList<>();
   public static List<UUID> emptyHandCooldownPlayers = new ArrayList<>();
   public static List<UUID> noPermsCooldownPlayers = new ArrayList<>();
-  public static List<UUID> clickTimerCooldownPlayers = new ArrayList<>();
   public static HashMap<UUID,Long> piggybackPickupCooldownPlayers = new HashMap<>();
+  public static HashMap<UUID,Long> piggybackRideCooldownPlayers = new HashMap<>();
   public static HashMap<UUID, List<Entity>> passengers = new HashMap<>();
   private WorldGuardHook wgHook;
   //private DenyPiggybackFlag plotSquared;
@@ -59,7 +58,6 @@ public class Piggyback extends org.bukkit.plugin.java.JavaPlugin
 	  initConfigs();
 	  commands = new Commands(this);
 	  this.RegisterCommands();
-	  new CustomEvents(plugin, false, true, false, false, false).initializeLib();
 	  pm.registerEvents(new PickupClickListener(plugin), plugin);
 	  pm.registerEvents(new BukkitListeners(), plugin);
 	  pm.registerEvents(new PiggybackEventsListener(plugin), plugin);

@@ -45,7 +45,7 @@ main:
 pickup:
   # Cooldown in seconds before being able to pick-up players/mobs (set to 0 to disable)
   cooldown: 10
-  # Whether to 'throw' the rider when looking at them and re-clicking on them
+  # Whether to 'throw' the rider when looking at them whilte crouching and re-clicking on them
   # when they are riding you.
   throwRiderAway: true
   # If the above setting and this is also true, the player will perform a "far throw" when running

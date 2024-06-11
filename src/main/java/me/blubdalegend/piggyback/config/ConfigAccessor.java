@@ -85,33 +85,39 @@ public class ConfigAccessor
 		clickAction = Actions.valueOf((Objects.requireNonNull(config.getString("main.clickAction"))).toUpperCase()); //DONE
 		clickType = Clicks.valueOf((Objects.requireNonNull(config.getString("main.clickType"))).toUpperCase());	// DONE
 		requireEmptyHand = config.getBoolean("main.requireEmptyHand"); //DONE
-		requireItem = Material.matchMaterial(config.getString(("main.requireItem").toUpperCase())); //is null if cannot match
+		requireItem = Material.matchMaterial(config.getString(("main.requireItem").toUpperCase())); //DONE
 		onlyPlayers = config.getBoolean("main.onlyPlayers"); // DONE
 		onlyMobs = config.getBoolean("main.onlyMobs"); // DONE
 		allowNPCs = config.getBoolean("main.allowNPCs"); // DONE
 		
 		// pickup configuration
-		pickupCooldown = ((config.getLong("pickup.cooldown")) * 20);
-		throwRiderAway = config.getBoolean("pickup.throwRiderAway");
-		farThrowRider = config.getBoolean("pickup.farThrowRider");
+		pickupCooldown = ((config.getLong("pickup.cooldown")) * 20); // DONE
+		throwRiderAway = config.getBoolean("pickup.throwRiderAway"); // DONE
+		farThrowRider = config.getBoolean("pickup.farThrowRider"); // DONE
 		
 		// ride
-		rideCooldown = ((config.getLong("ride.cooldown")) * 20);
-		pickupOnlyMobs = config.getBoolean("ride.pickupOnlyMobs");
-		pickupOnlyPlayers = config.getBoolean("ride.pickupOnlyPlayers");
+		rideCooldown = ((config.getLong("ride.cooldown")) * 20); // DONE
+		pickupOnlyMobs = config.getBoolean("ride.pickupOnlyMobs"); // DONE
+		pickupOnlyPlayers = config.getBoolean("ride.pickupOnlyPlayers"); // DONE
 		
 		// messages
-		langfile = ((config.getString("messages.language")) + ".yml");
-		send = config.getBoolean("messages.send");
-		messageCooldown = ((config.getLong("messages.cooldown")) * 20);
+		langfile = ((config.getString("messages.language")) + ".yml"); //DONE
+		send = config.getBoolean("messages.send"); //DONE
+		messageCooldown = ((config.getLong("messages.cooldown")) * 20); //DONE
 		
 		// blacklists
-		whitelistEntities = config.getBoolean("blacklists.entities.whitelist");
-		disabledEntities = uppercaseStringList(config.getStringList("blacklists.entities.entityBlacklist"));
-		whitelistCustomEntities = config.getBoolean("blacklists.customEntities.whitelist");
-		disabledCustomEntities = uppercaseStringList(config.getStringList("blacklists.customEntities.customEntityBlacklist"));
-		whitelistWorlds = config.getBoolean("blacklists.worldBlacklist.whitelist");
-		disabledWorlds = uppercaseStringList(config.getStringList("blacklists.worldBlacklist.worlds"));
+		whitelistEntities = config.getBoolean("blacklists.entities.whitelist"); // DONE
+		disabledEntities = new ArrayList<String>();
+		if(config.getStringList("blacklists.entities.entityBlacklist")!=null)
+		    disabledEntities = uppercaseStringList(config.getStringList("blacklists.entities.entityBlacklist")); // DONE
+		whitelistCustomEntities = config.getBoolean("blacklists.customEntities.whitelist"); // DONE
+		disabledCustomEntities = new ArrayList<String>();
+		if(config.getStringList("blacklists.customEntities.customEntityBlacklist")!=null)
+		    disabledCustomEntities = uppercaseStringList(config.getStringList("blacklists.customEntities.customEntityBlacklist")); // DONE
+		whitelistWorlds = config.getBoolean("blacklists.worldBlacklist.whitelist"); // DONE
+		disabledWorlds = new ArrayList<String>();
+		if(config.getStringList("blacklists.worldBlacklist.worlds")!=null)
+		    disabledWorlds = uppercaseStringList(config.getStringList("blacklists.worldBlacklist.worlds")); // DONE
 		
 		// storage
 		storageType = config.getString("storage.type");

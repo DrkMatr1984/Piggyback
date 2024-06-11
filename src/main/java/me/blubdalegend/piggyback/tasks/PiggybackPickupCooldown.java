@@ -17,7 +17,7 @@ public class PiggybackPickupCooldown extends BukkitRunnable {
 	@Override
 	public void run() {
 		if(Piggyback.piggybackPickupCooldownPlayers.containsKey(player.getUniqueId())){
-			Piggyback.piggybackPickupCooldownPlayers.remove(player.getUniqueId(), Piggyback.piggybackPickupCooldownPlayers.get(player.getUniqueId()));
+			Piggyback.piggybackPickupCooldownPlayers.remove(player.getUniqueId());
 		}		
 	}
 	

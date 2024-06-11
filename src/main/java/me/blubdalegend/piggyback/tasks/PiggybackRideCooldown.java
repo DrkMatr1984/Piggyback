@@ -5,19 +5,19 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import me.blubdalegend.piggyback.Piggyback;
 
-public class PickupClickCooldown extends BukkitRunnable {
+public class PiggybackRideCooldown extends BukkitRunnable {
 	
 	private Player player;
 	
-	public PickupClickCooldown(Player p)
+	public PiggybackRideCooldown(Player p)
 	{
 		this.player = p;
 	} 
 	
 	@Override
 	public void run() {
-		if(Piggyback.clickTimerCooldownPlayers.contains(player.getUniqueId())){
-			Piggyback.clickTimerCooldownPlayers.remove(player.getUniqueId());
+		if(Piggyback.piggybackRideCooldownPlayers.containsKey(player.getUniqueId())){
+			Piggyback.piggybackRideCooldownPlayers.remove(player.getUniqueId());
 		}		
 	}
 	

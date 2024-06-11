@@ -33,6 +33,7 @@ public class LanguageFile
 	public String noPickUpNPC;
 	public String noRideNPC;
 	public String emptyHand;
+	public String requireItem;
 	public String noPerms;
 	public String notAPlayer;
 	public String noPickUpPlayer;
@@ -58,8 +59,12 @@ public class LanguageFile
 	public String helpToggleOther;
 	public String helpMessageToggle;
 	public String helpMessageToggleOther;
+	public String helpClickType;
+	public String helpRequireItem;
 	
 	private final Piggyback plugin;
+	
+	//Credit goes to alexey-va for some of the code for saving multiple lang files
 	
 	public LanguageFile(Piggyback plugin){
 		this.plugin = plugin;
@@ -117,6 +122,7 @@ public class LanguageFile
 			noPickUpNPC = language.getString("message.noPickUpNPC");
 			noRideNPC = language.getString("message.noRideNPC");
 			emptyHand = language.getString("message.emptyHand");
+			requireItem = language.getString("message.requireItem");
 			noPerms = language.getString("message.noPerms");
 			notAPlayer = language.getString("message.notAPlayer");
 			noPickUpPlayer = language.getString("message.noPickUpPlayer");
@@ -134,8 +140,10 @@ public class LanguageFile
 			helpMessageToggle = language.getString("help.messageToggle");
 			helpMessageToggleOther = language.getString("help.messageToggleOther");
 			helpReload = language.getString("help.reload");
+			helpClickType = language.getString("help.clickType");
+			helpRequireItem = language.getString("help.requireItem");
 		}else {
-			plugin.getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&e[Piggyback] &cCannot find " + languageFile.getName()));
+			plugin.getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&e[Piggyback] &cCan't find " + languageFile.getName()));
 			plugin.getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&e[Piggyback] &cCheck PiggyBack/lang/ folder and make sure that"));
 			plugin.getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&e[Piggyback] &cyou have a filename in that folder that matches"));
 			plugin.getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&e[Piggyback] &cLanguage setting in config.yml"));
