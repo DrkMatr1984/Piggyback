@@ -40,6 +40,7 @@ message:
   noPerms: "&cSorry, you don't have permission to do that :(&r"
   notAPlayer: "&cYou're not a player! You can't toggle being picked-up/ridden!&r"
   hasNotPlayed: "%player% has not played on this server before."
+  wrongCommand: "&cYou have entered an invalid PiggyBack command. Please check help.&r"
   error: '&4An Error has Occured!&r'
   reload: "&aConfigs and Language file have been reloaded successfully"
 ## Placeholders

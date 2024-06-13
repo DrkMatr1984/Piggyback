@@ -1,19 +1,22 @@
 package me.blubdalegend.piggyback.config;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.Queue;
+import java.util.Set;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.ConcurrentHashMap;
 
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
-
 import me.blubdalegend.piggyback.Piggyback;
 import org.jetbrains.annotations.NotNull;
 
 public class ToggleLists{
-	public Queue<String> disabledPlayers = new ConcurrentLinkedQueue<String>();
-	public Queue<String> messagePlayers = new ConcurrentLinkedQueue<String>();
+	public Set<String> disabledPlayers = Collections.newSetFromMap(new ConcurrentHashMap<>());
+	public Set<String> messagePlayers = Collections.newSetFromMap(new ConcurrentHashMap<>());
 	private YMLStorage ymlStorage;
 	private MySQLStorage mysqlStorage;
 	
@@ -30,16 +33,26 @@ public class ToggleLists{
 		if(this.storageType!=null) {
 			if(this.storageType.equalsIgnoreCase("yml")) {
 				ymlStorage = new YMLStorage(plugin);
-				disabledPlayers = listToQueue(ymlStorage.loadDisabledPlayers());
-				messagePlayers = listToQueue(ymlStorage.loadMessagePlayers());
+				disabledPlayers = listToSet(ymlStorage.loadDisabledPlayers());
+				messagePlayers = listToSet(ymlStorage.loadMessagePlayers());
 			}else {   ///MYSQL type Storages
 				if(DatabaseType.match(this.storageType)!=null) {
 			        if(isSQLite()) {
-			        	mysqlStorage = new MySQLStorage(plugin);
-			        	disabledPlayers = listToQueue(mysqlStorage.loadDisabledPlayers());
-			        	messagePlayers = listToQueue(mysqlStorage.loadMessagePlayers());
+			        	try {
+							mysqlStorage = new MySQLStorage(plugin);
+						} catch (SQLException e) {
+							plugin.getServer().getConsoleSender().sendMessage("SQLite Error");
+							e.printStackTrace();
+						}
+			        	disabledPlayers = listToSet(mysqlStorage.loadDisabledPlayers());
+			        	messagePlayers = listToSet(mysqlStorage.loadMessagePlayers());
 			        }else {
-			        	mysqlStorage = new MySQLStorage(plugin);
+			        	try {
+							mysqlStorage = new MySQLStorage(plugin);
+						} catch (SQLException e) {
+							plugin.getServer().getConsoleSender().sendMessage("MySQL Error");
+							e.printStackTrace();
+						}
 			        }
 				}else {
 					//Someone did not specify YML, H2, MYSQL, POSTGRE, SQLITE
@@ -47,19 +60,36 @@ public class ToggleLists{
 					plugin.getLogger().info("Database needs a type set. Possible values: YML, H2, MYSQL, POSTGRE, SQLITE");
 					plugin.getLogger().info("Falling back to yml.");
 					ymlStorage = new YMLStorage(plugin);
-					disabledPlayers = listToQueue(ymlStorage.loadDisabledPlayers());
-					messagePlayers = listToQueue(ymlStorage.loadMessagePlayers());
+					disabledPlayers = listToSet(ymlStorage.loadDisabledPlayers());
+					messagePlayers = listToSet(ymlStorage.loadMessagePlayers());
 					this.storageType = "yml";
 				}
 			}
-		}	
+			if(isYML() || isSQLite()) {
+				Bukkit.getScheduler().runTaskTimerAsynchronously(plugin,new Runnable() {
+					public void run() {
+						saveData();
+						plugin.getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&e[Piggyback] &aSaving data..."));
+					}
+				}, 20*plugin.config.saveTimer, 20*plugin.config.saveTimer);
+			}
+		}else {
+			//Someone did not specify YML, H2, MYSQL, POSTGRE, SQLITE
+			//Fallback to yml
+			plugin.getLogger().info("Database needs a type set. Possible values: YML, H2, MYSQL, POSTGRE, SQLITE");
+			plugin.getLogger().info("Falling back to yml.");
+			ymlStorage = new YMLStorage(plugin);
+			disabledPlayers = listToSet(ymlStorage.loadDisabledPlayers());
+			messagePlayers = listToSet(ymlStorage.loadMessagePlayers());
+			this.storageType = "yml";
+		}
 	}
 	
 	public void saveData() {
 		if(isYML()) {
-			ymlStorage.saveData(disabledPlayers, messagePlayers);
+			ymlStorage.saveData(setToList(disabledPlayers),setToList(messagePlayers));
 		}else if(isSQLite()){   ///MYSQL type Storages
-			mysqlStorage.saveData(disabledPlayers, messagePlayers);
+			mysqlStorage.saveData(setToList(disabledPlayers), setToList(messagePlayers));
 		}else {
 			mysqlStorage.saveData();
 		}
@@ -116,9 +146,8 @@ public class ToggleLists{
 					this.disabledPlayers.remove(id);
 			}
 		}else {
-			mysqlStorage.setDisabled(id, b);
-		}
-		
+			plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> mysqlStorage.setDisabled(id, b));			
+		}	
 	}
 	
 	public void setDisabled(@NotNull Player p, boolean b) {
@@ -154,7 +183,7 @@ public class ToggleLists{
 			        this.messagePlayers.remove(id);
 			}
 		}else {
-			mysqlStorage.setMessagesDisabled(id, b);
+			plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> mysqlStorage.setMessagesDisabled(id, b));
 		}	
 	}
 	
@@ -166,11 +195,17 @@ public class ToggleLists{
 		setMessagesDisabled(p.getUniqueId(), b);
 	}
 	
-	private Queue<String> listToQueue(List<String> list) {
-		Queue<String> queue = new ConcurrentLinkedQueue<String>();
+	private Set<String> listToSet(List<String> list) {
+		Set<String> set = Collections.newSetFromMap(new ConcurrentHashMap<>());
 		for(String s : list)
-			queue.add(s);
-		return queue;
+			set.add(s);
+		return set;
 	}
 	
+	public List<String> setToList(Set<String> set) {
+		List<String> list = new ArrayList<String>();
+		for(String s : set)
+			list.add(s);
+		return list;
+	}
 }

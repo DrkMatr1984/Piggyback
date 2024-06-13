@@ -4,14 +4,10 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Queue;
-
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import me.blubdalegend.piggyback.Piggyback;
-
-
 
 public class YMLStorage
 {
@@ -67,7 +63,7 @@ public class YMLStorage
 		return messagePlayers;
 	}
 		  
-	public void saveData(Queue<String> disabledPlayers, Queue<String> messagePlayers){
+	public void saveData(List<String> disabledPlayers, List<String> messagePlayers){
 		//pickup toggle users
 		if(disabledPlayers!=null)
 		{
@@ -90,7 +86,7 @@ public class YMLStorage
 		//message toggle users
 		if(messagePlayers!=null)
 		{
-			message.set("DisabledPlayers",disabledPlayers);
+			message.set("DisabledPlayers",messagePlayers);
 		}
 		if(messageFile.exists())
 			messageFile.delete();
@@ -108,4 +104,3 @@ public class YMLStorage
 		}		
 	}
 }
-

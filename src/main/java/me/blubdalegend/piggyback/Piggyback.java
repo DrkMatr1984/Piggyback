@@ -18,6 +18,7 @@ import me.blubdalegend.piggyback.config.ConfigAccessor;
 import me.blubdalegend.piggyback.config.LanguageFile;
 import me.blubdalegend.piggyback.config.ToggleLists;
 import me.blubdalegend.piggyback.listeners.PiggybackEventsListener;
+import me.blubdalegend.piggyback.listeners.EntityInteractListener;
 import me.blubdalegend.piggyback.listeners.BukkitListeners;
 import me.blubdalegend.piggyback.listeners.PickupClickListener;
 import me.blubdalegend.piggyback.compatibility.Console;
@@ -58,9 +59,10 @@ public class Piggyback extends org.bukkit.plugin.java.JavaPlugin
 	  initConfigs();
 	  commands = new Commands(this);
 	  this.RegisterCommands();
+	  pm.registerEvents(new EntityInteractListener(plugin), plugin);
 	  pm.registerEvents(new PickupClickListener(plugin), plugin);
-	  pm.registerEvents(new BukkitListeners(), plugin);
 	  pm.registerEvents(new PiggybackEventsListener(plugin), plugin);
+	  pm.registerEvents(new BukkitListeners(), plugin);	  
       new PiggybackAPI(plugin);
       if(Bukkit.getPluginManager().isPluginEnabled("MVdWPlaceholderAPI")) {
       	  log.info("Hooked into MVdWPlaceholderAPI!");

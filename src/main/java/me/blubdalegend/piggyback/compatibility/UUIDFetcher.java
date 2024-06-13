@@ -91,8 +91,8 @@ public class UUIDFetcher implements Callable<Map<String, UUID>> {
 	    		Bukkit.getScheduler().runTask(piggyback, new Runnable() {
 	                @Override
 	                public void run() {
-	                // call the callback with the result
-	                callback.onQueryDone(result);
+	                    // call the callback with the result
+	                    callback.onQueryDone(result);
 	                }
 	            });        
 	    }}.runTaskAsynchronously(piggyback);

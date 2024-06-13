@@ -84,6 +84,7 @@ public class PickupClickListener implements org.bukkit.event.Listener
 							}
 						}	  
 					}else {
+						Bukkit.getServer().getLogger().info("Trying to Pickup...");
 						if(!plugin.config.disabledWorlds.isEmpty()) {
 					    	if(plugin.config.disabledWorlds.contains(clicked.getWorld().toString().toUpperCase()) && !plugin.config.whitelistWorlds)
 						    {
@@ -153,7 +154,11 @@ public class PickupClickListener implements org.bukkit.event.Listener
 							}
 						}
 					    if(clicked instanceof Player p)
+					    	
 					    {
+					    	if(p.hasPermission("piggyback.no")) {
+								return;
+							}
 							if(plugin.lists.disabledPlayers.contains(player.getUniqueId().toString())){
 					    		if(!((plugin.lang.prefix + " " + plugin.lang.noPickUpPlayerToggle).equals(" "))){
 					    			player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " " + (plugin.lang.noPickUpPlayerToggle).replace("%player%", p.getDisplayName())));
@@ -312,6 +317,9 @@ public class PickupClickListener implements org.bukkit.event.Listener
 					}
 					if(clicked instanceof Player p)
 			        {
+						if(p.hasPermission("piggyback.no")) {
+							return;
+						}
 			           	if(plugin.lists.disabledPlayers.contains(player.getUniqueId().toString())){
 					   		if(!((plugin.lang.prefix + " " + plugin.lang.noRidePlayerToggle).equals(" "))){
 					   			player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " " + (plugin.lang.noRidePlayerToggle).replace("%player%", p.getDisplayName())));
@@ -469,6 +477,9 @@ public class PickupClickListener implements org.bukkit.event.Listener
 					}
 		            if(clicked instanceof Player p)
 		            {
+		            	if(p.hasPermission("piggyback.no")) {
+							return;
+						}
 		            	if(plugin.lists.disabledPlayers.contains(player.getUniqueId().toString())){
 				    		if(!((plugin.lang.prefix + " " + plugin.lang.noRidePlayerToggle).equals(" "))){
 				    			player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " " + (plugin.lang.noRidePlayerToggle).replace("%player%", p.getDisplayName())));
@@ -585,6 +596,7 @@ public class PickupClickListener implements org.bukkit.event.Listener
 							}
 						}	  
 					}else {
+						Bukkit.getServer().getLogger().info("Trying to Pickup...");
 						if(!plugin.config.disabledWorlds.isEmpty()) {
 					    	if(plugin.config.disabledWorlds.contains(clicked.getWorld().toString().toUpperCase()) && !plugin.config.whitelistWorlds)
 						    {
@@ -655,6 +667,9 @@ public class PickupClickListener implements org.bukkit.event.Listener
 						}
 					    if(clicked instanceof Player p)
 					    {
+					    	if(p.hasPermission("piggyback.no")) {
+								return;
+							}
 							if(plugin.lists.disabledPlayers.contains(player.getUniqueId().toString())){
 					    		if(!((plugin.lang.prefix + " " + plugin.lang.noPickUpPlayerToggle).equals(" "))){
 					    			player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " " + (plugin.lang.noPickUpPlayerToggle).replace("%player%", p.getDisplayName())));

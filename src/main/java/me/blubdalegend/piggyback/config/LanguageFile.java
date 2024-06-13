@@ -48,6 +48,7 @@ public class LanguageFile
 	public String messageOff;
 	public String messageOnOther;
 	public String messageOffOther;
+	public String wrongCommand;
 	public String error;
 	public String hasNotPlayed;
 	public String reload;
@@ -83,7 +84,6 @@ public class LanguageFile
 				if(files!=null) {
 					for(String file : files) {
 						plugin.saveResource("lang/" + file, false);
-						plugin.getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&e[Piggyback] " + "&aPiggyBack/lang/" + file + " saved"));
 			    	}
 				}				
 			} catch (IOException e) {
@@ -100,7 +100,7 @@ public class LanguageFile
 			command = (language.getString("commands.main")).toLowerCase();
 			reloadCommand = (language.getString("commands.reload")).toLowerCase();
 			toggleCommand = (language.getString("commands.toggle")).toLowerCase();
-			messagesCommand = (language.getString("commands.main")).toLowerCase();
+			messagesCommand = (language.getString("commands.messages")).toLowerCase();
 			helpCommand = (language.getString("commands.help")).toLowerCase();
 			// feedback
 			title = language.getString("message.prefix");
@@ -129,6 +129,7 @@ public class LanguageFile
 			noPickUpPlayerToggle = language.getString("message.noPickUpPlayerToggle");
 			noRidePlayer = language.getString("message.noRidePlayer");
 			noRidePlayerToggle = language.getString("message.noRidePlayerToggle");
+			wrongCommand = language.getString("message.wrongCommand");
 			error = language.getString("message.error");
 			hasNotPlayed = language.getString("message.hasNotPlayed");
 			reload = language.getString("message.reload");
