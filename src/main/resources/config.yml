@@ -140,16 +140,20 @@ storage:
   # Amount of time in seconds before saving data when using SQLite
   # or YML
   saveTimer: 600
-  # Filename of sqlite database file if sqlite is chosen. Location is
+  # Filename of SQLite database file if SQLite is chosen. Location is
   # in piggyback/data
   sqliteFilename: 'pback.db'
-  # Url of the server, with port, if using H2, MYSQL, or POSTGRE
-  url: 'mysql://127.0.0.1:3306/'
+  # Hostname or IP of the server if using H2, MYSQL, or POSTGRE
+  hostname: '127.0.0.1'
+  # Port number of the server if using H2, MYSQL, or POSTGRE
+  port: '3306'
   # The Name of the Database to use
   database: 'piggyback'
-  # Boolean to use SSL in case of mysql database
+  # Boolean to use SSL in case of mysql type database. If this is true,
+  # please either symlink or place ca-certificate.crt into the 
+  # PiggyBack/data folder. (Especially for postgre)
   useSSL: false
-  # Whether to use the autoReconnect feature of MYSQL
+  # Whether to use the autoReconnect feature of MySQL (Only for MySQL)
   autoReconnect: true
   # Username for database. Not needed when using SQLITE or YML
   username: 'root'

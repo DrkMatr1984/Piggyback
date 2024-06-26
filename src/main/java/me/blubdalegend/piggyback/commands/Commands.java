@@ -52,16 +52,19 @@ public class Commands implements CommandExecutor
 						if(sender.hasPermission("piggyback.toggle") || sender.isOp()){
 							if(sender instanceof Player) {
 								Player p = (Player)sender;
-						  		if (!plugin.lists.disabledPlayers.contains(p.getUniqueId().toString())) {
+								
+						  		if (!plugin.lists.isDisabled(p)) {
+						  		    //toggle off
 						   			if(!((plugin.lang.prefix + " " + plugin.lang.toggleOff).equals(" "))){
 						   				p.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " " + plugin.lang.toggleOff));
 						   			}
-						   			plugin.lists.disabledPlayers.add(p.getUniqueId().toString());
+						   			plugin.lists.setDisabled(p, true);
 						   		} else {
+						   			//toggle on
 						           	if(!((plugin.lang.prefix + " " + plugin.lang.toggleOn).equals(" "))){
 						           		p.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " " + plugin.lang.toggleOn));
 						           	}
-						           	plugin.lists.disabledPlayers.remove(p.getUniqueId().toString());
+						           	plugin.lists.setDisabled(p, false);
 						        }
 						   		return true;
 							}else {
@@ -80,16 +83,16 @@ public class Commands implements CommandExecutor
 						if(sender.hasPermission("piggyback.messages") || sender.isOp()){
 							if(sender instanceof Player) {
 								Player p = (Player)sender;
-						    	if (!plugin.lists.messagePlayers.contains(p.getUniqueId().toString())) {
+						    	if (!plugin.lists.hasMessagesDisabled(p)) {
 						    		if(!((plugin.lang.prefix + " " + plugin.lang.messageOff).equals(" "))){
 						    			p.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " " + plugin.lang.messageOff));
 						    		}
-						    		plugin.lists.messagePlayers.add(p.getUniqueId().toString());
+						    		plugin.lists.setMessagesDisabled(p, true);
 						    	} else {
 						           	if(!((plugin.lang.prefix + " " + plugin.lang.messageOn).equals(" "))){
 						           		p.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " " + plugin.lang.messageOn));
 						           	}
-						           	plugin.lists.messagePlayers.remove(p.getUniqueId().toString());
+						           	plugin.lists.setMessagesDisabled(p, false);
 						        }
 						    	return true;
 							}else {
@@ -116,24 +119,24 @@ public class Commands implements CommandExecutor
 									if(Bukkit.getServer().getPlayer(s)!=null) {
 										UUID id = Bukkit.getServer().getPlayer(s).getUniqueId();
 											if(id!=null) {
-										   		if (!plugin.lists.messagePlayers.contains(id.toString())) {
-										   			if(!((plugin.lang.prefix + " " + plugin.lang.messageOff).equals(" "))){
+										   		if (!plugin.lists.isDisabled(id)) {
+										   			if(!((plugin.lang.prefix + " " + plugin.lang.toggleOff).equals(" "))){
 										   				if(Bukkit.getOfflinePlayer(id).isOnline())
-										   					Bukkit.getPlayer(id).sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " " + plugin.lang.messageOff));
+										   					Bukkit.getPlayer(id).sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " " + plugin.lang.toggleOff));
 										   			}
-										   			if(!((plugin.lang.prefix + " " + plugin.lang.messageOffOther).equals(" "))){
-										   				sender.sendMessage(ChatColor.translateAlternateColorCodes('&', ((plugin.lang.prefix + " " + plugin.lang.messageOffOther).replace("%player%", s))));
+										   			if(!((plugin.lang.prefix + " " + plugin.lang.toggleOffOther).equals(" "))){
+										   				sender.sendMessage(ChatColor.translateAlternateColorCodes('&', ((plugin.lang.prefix + " " + plugin.lang.toggleOffOther).replace("%player%", s))));
 										   			}
-										   			plugin.lists.messagePlayers.add(id.toString());
+										   			plugin.lists.setDisabled(id, true);
 										   		} else {
-										           	if(!((plugin.lang.prefix + " " + plugin.lang.messageOn).equals(" "))){
+										           	if(!((plugin.lang.prefix + " " + plugin.lang.toggleOn).equals(" "))){
 										           		if(Bukkit.getOfflinePlayer(id).isOnline())
-										           			Bukkit.getPlayer(id).sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " " + plugin.lang.messageOn));
+										           			Bukkit.getPlayer(id).sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " " + plugin.lang.toggleOn));
 										           	}
-										           	if(!((plugin.lang.prefix + " " + plugin.lang.messageOnOther).equals(" "))){
-										           		sender.sendMessage(ChatColor.translateAlternateColorCodes('&', ((plugin.lang.prefix + " " + plugin.lang.messageOnOther).replace("%player%", s))));
+										           	if(!((plugin.lang.prefix + " " + plugin.lang.toggleOnOther).equals(" "))){
+										           		sender.sendMessage(ChatColor.translateAlternateColorCodes('&', ((plugin.lang.prefix + " " + plugin.lang.toggleOnOther).replace("%player%", s))));
 										   			}
-										           	plugin.lists.messagePlayers.remove(id.toString());
+										           	plugin.lists.setDisabled(id, false);
 										        }
 										    }else {
 										    	if(!((plugin.lang.prefix + " " + plugin.lang.hasNotPlayed).equals(" "))){
@@ -145,24 +148,16 @@ public class Commands implements CommandExecutor
 											    @Override
 									            public void onQueryDone(UUID id) {
 											    	if(id!=null) {
-												    	if (!plugin.lists.disabledPlayers.contains(id.toString())) {
-												   			if(!((plugin.lang.prefix + " " + plugin.lang.toggleOff).equals(" "))){
-												   				if(Bukkit.getOfflinePlayer(id).isOnline())
-												   					Bukkit.getPlayer(id).sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " " + plugin.lang.toggleOff));
-												   			}
+												    	if (!plugin.lists.isDisabled(id)) {		
 												   			if(!((plugin.lang.prefix + " " + plugin.lang.toggleOffOther).equals(" "))){
 												   				sender.sendMessage(ChatColor.translateAlternateColorCodes('&', ((plugin.lang.prefix + " " + plugin.lang.toggleOffOther).replace("%player%", s))));
 												   			}
-												   			plugin.lists.disabledPlayers.add(id.toString());
+												   			plugin.lists.setDisabled(id, true);
 												   		} else {
-												           	if(!((plugin.lang.prefix + " " + plugin.lang.toggleOn).equals(" "))){
-												           		if(Bukkit.getOfflinePlayer(id).isOnline())
-												           			Bukkit.getPlayer(id).sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " " + plugin.lang.toggleOn));
-												           	}
 												           	if(!((plugin.lang.prefix + " " + plugin.lang.toggleOnOther).equals(" "))){
 												           		sender.sendMessage(ChatColor.translateAlternateColorCodes('&', ((plugin.lang.prefix + " " + plugin.lang.toggleOnOther).replace("%player%", s))));
 												   			}
-												           	plugin.lists.disabledPlayers.remove(id.toString());
+												           	plugin.lists.setDisabled(id, false);
 												        }
 												    }else {
 												    	if(!((plugin.lang.prefix + " " + plugin.lang.hasNotPlayed).equals(" "))){
@@ -173,36 +168,7 @@ public class Commands implements CommandExecutor
 										});
 									}								
 							    }
-						    }
-									/*if(getOfflinePlayerUUID(s)!=null) {
-								    	UUID id = getOfflinePlayerUUID(s);
-								    	if (!plugin.lists.disabledPlayers.contains(id.toString())) {
-								   			if(!((plugin.lang.prefix + " " + plugin.lang.toggleOff).equals(" "))){
-								   				if(Bukkit.getOfflinePlayer(id).isOnline())
-								   					Bukkit.getPlayer(id).sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " " + plugin.lang.toggleOff));
-								   			}
-								   			if(!((plugin.lang.prefix + " " + plugin.lang.toggleOffOther).equals(" "))){
-								   				sender.sendMessage(ChatColor.translateAlternateColorCodes('&', ((plugin.lang.prefix + " " + plugin.lang.toggleOffOther).replace("%player%", s))));
-								   			}
-								   			plugin.lists.disabledPlayers.add(id.toString());
-								   		} else {
-								           	if(!((plugin.lang.prefix + " " + plugin.lang.toggleOn).equals(" "))){
-								           		if(Bukkit.getOfflinePlayer(id).isOnline())
-								           			Bukkit.getPlayer(id).sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " " + plugin.lang.toggleOn));
-								           	}
-								           	if(!((plugin.lang.prefix + " " + plugin.lang.toggleOnOther).equals(" "))){
-								           		sender.sendMessage(ChatColor.translateAlternateColorCodes('&', ((plugin.lang.prefix + " " + plugin.lang.toggleOnOther).replace("%player%", s))));
-								   			}
-								           	plugin.lists.disabledPlayers.remove(id.toString());
-								        }
-								   		return true;
-								    }else {
-								    	if(!((plugin.lang.prefix + " " + plugin.lang.hasNotPlayed).equals(" "))){
-								    		sender.sendMessage(ChatColor.translateAlternateColorCodes('&', ((plugin.lang.prefix + " " + plugin.lang.hasNotPlayed).replace("%player%", s))));
-									    	return false;
-								    	}						    	
-								    }*/
-															    			  		
+						    }  			  		
 					    }else{
 					    	if(!((plugin.lang.prefix + " " + plugin.lang.noPerms).equals(" "))){
 					       		sender.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " " + plugin.lang.noPerms));
@@ -215,7 +181,7 @@ public class Commands implements CommandExecutor
 									if(Bukkit.getServer().getPlayer(s)!=null) {
 										UUID id = Bukkit.getServer().getPlayer(s).getUniqueId();
 											if(id!=null) {
-										   		if (!plugin.lists.messagePlayers.contains(id.toString())) {
+										   		if (!plugin.lists.hasMessagesDisabled(id)) {
 										   			if(!((plugin.lang.prefix + " " + plugin.lang.messageOff).equals(" "))){
 										   				if(Bukkit.getOfflinePlayer(id).isOnline())
 										   					Bukkit.getPlayer(id).sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " " + plugin.lang.messageOff));
@@ -223,7 +189,7 @@ public class Commands implements CommandExecutor
 										   			if(!((plugin.lang.prefix + " " + plugin.lang.messageOffOther).equals(" "))){
 										   				sender.sendMessage(ChatColor.translateAlternateColorCodes('&', ((plugin.lang.prefix + " " + plugin.lang.messageOffOther).replace("%player%", s))));
 										   			}
-										   			plugin.lists.messagePlayers.add(id.toString());
+										   			plugin.lists.setMessagesDisabled(id, true);
 										   		} else {
 										           	if(!((plugin.lang.prefix + " " + plugin.lang.messageOn).equals(" "))){
 										           		if(Bukkit.getOfflinePlayer(id).isOnline())
@@ -232,7 +198,7 @@ public class Commands implements CommandExecutor
 										           	if(!((plugin.lang.prefix + " " + plugin.lang.messageOnOther).equals(" "))){
 										           		sender.sendMessage(ChatColor.translateAlternateColorCodes('&', ((plugin.lang.prefix + " " + plugin.lang.messageOnOther).replace("%player%", s))));
 										   			}
-										           	plugin.lists.messagePlayers.remove(id.toString());
+										           	plugin.lists.setMessagesDisabled(id, false);
 										        }
 										    }else {
 										    	if(!((plugin.lang.prefix + " " + plugin.lang.hasNotPlayed).equals(" "))){
@@ -244,24 +210,16 @@ public class Commands implements CommandExecutor
 											    @Override
 									            public void onQueryDone(UUID id) {
 											    	if(id!=null) {
-											    		if (!plugin.lists.messagePlayers.contains(id.toString())) {
-												   			if(!((plugin.lang.prefix + " " + plugin.lang.messageOff).equals(" "))){
-												   				if(Bukkit.getOfflinePlayer(id).isOnline())
-												   					Bukkit.getPlayer(id).sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " " + plugin.lang.messageOff));
-												   			}
+											    		if (!plugin.lists.hasMessagesDisabled(id)) {
 												   			if(!((plugin.lang.prefix + " " + plugin.lang.messageOffOther).equals(" "))){
 												   				sender.sendMessage(ChatColor.translateAlternateColorCodes('&', ((plugin.lang.prefix + " " + plugin.lang.messageOffOther).replace("%player%", s))));
 												   			}
-												   			plugin.lists.messagePlayers.add(id.toString());
+												   			plugin.lists.setMessagesDisabled(id, true);
 												   		} else {
-												           	if(!((plugin.lang.prefix + " " + plugin.lang.messageOn).equals(" "))){
-												           		if(Bukkit.getOfflinePlayer(id).isOnline())
-												           			Bukkit.getPlayer(id).sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " " + plugin.lang.messageOn));
-												           	}
 												           	if(!((plugin.lang.prefix + " " + plugin.lang.messageOnOther).equals(" "))){
 												           		sender.sendMessage(ChatColor.translateAlternateColorCodes('&', ((plugin.lang.prefix + " " + plugin.lang.messageOnOther).replace("%player%", s))));
 												   			}
-												           	plugin.lists.messagePlayers.remove(id.toString());
+												           	plugin.lists.setMessagesDisabled(id, false);
 												        }
 												    }else {
 												    	if(!((plugin.lang.prefix + " " + plugin.lang.hasNotPlayed).equals(" "))){
@@ -270,35 +228,7 @@ public class Commands implements CommandExecutor
 												    }								               
 									            }
 											});
-										}																	
-									/*if(getOfflinePlayerUUID(s)!=null) {
-								    	UUID id = getOfflinePlayerUUID(s);
-								    	if (!plugin.lists.messagePlayers.contains(id.toString())) {
-								   			if(!((plugin.lang.prefix + " " + plugin.lang.messageOff).equals(" "))){
-								   				if(Bukkit.getOfflinePlayer(id).isOnline())
-								   					Bukkit.getPlayer(id).sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " " + plugin.lang.messageOff));
-								   			}
-								   			if(!((plugin.lang.prefix + " " + plugin.lang.messageOffOther).equals(" "))){
-								   				sender.sendMessage(ChatColor.translateAlternateColorCodes('&', ((plugin.lang.prefix + " " + plugin.lang.messageOffOther).replace("%player%", s))));
-								   			}
-								   			plugin.lists.messagePlayers.add(id.toString());
-								   		} else {
-								           	if(!((plugin.lang.prefix + " " + plugin.lang.messageOn).equals(" "))){
-								           		if(Bukkit.getOfflinePlayer(id).isOnline())
-								           			Bukkit.getPlayer(id).sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " " + plugin.lang.messageOn));
-								           	}
-								           	if(!((plugin.lang.prefix + " " + plugin.lang.messageOnOther).equals(" "))){
-								           		sender.sendMessage(ChatColor.translateAlternateColorCodes('&', ((plugin.lang.prefix + " " + plugin.lang.messageOnOther).replace("%player%", s))));
-								   			}
-								           	plugin.lists.messagePlayers.remove(id.toString());
-								        }
-								   		return true;
-								    }else {
-								    	if(!((plugin.lang.prefix + " " + plugin.lang.hasNotPlayed).equals(" "))){
-								    		sender.sendMessage(ChatColor.translateAlternateColorCodes('&', ((plugin.lang.prefix + " " + plugin.lang.hasNotPlayed).replace("%player%", s))));
-									    	return false;
-								    	}						    	
-								    }*/
+										}
 								}							    
 							}				  		
 					    }else{

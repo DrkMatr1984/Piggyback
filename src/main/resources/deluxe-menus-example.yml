@@ -1,0 +1,111 @@
+## This is an Example Config for the plugin "DeluxeMenus" to create a gui to Toggle on/off PiggyBack toggles. This config uses PlaceholderAPI and is able
+## to actually show the currently toggled state in the Menu. This Config also uses HeadDatabase. If you don't have that plugin, please refer to DeluxeMenu's
+## Documentation for other possible options within the material slow in this config.
+menu_title: '           &e&lOptions Menu'
+open_command: 'options'
+size: 36
+items:
+  '1':
+    material: hdb-25065 ## <----- Using HeadDatabase. You can switch to an actual material if you don't have HD.
+    data: 0
+    slot: 0
+    priority: 1
+    update: true
+    view_requirement:
+      requirements:
+        has_perm:
+          type: "has permission"
+          permission: piggyback.toggle
+        isNotDisabled:
+          type: string equals ignorecase
+          input: '%Piggyback_is_disabled%'
+          output: 'false'      
+    display_name: '&aToggle &dPiggyback'
+    lore:
+    - '&fCurrently: &aon'
+    - '&f&oClick this Icon to Toggle'
+    - '&f&oyour ability to be picked'
+    - '&f&oup &c&oOff'
+    - '&7(Also prevents you from picking'
+    - '&7up others)'
+    left_click_commands:
+    - '[player] pback toggle'
+    - '[refresh]'
+    right_click_commands:
+    - '[player] pback toggle'
+    - '[refresh]'
+  '1a':
+    material: hdb-41310
+    data: 0
+    slot: 0
+    update: true
+    priority: 2
+    view_requirement:
+      requirements:
+        has_perm:
+          type: "has permission"
+          permission: piggyback.toggle      
+    display_name: '&aToggle &dPiggyback'
+    lore:
+    - '&fCurrently: &coff'
+    - '&f&oClick this Icon to Toggle'
+    - '&f&oyour ability to be picked'
+    - '&f&oup &a&oOn'
+    - '&7(Also allows you to pick'
+    - '&7up others)'
+    left_click_commands:
+    - '[player] pback toggle'
+    - '[refresh]'
+    right_click_commands:
+    - '[player] pback toggle'
+    - '[refresh]'
+  '2':
+    material: hdb-8603
+    data: 0
+    slot: 1
+    update: true
+    priority: 1
+    view_requirement:
+      requirements:
+        has_perm:
+          type: "has permission"
+          permission: piggyback.messages
+        isNotDisabled:
+          type: string equals ignorecase
+          input: '%Piggyback_is_messages_disabled%'
+          output: 'false'
+    display_name: '&aToggle &dPiggyback &7Messages'
+    lore:
+    - '&fCurrently: &aon'
+    - '&f&oClick this Icon to Toggle'
+    - '&f&oPiggyback message spam'
+    - '&c&oOff'
+    left_click_commands:
+    - '[player] pback messages'
+    - '[refresh]'
+    right_click_commands:
+    - '[player] pback messages'
+    - '[refresh]'
+  '2a':
+    material: hdb-337
+    data: 0
+    slot: 1
+    update: true
+    priority: 2
+    view_requirement:
+      requirements:
+        has_perm:
+          type: "has permission"
+          permission: piggyback.messages
+    display_name: '&aToggle &dPiggyback &7Messages'
+    lore:
+    - '&fCurrently: &coff'
+    - '&f&oClick this Icon to Toggle'
+    - '&f&oPiggyback message spam'
+    - '&a&oOn'
+    left_click_commands:
+    - '[player] pback messages'
+    - '[refresh]'
+    right_click_commands:
+    - '[player] pback messages'
+    - '[refresh]'

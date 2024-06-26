@@ -1,6 +1,7 @@
 package me.blubdalegend.piggyback;
 
 import java.lang.reflect.Field;
+import java.sql.SQLException;
 import java.util.*;
 import java.util.logging.Logger;
 
@@ -16,6 +17,7 @@ import org.bukkit.plugin.PluginManager;
 
 import me.blubdalegend.piggyback.config.ConfigAccessor;
 import me.blubdalegend.piggyback.config.LanguageFile;
+import me.blubdalegend.piggyback.config.MySQLStorage;
 import me.blubdalegend.piggyback.config.ToggleLists;
 import me.blubdalegend.piggyback.listeners.PiggybackEventsListener;
 import me.blubdalegend.piggyback.listeners.EntityInteractListener;
@@ -94,11 +96,19 @@ public class Piggyback extends org.bukkit.plugin.java.JavaPlugin
       }
   }
   
-  public void onDisable(){
+  @Override
+  public void onDisable(){	  
+	  super.onDisable();
 	  lists.saveData();
-	  if(!lists.isYML()) {
-		  lists.closeMySQLConnection();
-	  }
+	  Bukkit.getScheduler().cancelTasks(this);
+	  if(!this.config.storageType.equalsIgnoreCase("yml")) {
+		  try {
+			  MySQLStorage.closeConnection();
+		  } catch (SQLException e) {
+			  // TODO Auto-generated catch block
+			  e.printStackTrace();
+		  }
+	  }	  	  
 	  this.unRegisterCommands();
 	  plugin.getPluginLoader().disablePlugin(plugin);
   }

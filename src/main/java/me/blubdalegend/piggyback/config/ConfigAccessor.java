@@ -57,7 +57,8 @@ public class ConfigAccessor
 	public String storageType;
 	public long saveTimer;
 	public String sqliteFilename = "pback.db";
-	public String url;
+	public String hostname;
+	public int port;
 	public String database;
 	public boolean useSSL;
 	public boolean autoReconnect;
@@ -125,10 +126,12 @@ public class ConfigAccessor
 		if(config.getStringList("blacklists.worldBlacklist.worlds")!=null)
 		    disabledWorlds = uppercaseStringList(config.getStringList("blacklists.worldBlacklist.worlds"));
 		
+		// storage
 		storageType = config.getString("storage.type");
 		saveTimer = ((config.getLong("storage.saveTimer")) * 20);
 		sqliteFilename = config.getString("storage.sqliteFilename");
-		url = config.getString("storage.url");
+		hostname = config.getString("storage.hostname");
+		port = Integer.parseInt(config.getString("storage.port"));
 		database = config.getString("storage.database");
 		useSSL = config.getBoolean("storage.useSSL");
 		autoReconnect = config.getBoolean("storage.autoReconnect");

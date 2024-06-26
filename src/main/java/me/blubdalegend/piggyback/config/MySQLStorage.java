@@ -1,25 +1,27 @@
 package me.blubdalegend.piggyback.config;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.Connection;
-import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 import javax.sql.DataSource;
+import org.postgresql.ds.PGSimpleDataSource;
 
-import org.sqlite.SQLiteConfig;
 import org.sqlite.SQLiteDataSource;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
@@ -27,143 +29,139 @@ import me.blubdalegend.piggyback.Piggyback;
 
 public class MySQLStorage {
 	
-	protected DataSource dataSource;
-    protected DatabaseType driver;
+	protected static DataSource dataSource;
     private HikariConfig config;
-    protected String url = "";
+    protected String hostname = "";
     protected String username = "";
     protected String password = "";
-    private Connection conn = null;
+    private static Connection conn = null;
     private File dataFolder;
-    
-    //fix to work with piggyback
-    
+    private Piggyback plugin;
+
+
     public MySQLStorage(Piggyback plugin) throws SQLException {
+    	this.plugin = plugin;
     	this.dataFolder = new File(plugin.getDataFolder() +"/data");
-        this.driver = DatabaseType.match(plugin.config.storageType);
-        if(this.driver!=null) {
-        	if(this.driver.equals(DatabaseType.SQLITE)){	
-        		if(!(dataFolder.exists())){
-        	   		dataFolder.mkdir();
-        	   	}
-        		this.url = "jdbc:sqlite:" + plugin.getDataFolder().getAbsolutePath() + System.getProperty("file.separator") + "data" + System.getProperty("file.separator") + plugin.config.sqliteFilename;		
-        		/*try
-            	{*/
-        			dataSource = new SQLiteDataSource();
-        			((SQLiteDataSource)dataSource).setUrl(this.url);
-        			this.conn = getConnection();         
-                    if (conn==null) {
-                         throw new SQLException("Couldn't connect to the database");
-                    }
-                 	createTable("disabledPlayers");
-                 	createTable("messagePlayers");
-            	/*}catch (Exception e) {
-            		try
-                    {
-                            conn.rollback();
-                    }
-                    catch (SQLException e1)
-                    {
-                            e1.printStackTrace();
-                    }
-                    e.printStackTrace();
-                    return;
-                }*/
-        			/*
-                    if (!loadDriver()) {
-                        throw new SQLException("Couldn't load driver");
-                    }
-                    this.conn = getConnection();           
-                
-                	if (conn==null) {
-                        throw new SQLException("Couldn't connect to the database");
-                    }
-                	createTable("disabledPlayers");
-                	createTable("messagePlayers");
-            	}catch (Exception e) {
-            		try
-                    {
-                            conn.rollback();
-                    }
-                    catch (SQLException e1)
-                    {
-                            e1.printStackTrace();
-                    }
-                    e.printStackTrace();
-                    return;
-                }
-                    */     	             
-            }else{
-            	if(plugin.config.storageType.equalsIgnoreCase("mysql")) {
-            		if(plugin.config.autoReconnect)
-                		this.url = "jdbc:" + plugin.config.url + plugin.config.database + "?useSSL=" + plugin.config.useSSL + "&autoReconnect=true";
-                	else
-                		this.url = "jdbc:" + plugin.config.url + plugin.config.database + "?useSSL=" + plugin.config.useSSL;
-            	}
-            	this.username = plugin.config.username;
-                this.password = plugin.config.password;
-            	config = new HikariConfig();
-            	config.setJdbcUrl(this.url);
+        this.username = plugin.config.username;
+        this.password = plugin.config.password;
+        if(plugin.config.storageType.equalsIgnoreCase("sqlite")){
+        	if(!(dataFolder.exists())){
+           		dataFolder.mkdir();
+           	}
+        	this.hostname = "jdbc:sqlite:" + plugin.getDataFolder().getAbsolutePath() + System.getProperty("file.separator") + "data" + System.getProperty("file.separator") + plugin.config.sqliteFilename;		
+        	dataSource = new SQLiteDataSource();
+        	((SQLiteDataSource)dataSource).setUrl(this.hostname);
+        	MySQLStorage.conn = getConnection();         
+            if (conn==null) {
+                throw new SQLException("Couldn't connect to the database");
+            }
+            createTable("disabledPlayers");
+            createTable("messagePlayers");     	             
+        }else{
+          	if(plugin.config.storageType.equalsIgnoreCase("mysql")) {
+           		if(plugin.config.autoReconnect)
+               		this.hostname = "jdbc:mysql://" + plugin.config.hostname + ":" + plugin.config.port + "/" + plugin.config.database + "?useSSL=" + plugin.config.useSSL + "&autoReconnect=true";
+               	else
+               		this.hostname = "jdbc:mysql://" + plugin.config.hostname + ":" + plugin.config.port + "/" + plugin.config.database + "?useSSL=" + plugin.config.useSSL;         		
+               	config = new HikariConfig();
+               	config.setJdbcUrl(this.hostname);
                 config.setUsername(this.username);
                 config.setPassword(this.password);
                 config.setMaximumPoolSize(10);
                 config.setMaxLifetime(360000);
                 config.setValidationTimeout(60000);
-                config.setDriverClassName(this.driver.driver);
+                config.setDriverClassName("com.mysql.cj.jdbc.Driver");
                 config.addDataSourceProperty("cachePrepStmts", "true");
                 config.addDataSourceProperty("prepStmtCacheSize", "250");
                 config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
                 dataSource = new HikariDataSource(config);
-                try {
-					this.conn = getConnection();
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-                if (conn==null) {
-                    throw new SQLException("Couldn't connect to the database");
-                }
-                try
-            	{
-                	createTable("piggybackDisabledPlayers");
-                	createTable("piggybackMessagePlayers");
-            	}catch (Exception e) {
-            		try
-                    {
-                            conn.rollback();
-                    }
-                    catch (SQLException e1)
-                    {
-                            e1.printStackTrace();
-                    }
-                    e.printStackTrace();
-                    return;
-            	}
+          	}else if (plugin.config.storageType.equalsIgnoreCase("h2")) {
+           		this.hostname = "jdbc:h2:tcp://" + plugin.config.hostname + ":" + plugin.config.port + "/~/" + plugin.config.database;
+           		config = new HikariConfig();
+           		config.setJdbcUrl(this.hostname);
+                config.setUsername(this.username); // Replace with your username
+                config.setPassword(this.password); // Replace with your password
+                config.setDriverClassName("org.h2.Driver");
+                config.setMaximumPoolSize(10);
+                config.setMinimumIdle(2);
+                config.setIdleTimeout(30000);
+                config.setConnectionTimeout(30000);
+                config.setMaxLifetime(1800000);
+                dataSource = new HikariDataSource(config);
+         	}else if (plugin.config.storageType.equalsIgnoreCase("postgre")) {
+           		dataSource = new PGSimpleDataSource();
+           		if(plugin.config.useSSL) {
+           			Path path = Paths.get(plugin.getDataFolder().getAbsolutePath() + System.getProperty("file.separator") + "data" + System.getProperty("file.separator") + "ca-certificate.crt");
+               		String cert = null;
+               		try
+               		{
+               		    cert = Files.readString( path , StandardCharsets.UTF_8 );
+               		    System.out.println( "cert = " + cert );
+               		}
+               		catch ( IOException ex )
+               		{
+               		    throw new IllegalStateException( "Unable to load the TLS certificate needed to make database connections." );
+               		}
+               		Objects.requireNonNull(cert);
+               		if ( cert.isEmpty() )
+               		{
+               			throw new IllegalStateException( "Failed to load TLS cert." );
+               		}
+               	    ((PGSimpleDataSource)dataSource).setSslCert(cert);
+           		}         		
+           	    ((PGSimpleDataSource)dataSource).setServerNames(new String[]{plugin.config.hostname});
+           	    ((PGSimpleDataSource)dataSource).setDatabaseName(plugin.config.database);
+          	    ((PGSimpleDataSource)dataSource).setUser(this.username);
+           	    ((PGSimpleDataSource)dataSource).setPassword(this.password);
+           	    ((PGSimpleDataSource)dataSource).setPortNumbers(new int[] {plugin.config.port});
+           	}else {
+           		plugin.getLogger().info("ERROR: Database needs a type set. Possible values: YML, H2, MYSQL, POSTGRE, SQLITE");
+           	}
+        
+          	try {
+				MySQLStorage.conn = getConnection();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+            if (conn==null) {
+                throw new SQLException("Couldn't connect to the database");
             }
-        	//Start "keepAlive" task to keep connection active
-        	Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, () -> keepAlive(), 20*60*60*7, 20*60*60*7);
-        }else {
-        	plugin.getLogger().info("Database needs a type set. Possible values: H2, MYSQL, POSTGRE, SQLITE");
-        }      
+            if (plugin.config.storageType.equalsIgnoreCase("postgre")) {
+              	PreparedStatement stmt = getStatement("CREATE SCHEMA IF NOT EXISTS piggyback");
+                stmt.executeUpdate();
+            }
+            try
+            {
+               	createTable("piggybackDisabledPlayers");
+               	createTable("piggybackMessagePlayers");
+            }catch (Exception e) {
+            	try
+                {
+                    conn.rollback();
+                }
+                catch (SQLException e1)
+                {
+                    e1.printStackTrace();
+                }
+                e.printStackTrace();
+                return;
+            }
+            Bukkit.getScheduler().runTaskTimerAsynchronously(plugin,() -> keepAlive(), 20*60*60*7, 20*60*60*7);
+        }       	     
     }
     
     public List<String> loadDisabledPlayers(){
 		//pickup toggle users
 		List<String> disabledPlayers = new ArrayList<>();
 		String tableName;
-		if(this.driver.equals(DatabaseType.SQLITE)){
+		if(plugin.config.storageType.equalsIgnoreCase("sqlite")){
 			tableName = "disabledPlayers";
-			disabledPlayers = getSQLiteColumnNames(tableName);
+			disabledPlayers = getAllKeys(tableName);
 		}else {
 			tableName = "piggybackDisabledPlayers";
-			try {
-				disabledPlayers = getTableColumnNames(tableName);
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		
+			disabledPlayers = getAllKeys(tableName);
+		}		
 		return disabledPlayers;	
 	}
     
@@ -171,17 +169,12 @@ public class MySQLStorage {
 		//message toggle users
 		List<String> messagePlayers = new ArrayList<>();
 		String tableName;
-		if(this.driver.equals(DatabaseType.SQLITE)){
+		if(plugin.config.storageType.equalsIgnoreCase("sqlite")){
 			tableName = "messagePlayers";
-			messagePlayers = getSQLiteColumnNames(tableName);
+			messagePlayers = getAllKeys(tableName);
 		}else {
 			tableName = "piggybackMessagePlayers";
-			try {
-				messagePlayers = getTableColumnNames(tableName);
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			messagePlayers = getAllKeys(tableName);
 		}
 		return messagePlayers;
 	}    
@@ -189,85 +182,58 @@ public class MySQLStorage {
 	//SQLite Saving
 	public void saveData(List<String> disabledPlayers, List<String> messagePlayers) {
         clearTable("disabledPlayers");
+        try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		if(disabledPlayers!=null) {
 	  		if(!disabledPlayers.isEmpty()) {
-				for(String s : disabledPlayers) {
+				for(String id : disabledPlayers) {
 					try {
 							createTable("disabledPlayers");
-							PreparedStatement ps = getStatement("REPLACE INTO " + "disabledPlayers" + " SET uuid= ?");
-						    ps.setString(1, s);
+							PreparedStatement ps = getStatement("REPLACE INTO disabledPlayers (uuid) VALUES (?)");
+						    ps.setString(1, id);
 						    ps.executeUpdate();
 						    ps.close();
 				        } catch (Exception ex) {
-				    	  //put error message here
+				        	ex.printStackTrace();
 				        }
 				}
 	  		}
 		}
 		clearTable("messagePlayers");
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		if(messagePlayers!=null) {
 	  		if(!messagePlayers.isEmpty()) {
 				for(String s : messagePlayers) {
 					try {
 							createTable("messagePlayers");
-							PreparedStatement ps = getStatement("REPLACE INTO " + "messagePlayers" + " SET uuid= ?");
+							PreparedStatement ps = getStatement("REPLACE INTO messagePlayers (uuid) VALUES (?)");
 							ps.setString(1, s);
 							ps.executeUpdate();
 							ps.close();
 				      } catch (Exception ex) {
-				    	  //put error message here
+				    	  ex.printStackTrace();
 				      }
 		  		}
 	  		}
 		}				
 	}
 	
-	//MySQL saving
-	public void saveData() {
-		List<String> disabledPlayers = loadDisabledPlayers();
-		if(disabledPlayers!=null) {
-  			if(!disabledPlayers.isEmpty()) {
-  				clearTable("piggybackDisabledPlayers");
-	  			for(String s : disabledPlayers) {
-	  				try {
-	  					createTable("piggybackDisabledPlayers");
-	  			        PreparedStatement ps = getStatement("REPLACE INTO piggybackDisabledPlayers SET uuid= ?");
-	  			        ps.setString(1, s);
-	  			        ps.executeUpdate();
-	  			        ps.close();
-	  			      } catch (Exception ex) {
-	  			    	  //put error message here
-	  			      }
-	  	  		}
-  			}
-		}
-		
-		List<String> messagePlayers = loadMessagePlayers();
-		if(messagePlayers!=null) {
-  			if(!messagePlayers.isEmpty()) {
-  				clearTable("piggybackMessagePlayers");
-	  			for(String s : messagePlayers) {
-	  				try {
-	  					createTable("piggybackMessagePlayers");
-	  			        PreparedStatement ps = getStatement("REPLACE INTO piggybackMessagePlayers SET uuid= ?");
-	  			        ps.setString(1, s);
-	  			        ps.executeUpdate();
-	  			        ps.close();
-	  			      } catch (Exception ex) {
-	  			    	  //put error message here
-	  			      }
-	  	  		}
-  			}
-		}
-	}
-	
 	public boolean isDisabled(String uuid) {
-		try {
-			if(getTableColumnNames("piggybackDisabledPlayers").contains(uuid))
+		if(plugin.config.storageType.equalsIgnoreCase("postgre")) {
+			if(getAllKeys("piggyback.piggybackDisabledPlayers").contains(uuid))
 				return true;
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		}else {
+			if(getAllKeys("piggybackDisabledPlayers").contains(uuid))
+				return true;
 		}
 		return false;
 	}
@@ -282,10 +248,18 @@ public class MySQLStorage {
 	
 	public void setDisabled(String uuid, boolean b) {
 		if(!isDisabled(uuid) && b==true) {
-			addToggle("piggybackDisabledPlayers", uuid);
+			if(plugin.config.storageType.equalsIgnoreCase("postgre")) {
+				addToggle("piggyback.piggybackDisabledPlayers", uuid);
+			}else {
+				addToggle("piggybackDisabledPlayers", uuid);
+			}			
 		}
 		if(isDisabled(uuid) && b==false) {
-			removeToggle("piggybackDisabledPlayers", uuid);
+			if(plugin.config.storageType.equalsIgnoreCase("postgre")) {
+				removeToggle("piggyback.piggybackDisabledPlayers", uuid);
+			}else {
+				removeToggle("piggybackDisabledPlayers", uuid);
+			}			
 		}
 	}
 	
@@ -298,13 +272,13 @@ public class MySQLStorage {
 	}
 	
 	public boolean hasMessagesDisabled(String uuid) {
-		try {
-			if(getTableColumnNames("piggybackMessagePlayers").contains(uuid))
+		if(plugin.config.storageType.equalsIgnoreCase("postgre")) {
+			if(getAllKeys("piggyback.piggybackMessagePlayers").contains(uuid))
 				return true;
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		}else {
+			if(getAllKeys("piggybackMessagePlayers").contains(uuid))
+				return true;
+		}		
 		return false;
 	}
 	
@@ -318,10 +292,18 @@ public class MySQLStorage {
 	
 	public void setMessagesDisabled(String uuid, boolean b) {
 		if(!hasMessagesDisabled(uuid) && b==true) {
-			addToggle("piggybackMessagePlayers", uuid);
+			if(plugin.config.storageType.equalsIgnoreCase("postgre")) {
+				addToggle("piggyback.piggybackMessagePlayers", uuid);
+			}else {
+				addToggle("piggybackMessagePlayers", uuid);
+			}		
 		}
 		if(hasMessagesDisabled(uuid) && b==false) {
-			removeToggle("piggybackMessagePlayers", uuid);
+			if(plugin.config.storageType.equalsIgnoreCase("postgre")) {
+				removeToggle("piggyback.piggybackMessagePlayers", uuid);
+			}else {
+				removeToggle("piggybackMessagePlayers", uuid);
+			}			
 		}
 	}
 	
@@ -334,22 +316,38 @@ public class MySQLStorage {
 	}
 	
 	private void addToggle(String tableName, String uuid){
-    	PreparedStatement ps = getStatement("REPLACE INTO " + tableName + " SET uuid= ?");
+		String qry = "";
+		if(plugin.config.storageType.equalsIgnoreCase("postgre")) {
+			qry = "INSERT INTO piggyback." + tableName + " (uuid) " + 
+		        "VALUES (?)";
+		}else {
+			qry = "REPLACE INTO " + tableName + " (uuid) VALUES (?)";
+		}	
+		PreparedStatement ps = getStatement(qry);
     	try {
     		createTable(tableName);
 		    ps.setString(1, uuid);
 		    ps.executeUpdate();
 		    ps.close();
 	    } catch (Exception ex) {
-		  	  //put error message here
+	    	 ex.printStackTrace();
 		}
     }
     
+	///////This doesn't actually seem to do anything different than the expression above it.
     private void removeToggle(String tableName, String uuid) {
-    	PreparedStatement ps = getStatement("DELETE FROM " + tableName + " WHERE uuid= ?");
+    	String qry = "";
+    	if(plugin.config.storageType.equalsIgnoreCase("postgre")) {
+    		qry = "DELETE FROM piggyback." + tableName + " WHERE uuid = ?";
+    	} else {
+    		qry = "DELETE FROM " + tableName + " WHERE uuid = ?";
+    	}
+    	PreparedStatement ps = getStatement(qry);
     	try {
+    		createTable(tableName);
 			ps.setString(1, uuid);
-			ps.executeUpdate();
+			 // Execute the delete statement
+            ps.executeUpdate();
 		    ps.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -357,7 +355,7 @@ public class MySQLStorage {
 		}
     }
     
-    public void closeConnection() throws SQLException{
+    public static void closeConnection() throws SQLException{
     	if(dataSource instanceof HikariDataSource) {
     		if(!((HikariDataSource) dataSource).isClosed()) {
     			((HikariDataSource) dataSource).close();
@@ -366,22 +364,9 @@ public class MySQLStorage {
     		if (conn != null && !conn.isClosed()) conn.close();
     	}  	 
     }
-    
-    private boolean loadDriver()
-    {
-        try {
-            this.getClass().getClassLoader().loadClass(this.driver.driver).newInstance();
-            return true;
-        } catch (IllegalAccessException e) {
-            // Constructor is private, OK for DriverManager contract
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
+   
     private Connection getConnection() throws SQLException{
-    	if (conn != null)
+    	if (isConnected())
     	      try {
     	        conn.createStatement().execute("SELECT 1;");
     	      } catch (SQLException sqlException) {
@@ -392,22 +377,16 @@ public class MySQLStorage {
     	        	  
     	          } 
     	      }
-    	Bukkit.getServer().getLogger().info("!!!!!!!!!!!!!!!!!!!! Got to getConnection. Is somewhere throwing a fit in here");
         if (conn == null || conn.isClosed() || !conn.isValid(60)) { //maybe change to lower than 60, like 4 seconds?
-        	if(dataSource  instanceof HikariDataSource || dataSource instanceof SQLiteDataSource) {
-                if((username.isEmpty() && password.isEmpty())) {
-                	Bukkit.getServer().getLogger().info("!!!!!!!!!!!!!!!!!!!! Trying to connect to SQLite");
-                	try {
-						conn = dataSource.getConnection();
-					} catch (SQLException e) {
-						Bukkit.getServer().getLogger().info("!!!!!!!!!!!!!!!!!!!! dataSource.getConnection() is throwing a fit");
-					}
-                } else {
-                	Bukkit.getServer().getLogger().info("!!!!!!!!!!!!!!!!!!!! Trying to connect to MySQL");
-                	conn = dataSource.getConnection(username, password);
-                }              	
+        	if(dataSource  instanceof HikariDataSource || dataSource instanceof SQLiteDataSource || dataSource instanceof PGSimpleDataSource) {
+                try {
+				    conn = dataSource.getConnection();
+				} catch (SQLException e) {
+					Bukkit.getServer().getLogger().info("!!!!!!!!!!!!!!!!!!!! dataSource.getConnection() is throwing a fit");
+					e.printStackTrace();
+				}           	
         	}else {
-        		conn = (username.isEmpty() && password.isEmpty()) ? DriverManager.getConnection(url) : DriverManager.getConnection(url, username, password);
+        		conn = (username.isEmpty() && password.isEmpty()) ? DriverManager.getConnection(hostname) : DriverManager.getConnection(hostname, username, password);
         		Bukkit.getServer().getLogger().info("!!!!!!!!!!!!!!!!!!!! Trying to connect to Other Database");
         	}           
         }
@@ -430,13 +409,24 @@ public class MySQLStorage {
     private void createTable(String tableName) throws SQLException {
     	try
     	{
-    		this.conn = dataSource.getConnection();
+    		MySQLStorage.conn = dataSource.getConnection();
             if (conn==null) {
                 throw new SQLException("Couldn't connect to the database");
             }
-            String qry = "CREATE TABLE IF NOT EXISTS `" + tableName + "` (`uuid` VARCHAR(64) NOT NULL PRIMARY KEY);";
-            Statement stmt = this.conn.createStatement();
-            stmt.execute(qry);
+            String qry = "";
+        	if(plugin.config.storageType.equalsIgnoreCase("postgre")) {
+        		qry = "CREATE TABLE IF NOT EXISTS piggyback." + tableName + " (" +
+                        "id SERIAL PRIMARY KEY, " +
+                        "uuid VARCHAR(64) UNIQUE NOT NULL" +
+                        ")";
+        	}else {
+        		qry = "CREATE TABLE IF NOT EXISTS " + tableName + " (" +
+                        "id INT AUTO_INCREMENT PRIMARY KEY, " +
+                        "uuid VARCHAR(64) NOT NULL" +
+                        ")";
+        	}          
+            PreparedStatement stmt = getStatement(qry);
+            stmt.executeUpdate();
     	}catch (Exception e) {
     		try
             {
@@ -448,17 +438,7 @@ public class MySQLStorage {
             }
             e.printStackTrace();
             return;
-    	}
-    	/*
- 		if (isConnected()) {
- 			try {
- 	        	PreparedStatement ps = conn.prepareStatement("CREATE TABLE IF NOT EXISTS " + tableName + " (`uuid` VARCHAR(64) NOT NULL PRIMARY KEY");
- 		 			ps.executeUpdate();
- 	        } catch (SQLException e) {
- 	        	Bukkit.getServer().getLogger().info("It's throwing E on the create table catch");
- 	        	throw e;
- 	        }
- 		}*/      
+    	}   
     }
     
     private void deleteTable(String tableName){
@@ -466,7 +446,6 @@ public class MySQLStorage {
 			try {
 				PreparedStatement statement = conn.prepareStatement("DROP TABLE IF EXISTS " + tableName);
 				statement.executeUpdate();
-				System.out.println(tableName + " table deleted successfully.");
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -487,53 +466,27 @@ public class MySQLStorage {
         }
     }
     
-    private List<String> getTableColumnNames(String tableName) throws SQLException {
-    	if (isConnected()) {
+    // Function to get all keys from a table
+    private List<String> getAllKeys(String tableName) {
+    	List<String> keys = new ArrayList<>();
+    	if (isConnected()) {  		
+            String sql = "SELECT uuid FROM " + tableName;
+            PreparedStatement pstmt = getStatement(sql);
+            ResultSet rs;
     		try {
-                DatabaseMetaData metaData = conn.getMetaData();
-
-                // Get columns of the specified table
-                ResultSet resultSet = metaData.getColumns(null, null, tableName, null);
-                resultSet.last();
-                int columnCount = resultSet.getRow();
-                resultSet.beforeFirst();
-
-                if (columnCount > 0) {
-                    String[] columnNames = new String[columnCount];
-                    int index = 0;
-
-                    while (resultSet.next()) {
-                        columnNames[index++] = resultSet.getString("COLUMN_NAME");
-                    }
-
-                    return new ArrayList<String>(Arrays.asList(columnNames));
-                } else {
-                    return null; // Table not found or no columns
+    			rs = pstmt.executeQuery();
+    			while (rs.next()) {
+                    keys.add(rs.getString("uuid"));
                 }
-            } catch (SQLException e) {
-                throw e;
-            }
+    		} catch (SQLException e) {
+    			// TODO Auto-generated catch block
+    			e.printStackTrace();
+    		}            
+    	}else {
+    		Bukkit.getServer().getLogger().info("ERROR: Not connected to database. This is a serious error and PiggyBack data WILL be lost. Please"
+    				+ " notify the plugin author");
     	}
-        return null;
-    }
-    
-    private List<String> getSQLiteColumnNames(String tableName) {
-        List<String> columnNames = new ArrayList<>();
-        // SQL query to retrieve column names
-        String query = "PRAGMA table_info(" + tableName + ")";
-        if(isConnected()) {
-        	try {
-            	Statement stmt = conn.createStatement();
-                ResultSet rs = stmt.executeQuery(query);
-                while (rs.next()) {
-                    String columnName = rs.getString("name");
-                    columnNames.add(columnName);
-                }
-            }catch (SQLException e) {
-            	Bukkit.getServer().getLogger().info("!!!!!!!!!!!!!!!!!!!! Got to getConnection. Is somewhere throwing a fit in getSQLiteColumNames");
-            }
-        }             
-        return columnNames;
+    	return keys;
     }
     
     private PreparedStatement getStatement(String sql) {

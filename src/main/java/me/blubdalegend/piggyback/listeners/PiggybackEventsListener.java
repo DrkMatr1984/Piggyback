@@ -43,8 +43,8 @@ public class PiggybackEventsListener implements org.bukkit.event.Listener
 		}
 		riders.remove(event.getEntity());
 		Piggyback.passengers.put(player.getUniqueId(),riders);
-		ThrowEntity.throwEntity(event.getEntity(), event.getPlayer());
-		if (plugin.config.send && (!(plugin.lists.messagePlayers.contains(event.getPlayer().getUniqueId().toString()))))
+		ThrowEntity.throwEntity(event.getEntity(), player);
+		if (plugin.config.send && (!(plugin.lists.hasMessagesDisabled(player))))
 		{
 			if(!((plugin.lang.prefix + " " + plugin.lang.throwMsg).equals(" "))){
 				 event.getPlayer().sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " " + (plugin.lang.throwMsg).replace("%passenger%", getEntityName(event.getEntity()))));
@@ -65,7 +65,7 @@ public class PiggybackEventsListener implements org.bukkit.event.Listener
 		riders.remove(event.getEntity());
 		Piggyback.passengers.put(player.getUniqueId(),riders);
 		ThrowEntity.farThrowEntity(event.getEntity(), event.getPlayer());
-		if (plugin.config.send && (!(plugin.lists.messagePlayers.contains(event.getPlayer().getUniqueId().toString()))))
+		if (plugin.config.send && (!(plugin.lists.hasMessagesDisabled(player))))
 		{
 			if(!((plugin.lang.prefix + " " + plugin.lang.throwMsg).equals(" "))){
 				 event.getPlayer().sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " " + (plugin.lang.throwMsg).replace("%passenger%", getEntityName(event.getEntity()))));
@@ -85,7 +85,7 @@ public class PiggybackEventsListener implements org.bukkit.event.Listener
 		}
 		riders.remove(event.getEntity());
 		Piggyback.passengers.put(player.getUniqueId(),riders);
-		if (plugin.config.send && (!(plugin.lists.messagePlayers.contains(event.getPlayer().getUniqueId().toString()))))
+		if (plugin.config.send && (!(plugin.lists.hasMessagesDisabled(player))))
 		{
 			if(!((plugin.lang.prefix + " " + plugin.lang.dropMsg).equals(" "))){
 				event.getPlayer().sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " " + (plugin.lang.dropMsg).replace("%passenger%", getEntityName(event.getEntity()))));
@@ -112,7 +112,7 @@ public class PiggybackEventsListener implements org.bukkit.event.Listener
 		if(!riders.contains(entity))
 			riders.add(entity);
 		Piggyback.passengers.put(player.getUniqueId(),riders);
-		if (plugin.config.send && (!(plugin.lists.messagePlayers.contains(player.getUniqueId().toString())))) 
+		if (plugin.config.send && (!(plugin.lists.hasMessagesDisabled(player)))) 
 		{
 		    if(player.getPassengers().contains(entity)){
 		    	if(!((plugin.lang.prefix + " " + plugin.lang.carryMsg).equals(" "))){    			
@@ -151,7 +151,7 @@ public class PiggybackEventsListener implements org.bukkit.event.Listener
 					playersRiding.remove(player);		
 			}}.runTaskLater(plugin, 25);
 				
-		if (plugin.config.send && (!(plugin.lists.messagePlayers.contains(player.getUniqueId().toString())))) 
+		if (plugin.config.send && (!(plugin.lists.hasMessagesDisabled(player)))) 
 		{
 		  	if(clicked.getPassengers().contains(player)){
 		   		if(!((plugin.lang.prefix + " " + plugin.lang.rideMsg).equals(" "))){    			

@@ -15,8 +15,9 @@ import me.blubdalegend.piggyback.Piggyback;
 import org.jetbrains.annotations.NotNull;
 
 public class ToggleLists{
-	public Set<String> disabledPlayers = Collections.newSetFromMap(new ConcurrentHashMap<>());
-	public Set<String> messagePlayers = Collections.newSetFromMap(new ConcurrentHashMap<>());
+	
+	private Set<String> disabledPlayers = Collections.newSetFromMap(new ConcurrentHashMap<>());
+	private Set<String> messagePlayers = Collections.newSetFromMap(new ConcurrentHashMap<>());
 	private YMLStorage ymlStorage;
 	private MySQLStorage mysqlStorage;
 	
@@ -36,7 +37,7 @@ public class ToggleLists{
 				disabledPlayers = listToSet(ymlStorage.loadDisabledPlayers());
 				messagePlayers = listToSet(ymlStorage.loadMessagePlayers());
 			}else {   ///MYSQL type Storages
-				if(DatabaseType.match(this.storageType)!=null) {
+				if(this.storageType!=null) {
 			        if(isSQLite()) {
 			        	try {
 							mysqlStorage = new MySQLStorage(plugin);
@@ -57,7 +58,7 @@ public class ToggleLists{
 				}else {
 					//Someone did not specify YML, H2, MYSQL, POSTGRE, SQLITE
 					//Fallback to yml
-					plugin.getLogger().info("Database needs a type set. Possible values: YML, H2, MYSQL, POSTGRE, SQLITE");
+					plugin.getLogger().info("ERROR: Database needs a type set. Possible values: YML, H2, MYSQL, POSTGRE, SQLITE");
 					plugin.getLogger().info("Falling back to yml.");
 					ymlStorage = new YMLStorage(plugin);
 					disabledPlayers = listToSet(ymlStorage.loadDisabledPlayers());
@@ -68,8 +69,8 @@ public class ToggleLists{
 			if(isYML() || isSQLite()) {
 				Bukkit.getScheduler().runTaskTimerAsynchronously(plugin,new Runnable() {
 					public void run() {
-						saveData();
 						plugin.getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&e[Piggyback] &aSaving data..."));
+						saveData();
 					}
 				}, 20*plugin.config.saveTimer, 20*plugin.config.saveTimer);
 			}
@@ -87,11 +88,11 @@ public class ToggleLists{
 	
 	public void saveData() {
 		if(isYML()) {
+			plugin.getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&e[Piggyback] &aSaving data..."));
 			ymlStorage.saveData(setToList(disabledPlayers),setToList(messagePlayers));
 		}else if(isSQLite()){   ///MYSQL type Storages
+			plugin.getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&e[Piggyback] &aSaving data..."));
 			mysqlStorage.saveData(setToList(disabledPlayers), setToList(messagePlayers));
-		}else {
-			mysqlStorage.saveData();
 		}
 	}
 	
@@ -100,8 +101,7 @@ public class ToggleLists{
 			try {
 				mysqlStorage.closeConnection();
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				plugin.getLogger().info("Could not properly close MySQL-like connection.");
 			}
 	}
 	
@@ -112,11 +112,8 @@ public class ToggleLists{
 	}
 	
 	public boolean isSQLite() {
-		if(DatabaseType.match(this.storageType)!=null) {
-			if(DatabaseType.match(this.storageType)==DatabaseType.SQLITE){
-				return true;
-			}
-		}
+		if(this.storageType.equalsIgnoreCase("sqlite"))
+			return true;
 		return false;
 	}
 	
