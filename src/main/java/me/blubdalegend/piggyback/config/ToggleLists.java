@@ -33,6 +33,7 @@ public class ToggleLists{
 	private void initLists(){
 		if(this.storageType!=null) {
 			if(this.storageType.equalsIgnoreCase("yml")) {
+				Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " &aLoading .yml data files..."));
 				ymlStorage = new YMLStorage(plugin);
 				disabledPlayers = listToSet(ymlStorage.loadDisabledPlayers());
 				messagePlayers = listToSet(ymlStorage.loadMessagePlayers());
@@ -41,18 +42,24 @@ public class ToggleLists{
 			        if(isSQLite()) {
 			        	try {
 							mysqlStorage = new MySQLStorage(plugin);
-						} catch (SQLException e) {
-							plugin.getServer().getConsoleSender().sendMessage("SQLite Error");
+						} catch (Exception e) {
+							Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " &eThere has been an error with the &f" + plugin.config.storageType.toUpperCase() + " &edatabase. Check your settings and try again."));
+							Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " &eIf you are sure everything is correct please report the following error to &fhttps://github.com/DrkMatr1984/Piggyback/issues."));
+							Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " &cPiggyBack will now shutdown..."));
 							e.printStackTrace();
+			            	Bukkit.getServer().getPluginManager().disablePlugin(plugin);
 						}
 			        	disabledPlayers = listToSet(mysqlStorage.loadDisabledPlayers());
 			        	messagePlayers = listToSet(mysqlStorage.loadMessagePlayers());
 			        }else {
 			        	try {
 							mysqlStorage = new MySQLStorage(plugin);
-						} catch (SQLException e) {
-							plugin.getServer().getConsoleSender().sendMessage("MySQL Error");
+						} catch (Exception e) {
+							Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " &eThere has been an error with the &f" + plugin.config.storageType.toUpperCase() + " &edatabase. Check your settings and try again."));
+							Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " &eIf you are sure everything is correct please report the following error to &fhttps://github.com/DrkMatr1984/Piggyback/issues."));
+							Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " &cPiggyBack will now shutdown..."));
 							e.printStackTrace();
+			            	Bukkit.getServer().getPluginManager().disablePlugin(plugin);
 						}
 			        }
 				}else {
@@ -69,7 +76,7 @@ public class ToggleLists{
 			if(isYML() || isSQLite()) {
 				Bukkit.getScheduler().runTaskTimerAsynchronously(plugin,new Runnable() {
 					public void run() {
-						plugin.getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&e[Piggyback] &aSaving data..."));
+						Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " &aSaving data..."));
 						saveData();
 					}
 				}, 20*plugin.config.saveTimer, 20*plugin.config.saveTimer);
@@ -88,20 +95,23 @@ public class ToggleLists{
 	
 	public void saveData() {
 		if(isYML()) {
-			plugin.getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&e[Piggyback] &aSaving data..."));
+			Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " &aSaving data..."));
 			ymlStorage.saveData(setToList(disabledPlayers),setToList(messagePlayers));
+			Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " &aData saved successfully to YML!"));
 		}else if(isSQLite()){   ///MYSQL type Storages
-			plugin.getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&e[Piggyback] &aSaving data..."));
+			Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " &aSaving data..."));
 			mysqlStorage.saveData(setToList(disabledPlayers), setToList(messagePlayers));
+			Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " &aData saved successfully to SQLite!"));
 		}
 	}
 	
+	@SuppressWarnings("static-access")
 	public void closeMySQLConnection() {
 		if(!isYML())
 			try {
 				mysqlStorage.closeConnection();
 			} catch (SQLException e) {
-				plugin.getLogger().info("Could not properly close MySQL-like connection.");
+				Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " Could not properly close MySQL-like connection."));
 			}
 	}
 	

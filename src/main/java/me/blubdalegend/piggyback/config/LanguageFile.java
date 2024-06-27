@@ -69,7 +69,7 @@ public class LanguageFile
 	
 	public LanguageFile(Piggyback plugin){
 		this.plugin = plugin;
-		languageFolder = new File(this.plugin.getDataFolder() +"/lang");
+		languageFolder = new File(this.plugin.getDataFolder().getAbsolutePath() + System.getProperty("file.separator") + "lang");
 		if(!(languageFolder.exists())){
 			languageFolder.mkdir();
 	   	}

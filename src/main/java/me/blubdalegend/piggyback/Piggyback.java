@@ -51,7 +51,7 @@ public class Piggyback extends org.bukkit.plugin.java.JavaPlugin
   private Commands commands;
   
   private static CommandMap cmap;   
-  private CCommand command;
+  private CCommand command = null;
   
   public void onEnable()
   {
@@ -99,18 +99,24 @@ public class Piggyback extends org.bukkit.plugin.java.JavaPlugin
   @Override
   public void onDisable(){	  
 	  super.onDisable();
-	  lists.saveData();
+	  if(this.lists!=null)
+	      lists.saveData();
 	  Bukkit.getScheduler().cancelTasks(this);
 	  if(!this.config.storageType.equalsIgnoreCase("yml")) {
 		  try {
 			  MySQLStorage.closeConnection();
+			  Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&7[&6Piggyback&7] &b" + this.config.storageType.toUpperCase() + " &adatabase connection closed successfully!"));
 		  } catch (SQLException e) {
 			  // TODO Auto-generated catch block
 			  e.printStackTrace();
 		  }
 	  }	  	  
 	  this.unRegisterCommands();
-	  plugin.getPluginLoader().disablePlugin(plugin);
+	  try {
+		  plugin.getPluginLoader().disablePlugin(plugin);
+	  }catch (java.lang.IllegalStateException e) {
+		  
+	  }  
   }
   
   public void initConfigs(){
@@ -175,10 +181,10 @@ public class Piggyback extends org.bukkit.plugin.java.JavaPlugin
             try {
                 Field f = clazz.getDeclaredField("commandMap");
                 f.setAccessible(true);
-                cmap = (CommandMap)f.get(Bukkit.getServer());
-                if (!this.command.equals(null)) {
+                cmap = (CommandMap)f.get(Bukkit.getServer());        
+                if (this.command!=null) {
                     this.command.unregister(cmap);
-                    Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', lang.prefix + " &aCommand " + lang.command + " Unregistered!"));
+                    Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', lang.prefix + " &aCommand &e" + lang.command + " &aUnregistered!"));
                 } 
             } catch (Exception e) {
             e.printStackTrace();

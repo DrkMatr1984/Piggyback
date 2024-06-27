@@ -144,8 +144,33 @@
             <version>3.0.2</version>
             <scope>compile</scope>
         </dependency>
+        <dependency>
+            <groupId>org.apache.maven.resolver</groupId>
+            <artifactId>maven-resolver-impl</artifactId>
+            <version>1.9.20</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.maven.resolver</groupId>
+            <artifactId>maven-resolver-connector-basic</artifactId>
+            <version>1.6.3</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.maven.resolver</groupId>
+            <artifactId>maven-resolver-transport-http</artifactId>
+            <version>1.6.3</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.maven</groupId>
+            <artifactId>maven-resolver-provider</artifactId>
+            <version>3.9.6</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.apache.maven.resolver/maven-resolver-util -->
+        <dependency>
+            <groupId>org.apache.maven.resolver</groupId>
+            <artifactId>maven-resolver-util</artifactId>
+            <version>1.9.20</version>
+        </dependency>
     </dependencies>
-
     <!-- Build information -->
     <build>
         <plugins>
@@ -182,8 +207,6 @@
                                     <include>com.zaxxer:HikariCP</include>
                                     <include>org.bstats:bstats-bukkit</include>
                                     <include>org.bstats:bstats-base</include>
-                                    <include>org.postgresql:postgresql</include>
-                                    <include>com.h2database:h2</include>
                                 </includes>
                             </artifactSet>
                         </configuration>

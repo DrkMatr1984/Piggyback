@@ -135,6 +135,7 @@ blacklists:
 
 storage:
   # Storage Type. Possible values: YML, H2, MYSQL, POSTGRE, SQLITE
+  # Postgre and H2 need their respective jars placed in /PiggyBack/lib/ to function. (Currently h2-1.4.190.jar and postgresql-42.5.0.jar)
   # Case-Insensitive
   type: 'yml'
   # Amount of time in seconds before saving data when using SQLite
@@ -143,11 +144,11 @@ storage:
   # Filename of SQLite database file if SQLite is chosen. Location is
   # in piggyback/data
   sqliteFilename: 'pback.db'
-  # Hostname or IP of the server if using H2, MYSQL, or POSTGRE
+  # Hostname or IP of the server if using H2, MYSQL, or POSTGRE (H2 Already includes tcp://)
   hostname: '127.0.0.1'
-  # Port number of the server if using H2, MYSQL, or POSTGRE
+  # Port number of the server if using H2, MYSQL, or POSTGRE (PostgreSQL Default: 5432 / MySQL Default: 3306 / H2 Default: 9092)
   port: '3306'
-  # The Name of the Database to use
+  # The Name of the Database to use (H2 Default: test)
   database: 'piggyback'
   # Boolean to use SSL in case of mysql type database. If this is true,
   # please either symlink or place ca-certificate.crt into the 
@@ -155,10 +156,24 @@ storage:
   useSSL: false
   # Whether to use the autoReconnect feature of MySQL (Only for MySQL)
   autoReconnect: true
-  # Username for database. Not needed when using SQLITE or YML
+  # Username for database. Not needed when using SQLITE or YML (default for H2 is 'sa')
   username: 'root'
-  # Password for database. Not needed when using SQLITE or YML
+  # Password for database. Not needed when using SQLITE or YML (default for H2 is '')
   password: 'password'
+  # PostgreSQL and H2 need their respective jars placed in /PiggyBack/lib/ to function. (Currently h2-1.4.190.jar and postgresql-42.5.0.jar)
+  # You can either download those jars yourself and place them in the /PiggyBack/lib/ folder or set this to true to have PiggyBack attempt
+  # to automatically download the latest lib jars from the Maven Central Repository into /PiggyBack/lib/.
+  # Has no effect if ** storage.type: ** above is not set to H2 or PostgreSQL.
+  autoDownloadLibs: false
+  
+  ## ADDITIONAL NOTES ON H2 DATABASES: https://www.h2database.com/html/main.html
+  ## After downloading the lib from Maven or the website listed above, you can run the jar in 
+  ## Local server mode by executing 'java -cp h2*.jar org.h2.tools.Server' This will start a server with the default settings.
+  ## Running 'java -cp h2*.jar org.h2.tools.Server -?' will display additional runtime options.
+  ## H2 is a great alternative to MySQL for people running Minecraft using rented server panels; as long as you have access
+  ## to edit part of the startup string you may be able to start an h2 jar as a server and use it as a personal MySQL server.
+  ## If interest is piqued I may add an embedded version of an H2 server that optionally runs with PiggyBack that other 
+  ## plugins may connect to and use.
     
 ##################################
 ##### Metrics Configuration ######

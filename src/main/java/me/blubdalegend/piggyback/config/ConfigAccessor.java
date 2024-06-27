@@ -14,6 +14,7 @@ import me.blubdalegend.piggyback.Piggyback;
 public class ConfigAccessor
 {	
 	private File file = null;
+	private File example = null;
 	private File dataFolder;
 	private FileConfiguration config;
 	
@@ -64,6 +65,7 @@ public class ConfigAccessor
 	public boolean autoReconnect;
 	public String username;
 	public String password;
+	public boolean autoDownloadLibs;
 	
 	public boolean bStats;
 	
@@ -74,8 +76,12 @@ public class ConfigAccessor
 	        this.dataFolder.mkdir(); 
 		if (this.file == null)
 	        this.file = new File(this.dataFolder, "config.yml"); 
-	      if (!this.file.exists())
+	    if (!this.file.exists())
 	        this.plugin.saveResource("config.yml", false);
+	    if (this.example == null)
+	        this.example = new File(this.dataFolder, "deluxe-menus-example.yml"); 
+	    if (!this.example.exists())
+	        this.plugin.saveResource("deluxe-menus-example.yml", false);
 	    initConfig();
 	}
 		    
@@ -137,6 +143,7 @@ public class ConfigAccessor
 		autoReconnect = config.getBoolean("storage.autoReconnect");
 		username = config.getString("storage.username");
 		password = config.getString("storage.password");
+		autoDownloadLibs = config.getBoolean("storage.autoDownloadLibs");
 		
 		bStats = config.getBoolean("general.bStatsMetrics");
 	}

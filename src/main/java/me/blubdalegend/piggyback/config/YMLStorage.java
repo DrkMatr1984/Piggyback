@@ -4,6 +4,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -21,12 +24,12 @@ public class YMLStorage
 	
 	public YMLStorage(Piggyback plugin) {
 		this.plugin = plugin;
-		dataFolder = new File(this.plugin.getDataFolder() +"/data");
+		dataFolder = new File(plugin.getDataFolder().getAbsolutePath() + System.getProperty("file.separator") + "data");
 		initLists();
 	}
 	
 	public void initLists() {
-	//pickup toggle users
+	    //pickup toggle users
 	   	if(!(dataFolder.exists())){
 	   		dataFolder.mkdir();
 	   	}
@@ -35,6 +38,7 @@ public class YMLStorage
 	   	}
 	   	if (!usersFile.exists()) {           
 	   		plugin.saveResource("data/toggles.yml", false);
+	   		Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " &eSaving default toggles.yml data file..."));
 	   	}
 	   	// Message toggle users
 	   	if (messageFile == null) {
@@ -42,8 +46,8 @@ public class YMLStorage
 	   	}
 	   	if (!messageFile.exists()) {           
 	   		plugin.saveResource("data/messageToggles.yml", false);
+	   		Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " &eSaving default messageToggles.yml data file..."));
 	   	}
-	   
 	}
 	public List<String> loadDisabledPlayers(){
 		//pickup toggle users
@@ -101,6 +105,6 @@ public class YMLStorage
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}		
+		}	
 	}
 }

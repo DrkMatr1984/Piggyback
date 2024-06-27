@@ -1,6 +1,6 @@
 ## This is an Example Config for the plugin "DeluxeMenus" to create a gui to Toggle on/off PiggyBack toggles. This config uses PlaceholderAPI and is able
 ## to actually show the currently toggled state in the Menu. This Config also uses HeadDatabase. If you don't have that plugin, please refer to DeluxeMenu's
-## Documentation for other possible options within the material slow in this config.
+## Documentation for other possible options within the material slot in this config.
 menu_title: '           &e&lOptions Menu'
 open_command: 'options'
 size: 36

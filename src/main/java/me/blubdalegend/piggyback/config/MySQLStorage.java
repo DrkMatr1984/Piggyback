@@ -2,30 +2,30 @@ package me.blubdalegend.piggyback.config;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
+import java.util.Properties;
 import java.util.UUID;
 import javax.sql.DataSource;
-import org.postgresql.ds.PGSimpleDataSource;
-
 import org.sqlite.SQLiteDataSource;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
 import me.blubdalegend.piggyback.Piggyback;
+import me.blubdalegend.piggyback.compatibility.DownloadDrivers;
+import me.blubdalegend.piggyback.compatibility.ResourceUtils;
 
 public class MySQLStorage {
 	
@@ -34,17 +34,23 @@ public class MySQLStorage {
     protected String hostname = "";
     protected String username = "";
     protected String password = "";
+    protected String url = "";
+    protected Properties props;
+    protected Driver driver;
     private static Connection conn = null;
     private File dataFolder;
+    private File libFolder;
     private Piggyback plugin;
 
 
-    public MySQLStorage(Piggyback plugin) throws SQLException {
+    @SuppressWarnings({"deprecation"})
+	public MySQLStorage(Piggyback plugin) throws SQLException {
     	this.plugin = plugin;
-    	this.dataFolder = new File(plugin.getDataFolder() +"/data");
+    	this.dataFolder = new File(plugin.getDataFolder().getAbsolutePath() + System.getProperty("file.separator") + "data");
         this.username = plugin.config.username;
         this.password = plugin.config.password;
         if(plugin.config.storageType.equalsIgnoreCase("sqlite")){
+        	Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " &eConnecting to SQLite Database..."));
         	if(!(dataFolder.exists())){
            		dataFolder.mkdir();
            	}
@@ -56,9 +62,10 @@ public class MySQLStorage {
                 throw new SQLException("Couldn't connect to the database");
             }
             createTable("disabledPlayers");
-            createTable("messagePlayers");     	             
+            createTable("messagePlayers");
         }else{
           	if(plugin.config.storageType.equalsIgnoreCase("mysql")) {
+          		Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " &eConnecting to MySQL Database..."));
            		if(plugin.config.autoReconnect)
                		this.hostname = "jdbc:mysql://" + plugin.config.hostname + ":" + plugin.config.port + "/" + plugin.config.database + "?useSSL=" + plugin.config.useSSL + "&autoReconnect=true";
                	else
@@ -76,56 +83,172 @@ public class MySQLStorage {
                 config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
                 dataSource = new HikariDataSource(config);
           	}else if (plugin.config.storageType.equalsIgnoreCase("h2")) {
-           		this.hostname = "jdbc:h2:tcp://" + plugin.config.hostname + ":" + plugin.config.port + "/~/" + plugin.config.database;
-           		config = new HikariConfig();
-           		config.setJdbcUrl(this.hostname);
-                config.setUsername(this.username); // Replace with your username
-                config.setPassword(this.password); // Replace with your password
-                config.setDriverClassName("org.h2.Driver");
-                config.setMaximumPoolSize(10);
-                config.setMinimumIdle(2);
-                config.setIdleTimeout(30000);
-                config.setConnectionTimeout(30000);
-                config.setMaxLifetime(1800000);
-                dataSource = new HikariDataSource(config);
+          		Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " &eConnecting to H2 Database..."));
+          		File h2Jar = null;
+          		URL jarUrl = null;
+          		this.libFolder = new File(plugin.getDataFolder().getAbsolutePath() + System.getProperty("file.separator") + "lib");
+          		if(!(libFolder.exists())){
+               		libFolder.mkdir();
+               	}
+          		if(ResourceUtils.listLibFiles(plugin).isEmpty()) {
+          			if(plugin.config.autoDownloadLibs) {
+          				DownloadDrivers.downloadDriver(plugin.config.storageType, libFolder);
+          			}else {
+          				Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " &cERROR: &eTo use H2 database you need to place your H2 java driver jar inside of PiggyBack/lib before"));
+              			Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " &estarting the server. Please download the jar, place it in " + libFolder.toString() + ", and restart the server,"));
+              			Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " &eor enable ** autoDownloadLibs: true ** in the Storage Configuration section to automatically download the libs from the"));
+              			Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " &eMaven Central Repository"));
+              		}
+          		}else {
+          			boolean contains = false;
+          			for(String s : ResourceUtils.listLibFiles(plugin)) {      				
+          				if(s.contains("h2-")) {
+          					contains = true;
+          				}
+          			}
+          			if(!contains) {
+          				if(plugin.config.autoDownloadLibs) {
+              				DownloadDrivers.downloadDriver(plugin.config.storageType, libFolder);
+              			}else {
+              				Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " &cERROR: &eTo use H2 database you need to place your H2 java driver jar inside of PiggyBack/lib before"));
+                  			Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " &estarting the server. Please download the jar, place it in " + libFolder.toString() + ", and restart the server,"));
+                  			Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " &eor enable ** autoDownloadLibs: true ** in the Storage Configuration section to automatically download the libs from the"));
+                  			Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " &eMaven Central Repository"));
+                  		}
+      			    }      			
+          		}	
+          		
+          		if(!ResourceUtils.listLibFiles(plugin).isEmpty()) {
+          			for(String s : ResourceUtils.listLibFiles(plugin))
+          			    if(s.contains("h2-")) 
+          				    h2Jar = new File(libFolder.getAbsolutePath() + System.getProperty("file.separator") + s); 
+          		}         		  			
+          		if(h2Jar != null) {
+					try {
+						jarUrl = h2Jar.toURI().toURL();
+					} catch (MalformedURLException e) {
+						e.printStackTrace();
+					}				
+          		}
+          		if(jarUrl != null) {
+          			URLClassLoader classLoader = new URLClassLoader(new URL[]{jarUrl}, MySQLStorage.class.getClassLoader());
+          			try {
+          				driver = (Driver) Class.forName("org.h2.Driver", true, classLoader).newInstance();
+						plugin.getLogger().info("Loaded: " + h2Jar.getName());						
+					} catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
+						plugin.getLogger().info("Failed to Load: " + h2Jar.getName());
+						e.printStackTrace();
+					}
+                    	props = new Properties();
+                        url = "jdbc:h2:tcp://" + plugin.config.hostname + ":" + plugin.config.port + "/~/" + plugin.config.database;
+                        if(this.username!=null)
+                        	props.setProperty("user", this.username);
+                        if(this.password!=null)
+                        	props.setProperty("password", this.password);
+                        props.setProperty("MODE", "MYSQL");
+          		}          		
          	}else if (plugin.config.storageType.equalsIgnoreCase("postgre")) {
-           		dataSource = new PGSimpleDataSource();
-           		if(plugin.config.useSSL) {
-           			Path path = Paths.get(plugin.getDataFolder().getAbsolutePath() + System.getProperty("file.separator") + "data" + System.getProperty("file.separator") + "ca-certificate.crt");
-               		String cert = null;
-               		try
-               		{
-               		    cert = Files.readString( path , StandardCharsets.UTF_8 );
-               		    System.out.println( "cert = " + cert );
-               		}
-               		catch ( IOException ex )
-               		{
-               		    throw new IllegalStateException( "Unable to load the TLS certificate needed to make database connections." );
-               		}
-               		Objects.requireNonNull(cert);
-               		if ( cert.isEmpty() )
-               		{
-               			throw new IllegalStateException( "Failed to load TLS cert." );
-               		}
-               	    ((PGSimpleDataSource)dataSource).setSslCert(cert);
-           		}         		
-           	    ((PGSimpleDataSource)dataSource).setServerNames(new String[]{plugin.config.hostname});
-           	    ((PGSimpleDataSource)dataSource).setDatabaseName(plugin.config.database);
-          	    ((PGSimpleDataSource)dataSource).setUser(this.username);
-           	    ((PGSimpleDataSource)dataSource).setPassword(this.password);
-           	    ((PGSimpleDataSource)dataSource).setPortNumbers(new int[] {plugin.config.port});
+         		Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " &eConnecting to PostgreSQL Database..."));
+         		File postgreJar = null;
+          		URL jarUrl = null;
+          		this.libFolder = new File(plugin.getDataFolder().getAbsolutePath() + System.getProperty("file.separator") + "lib");
+          		if(!(libFolder.exists())){
+               		libFolder.mkdir();
+               	}
+          		if(ResourceUtils.listLibFiles(plugin).isEmpty()) {
+          			if(plugin.config.autoDownloadLibs) {
+          				DownloadDrivers.downloadDriver(plugin.config.storageType, libFolder);
+          			}else {
+          				Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " &cERROR: &eTo use PostgreSQL database you need to place your PostgreSQL java driver jar inside of PiggyBack/lib before"));
+              			Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " &estarting the server. Please download the jar, place it in " + libFolder.toString() + ", and restart the server,"));
+              			Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " &eor enable ** autoDownloadLibs: true ** in the Storage Configuration section to automatically download the libs from the"));
+              			Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " &eMaven Central Repository"));
+              		}
+          		}else {
+          			boolean contains = false;
+          			for(String s : ResourceUtils.listLibFiles(plugin)) {      				
+          				if(s.contains("postgresql-")) {
+          					contains = true;
+          				}
+          			}
+          			if(!contains) {
+          				if(plugin.config.autoDownloadLibs) {
+              				DownloadDrivers.downloadDriver(plugin.config.storageType, libFolder);
+              			}else {
+              				Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " &cERROR: &eTo use PostgreSQL database you need to place your PostgreSQL java driver jar inside of PiggyBack/lib before"));
+                  			Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " &estarting the server. Please download the jar, place it in " + libFolder.toString() + ", and restart the server,"));
+                  			Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " &eor enable ** autoDownloadLibs: true ** in the Storage Configuration section to automatically download the libs from the"));
+                  			Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " &eMaven Central Repository"));
+                  		}
+      			    }      			    
+          		}
+          		if(!ResourceUtils.listLibFiles(plugin).isEmpty()) {
+          			for(String s : ResourceUtils.listLibFiles(plugin))
+          			    if(s.contains("postgresql-")) 
+          				    postgreJar = new File(libFolder.getAbsolutePath() + System.getProperty("file.separator") + s); 
+          		}         		  			
+          		if(postgreJar != null) {
+					try {
+						jarUrl = postgreJar.toURI().toURL();
+					} catch (MalformedURLException e) {
+						Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " &cERROR: &ePath is not right for postgreSQL jar file"));
+						e.printStackTrace();
+					}				
+          		}
+          		
+          		if(jarUrl != null) {
+          			URLClassLoader classLoader = new URLClassLoader(new URL[]{jarUrl}, MySQLStorage.class.getClassLoader());
+          			try {
+          				driver = (Driver) Class.forName("org.postgresql.Driver", true, classLoader).newInstance();
+          				Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " &aLoaded: &f" + postgreJar.getName()));						
+					} catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
+						Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " &cFailed to Load: " + postgreJar.getName()));
+						e.printStackTrace();
+					}
+                    	props = new Properties();
+                        if(plugin.config.useSSL) {
+                   			Path path = Paths.get(plugin.getDataFolder().getAbsolutePath() + System.getProperty("file.separator") + "data" + System.getProperty("file.separator") + "ca-certificate.crt");
+                       		String cert = null;
+                       		try
+                       		{
+                       		    cert = Files.readString( path , StandardCharsets.UTF_8 );
+                       		    plugin.getLogger().info("Loading: " + cert + " for PostgreSQL...");
+                       		}
+                       		catch ( IOException ex )
+                       		{
+                       		    throw new IllegalStateException( "Unable to load the TLS certificate needed to make database connections for PostgreSQL." );
+                       		}
+                       		if(cert!=null) {
+                       		    if ( cert.isEmpty() )
+                       		      	throw new IllegalStateException( "Failed to load TLS cert." );
+                       		} else {
+                       			throw new IllegalStateException( "Failed to load TLS cert." );
+                       		}
+                       		props.setProperty("ssl", "true");
+                            props.setProperty("sslmode", "verify-full");
+                       		props.setProperty("sslrootcert", path.toString());
+                   		}
+                        url = "jdbc:postgresql://" + plugin.config.hostname + ":" + plugin.config.port + "/" + plugin.config.database;
+                        if(this.username!=null)
+                        	if(!this.username.isBlank())
+                        		props.setProperty("user", this.username);
+                        if(this.password!=null)
+                        	if(!this.password.isBlank())
+                        		props.setProperty("password", this.password);
+          		}
+         		
            	}else {
-           		plugin.getLogger().info("ERROR: Database needs a type set. Possible values: YML, H2, MYSQL, POSTGRE, SQLITE");
+           		Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " &cERROR: &eDatabase needs a type set. Possible values: YML, H2, MYSQL, POSTGRE, SQLITE"));
            	}
         
           	try {
-				MySQLStorage.conn = getConnection();
+				conn = getConnection();
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
             if (conn==null) {
-                throw new SQLException("Couldn't connect to the database");
+            	throw new SQLException("Couldn't connect to the database");
             }
             if (plugin.config.storageType.equalsIgnoreCase("postgre")) {
               	PreparedStatement stmt = getStatement("CREATE SCHEMA IF NOT EXISTS piggyback");
@@ -148,7 +271,8 @@ public class MySQLStorage {
                 return;
             }
             Bukkit.getScheduler().runTaskTimerAsynchronously(plugin,() -> keepAlive(), 20*60*60*7, 20*60*60*7);
-        }       	     
+        }
+        Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " &aSuccessfully connected to &f" + plugin.config.storageType.toUpperCase() +" &aDatabase!"));
     }
     
     public List<String> loadDisabledPlayers(){
@@ -356,15 +480,15 @@ public class MySQLStorage {
     }
     
     public static void closeConnection() throws SQLException{
-    	if(dataSource instanceof HikariDataSource) {
-    		if(!((HikariDataSource) dataSource).isClosed()) {
-    			((HikariDataSource) dataSource).close();
-    		}
-    	}else {
-    		if (conn != null && !conn.isClosed()) conn.close();
-    	}  	 
-    }
-   
+    	if(dataSource!=null) {
+    		if(dataSource instanceof HikariDataSource) {
+        		if(!((HikariDataSource) dataSource).isClosed()) {
+        			((HikariDataSource) dataSource).close();
+        		}
+        	}
+    	}
+    	if (conn != null && !conn.isClosed()) conn.close();  	 
+    } 
     private Connection getConnection() throws SQLException{
     	if (isConnected())
     	      try {
@@ -377,18 +501,25 @@ public class MySQLStorage {
     	        	  
     	          } 
     	      }
-        if (conn == null || conn.isClosed() || !conn.isValid(60)) { //maybe change to lower than 60, like 4 seconds?
-        	if(dataSource  instanceof HikariDataSource || dataSource instanceof SQLiteDataSource || dataSource instanceof PGSimpleDataSource) {
+        if (conn == null || conn.isClosed() || !conn.isValid(60)) {
+            //maybe change to lower than 60, like 4 seconds?
+        	if(dataSource  instanceof HikariDataSource || dataSource instanceof SQLiteDataSource) {
                 try {
 				    conn = dataSource.getConnection();
 				} catch (SQLException e) {
-					Bukkit.getServer().getLogger().info("!!!!!!!!!!!!!!!!!!!! dataSource.getConnection() is throwing a fit");
+					Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " &cCannot connect to Hikari/SQLite Database! Check your settings in config.yml!"));
 					e.printStackTrace();
 				}           	
         	}else {
-        		conn = (username.isEmpty() && password.isEmpty()) ? DriverManager.getConnection(hostname) : DriverManager.getConnection(hostname, username, password);
-        		Bukkit.getServer().getLogger().info("!!!!!!!!!!!!!!!!!!!! Trying to connect to Other Database");
-        	}           
+        		if(driver!=null) {
+        			try {
+        				conn = driver.connect(url, props);
+        			}catch (Exception e) {
+        				//hopefully this catches the exception and cleans up the error log
+        			}      			
+        		}
+        		    
+        	}      
         }
         // The connection could be null here (!)
         return conn;
@@ -409,7 +540,7 @@ public class MySQLStorage {
     private void createTable(String tableName) throws SQLException {
     	try
     	{
-    		MySQLStorage.conn = dataSource.getConnection();
+    		MySQLStorage.conn = getConnection();
             if (conn==null) {
                 throw new SQLException("Couldn't connect to the database");
             }
@@ -499,5 +630,5 @@ public class MySQLStorage {
   			}  
   		return null;
   	}
-    
+
 }
