@@ -1,10 +1,15 @@
 package me.blubdalegend.piggyback.config;
 
 import java.io.File;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -68,6 +73,7 @@ public class ConfigAccessor
 	public boolean autoDownloadLibs;
 	
 	public boolean bStats;
+	public int configVersion;
 	
 	public ConfigAccessor(Piggyback plugin){
 		this.plugin = plugin;
@@ -82,12 +88,13 @@ public class ConfigAccessor
 	        this.example = new File(this.dataFolder, "deluxe-menus-example.yml"); 
 	    if (!this.example.exists())
 	        this.plugin.saveResource("deluxe-menus-example.yml", false);
+	    this.config = YamlConfiguration.loadConfiguration(file);
+	    updateConfig();
 	    initConfig();
 	}
 		    
 	public void initConfig()
-	{
-		this.config = YamlConfiguration.loadConfiguration(file);
+	{	
 		// main config section
 		clickAction = Actions.valueOf((Objects.requireNonNull(config.getString("main.clickAction"))).toUpperCase());
 		clickType = Clicks.valueOf((Objects.requireNonNull(config.getString("main.clickType"))).toUpperCase());
@@ -145,7 +152,11 @@ public class ConfigAccessor
 		password = config.getString("storage.password");
 		autoDownloadLibs = config.getBoolean("storage.autoDownloadLibs");
 		
-		bStats = config.getBoolean("general.bStatsMetrics");
+		// bStats
+		bStats = config.getBoolean("metrics.bStatsMetrics");
+		
+		// Config Version
+		configVersion = config.getInt("config-version");
 	}
 	
 	private List<String> uppercaseStringList(List<String> list)
@@ -156,5 +167,43 @@ public class ConfigAccessor
 		}
 		return newList;
 	}
+	
+	public void updateConfig() {
+        InputStream defaultConfigStream = plugin.getResource("config.yml");
+        if (defaultConfigStream == null) {
+        	Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&7[&6Piggyback&7] &cDefault config.yml not found in the jar!"));
+            return;
+        }
+        FileConfiguration defaultConfig = YamlConfiguration.loadConfiguration(new InputStreamReader(defaultConfigStream));
+          
+        int currentVersion = configVersion;
+        int newVersion = defaultConfig.getInt("config-version");
+
+        if (newVersion > currentVersion) {
+        	Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&7[&6Piggyback&7] &cOutdated &fconfig.yml&c! &aUpdating &fconfig.yml &ato the newest version..."));
+            mergeConfigs(config, defaultConfig);
+            try {
+                config.save(file);
+                Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&7[&6Piggyback&7] &aYour &fconfig.yml &ahas been updated successfully!"));
+                Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&7[&6Piggyback&7] &7&oEven though this plugin updates its &f&oconfig.yml &7&oautomagically,"));
+                Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&7[&6Piggyback&7] &7&oI would consider renaming your current updated &f&oconfig.yml &7&oand"));
+                Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&7[&6Piggyback&7] &7&oletting a new one generate. Then manually copy over your old settings."));
+                Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&7[&6Piggyback&7] &7&oA fresh &f&oconfig.yml &7&owill have comments thoroughly explaining each"));
+                Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&7[&6Piggyback&7] &7&onew setting. Without reading these, &c&ounintended results may occur&7&o."));
+            } catch (Exception e) {
+            	Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&7[&6Piggyback&7] &cCould not save updated config.yml: "));
+            	e.printStackTrace();
+            }
+        }
+    }
+	
+	 private void mergeConfigs(FileConfiguration currentConfig, FileConfiguration defaultConfig) {
+		 Set<String> keys = defaultConfig.getKeys(true);
+		 for (String key : keys) {
+			 if (!currentConfig.contains(key)) {
+				 currentConfig.set(key, defaultConfig.get(key));
+			 }
+		 }
+	 }
 	
 }

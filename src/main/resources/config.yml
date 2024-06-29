@@ -182,3 +182,8 @@ storage:
 metrics:
   # Enable bStats metrics
   bStatsMetrics: true
+  
+##################################
+### DO NOT TOUCH OR BAD THINGS ###
+##################################
+config-version: 1

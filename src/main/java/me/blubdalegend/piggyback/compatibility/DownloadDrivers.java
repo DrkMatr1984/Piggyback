@@ -45,11 +45,13 @@ public class DownloadDrivers {
             Artifact artifact = null;
             if (storageType.equalsIgnoreCase("postgre")) {
                 artifact = new DefaultArtifact("org.postgresql:postgresql:LATEST");
-                Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', Piggyback.getPlugin().lang.prefix + " &eAttempting to download latest &f" + storageType.toUpperCase() +  " &edrivers..."));
+                Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&7[&6Piggyback&7] &eAttempting to download latest &f" + storageType.toUpperCase() +  " &edrivers"));
+                Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&7[&6Piggyback&7] &efrom &fhttps://repo.maven.apache.org/maven2/ ..."));
             }
             if(storageType.equalsIgnoreCase("h2")) {
                 artifact = new DefaultArtifact("com.h2database:h2:LATEST");
-                Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', Piggyback.getPlugin().lang.prefix + " &eAttempting to download latest &f" + storageType.toUpperCase() +  " &edrivers..."));
+                Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&7[&6Piggyback&7] &eAttempting to download latest &f" + storageType.toUpperCase() +  " &edrivers"));
+                Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&7[&6Piggyback&7] &efrom &fhttps://repo.maven.apache.org/maven2/ ..."));
             }
 
             // Define the remote repository to fetch the artifact from
@@ -63,14 +65,14 @@ public class DownloadDrivers {
 
                 // Download the artifact
                 ArtifactResult artifactResult = system.resolveArtifact(session, artifactRequest);
-
                 // Copy the downloaded artifact to the target directory
                 File targetFile = new File(libDir, artifactResult.getArtifact().getFile().getName());
                 Files.copy(artifactResult.getArtifact().getFile().toPath(), targetFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-
-                Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', Piggyback.getPlugin().lang.prefix + " &aDownloaded: &f" + targetFile.getName()));
+                Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&7[&6Piggyback&7] &aDownloaded: &f" + targetFile.getName()) + " &ato " + 
+                    Piggyback.getPlugin().getDataFolder().getAbsolutePath() + System.getProperty("file.separator") + "lib" + System.getProperty("file.separator"));
             }else {
-            	Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', Piggyback.getPlugin().lang.prefix + " &cSome kinda error occurrred in DOwnloadDrivers."));
+            	Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&7[&6Piggyback&7] &cAn Error occurred while attempting to download the latest"));
+            	Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&7[&6Piggyback&7] &f" + storageType.toUpperCase() +  " &cdrivers..."));
             }           
         } catch (Exception e) {
             e.printStackTrace();

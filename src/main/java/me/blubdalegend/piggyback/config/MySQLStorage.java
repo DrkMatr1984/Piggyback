@@ -50,7 +50,7 @@ public class MySQLStorage {
         this.username = plugin.config.username;
         this.password = plugin.config.password;
         if(plugin.config.storageType.equalsIgnoreCase("sqlite")){
-        	Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " &eConnecting to SQLite Database..."));
+        	Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&7[&6Piggyback&7] &eConnecting to SQLite Database..."));
         	if(!(dataFolder.exists())){
            		dataFolder.mkdir();
            	}
@@ -65,7 +65,7 @@ public class MySQLStorage {
             createTable("messagePlayers");
         }else{
           	if(plugin.config.storageType.equalsIgnoreCase("mysql")) {
-          		Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " &eConnecting to MySQL Database..."));
+          		Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&7[&6Piggyback&7] &eConnecting to MySQL Database..."));
            		if(plugin.config.autoReconnect)
                		this.hostname = "jdbc:mysql://" + plugin.config.hostname + ":" + plugin.config.port + "/" + plugin.config.database + "?useSSL=" + plugin.config.useSSL + "&autoReconnect=true";
                	else
@@ -83,7 +83,7 @@ public class MySQLStorage {
                 config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
                 dataSource = new HikariDataSource(config);
           	}else if (plugin.config.storageType.equalsIgnoreCase("h2")) {
-          		Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " &eConnecting to H2 Database..."));
+          		Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&7[&6Piggyback&7] &eConnecting to H2 Database..."));
           		File h2Jar = null;
           		URL jarUrl = null;
           		this.libFolder = new File(plugin.getDataFolder().getAbsolutePath() + System.getProperty("file.separator") + "lib");
@@ -94,10 +94,10 @@ public class MySQLStorage {
           			if(plugin.config.autoDownloadLibs) {
           				DownloadDrivers.downloadDriver(plugin.config.storageType, libFolder);
           			}else {
-          				Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " &cERROR: &eTo use H2 database you need to place your H2 java driver jar inside of PiggyBack/lib before"));
-              			Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " &estarting the server. Please download the jar, place it in " + libFolder.toString() + ", and restart the server,"));
-              			Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " &eor enable ** autoDownloadLibs: true ** in the Storage Configuration section to automatically download the libs from the"));
-              			Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " &eMaven Central Repository"));
+          				Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&7[&6Piggyback&7]  &cERROR: &eTo use H2 database you need to place your H2 java driver jar inside of PiggyBack/lib before"));
+              			Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&7[&6Piggyback&7]  &estarting the server. Please download the jar, place it in " + libFolder.toString() + ", and restart the server,"));
+              			Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&7[&6Piggyback&7]  &eor enable ** autoDownloadLibs: true ** in the Storage Configuration section to automatically download the libs from the"));
+              			Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&7[&6Piggyback&7]  &eMaven Central Repository"));
               		}
           		}else {
           			boolean contains = false;
@@ -110,10 +110,10 @@ public class MySQLStorage {
           				if(plugin.config.autoDownloadLibs) {
               				DownloadDrivers.downloadDriver(plugin.config.storageType, libFolder);
               			}else {
-              				Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " &cERROR: &eTo use H2 database you need to place your H2 java driver jar inside of PiggyBack/lib before"));
-                  			Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " &estarting the server. Please download the jar, place it in " + libFolder.toString() + ", and restart the server,"));
-                  			Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " &eor enable ** autoDownloadLibs: true ** in the Storage Configuration section to automatically download the libs from the"));
-                  			Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " &eMaven Central Repository"));
+              				Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&7[&6Piggyback&7]  &cERROR: &eTo use H2 database you need to place your H2 java driver jar inside of PiggyBack/lib before"));
+                  			Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&7[&6Piggyback&7]  &estarting the server. Please download the jar, place it in " + libFolder.toString() + ", and restart the server,"));
+                  			Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&7[&6Piggyback&7]  &eor enable ** autoDownloadLibs: true ** in the Storage Configuration section to automatically download the libs from the"));
+                  			Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&7[&6Piggyback&7]  &eMaven Central Repository"));
                   		}
       			    }      			
           		}	
@@ -148,7 +148,7 @@ public class MySQLStorage {
                         props.setProperty("MODE", "MYSQL");
           		}          		
          	}else if (plugin.config.storageType.equalsIgnoreCase("postgre")) {
-         		Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " &eConnecting to PostgreSQL Database..."));
+         		Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&7[&6Piggyback&7] &eConnecting to PostgreSQL Database..."));
          		File postgreJar = null;
           		URL jarUrl = null;
           		this.libFolder = new File(plugin.getDataFolder().getAbsolutePath() + System.getProperty("file.separator") + "lib");
@@ -159,10 +159,10 @@ public class MySQLStorage {
           			if(plugin.config.autoDownloadLibs) {
           				DownloadDrivers.downloadDriver(plugin.config.storageType, libFolder);
           			}else {
-          				Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " &cERROR: &eTo use PostgreSQL database you need to place your PostgreSQL java driver jar inside of PiggyBack/lib before"));
-              			Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " &estarting the server. Please download the jar, place it in " + libFolder.toString() + ", and restart the server,"));
-              			Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " &eor enable ** autoDownloadLibs: true ** in the Storage Configuration section to automatically download the libs from the"));
-              			Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " &eMaven Central Repository"));
+          				Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&7[&6Piggyback&7] &cERROR: &eTo use PostgreSQL database you need to place your PostgreSQL java driver jar inside of PiggyBack/lib before"));
+              			Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&7[&6Piggyback&7] &estarting the server. Please download the jar, place it in " + libFolder.toString() + ", and restart the server,"));
+              			Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&7[&6Piggyback&7] &eor enable ** autoDownloadLibs: true ** in the Storage Configuration section to automatically download the libs from the"));
+              			Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&7[&6Piggyback&7] &eMaven Central Repository"));
               		}
           		}else {
           			boolean contains = false;
@@ -175,10 +175,10 @@ public class MySQLStorage {
           				if(plugin.config.autoDownloadLibs) {
               				DownloadDrivers.downloadDriver(plugin.config.storageType, libFolder);
               			}else {
-              				Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " &cERROR: &eTo use PostgreSQL database you need to place your PostgreSQL java driver jar inside of PiggyBack/lib before"));
-                  			Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " &estarting the server. Please download the jar, place it in " + libFolder.toString() + ", and restart the server,"));
-                  			Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " &eor enable ** autoDownloadLibs: true ** in the Storage Configuration section to automatically download the libs from the"));
-                  			Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " &eMaven Central Repository"));
+              				Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&7[&6Piggyback&7] &cERROR: &eTo use PostgreSQL database you need to place your PostgreSQL java driver jar inside of PiggyBack/lib before"));
+                  			Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&7[&6Piggyback&7] &estarting the server. Please download the jar, place it in " + libFolder.toString() + ", and restart the server,"));
+                  			Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&7[&6Piggyback&7] &eor enable ** autoDownloadLibs: true ** in the Storage Configuration section to automatically download the libs from the"));
+                  			Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&7[&6Piggyback&7] &eMaven Central Repository"));
                   		}
       			    }      			    
           		}
@@ -191,7 +191,7 @@ public class MySQLStorage {
 					try {
 						jarUrl = postgreJar.toURI().toURL();
 					} catch (MalformedURLException e) {
-						Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " &cERROR: &ePath is not right for postgreSQL jar file"));
+						Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&7[&6Piggyback&7]  &cERROR: &ePath is not right for postgreSQL jar file"));
 						e.printStackTrace();
 					}				
           		}
@@ -200,9 +200,9 @@ public class MySQLStorage {
           			URLClassLoader classLoader = new URLClassLoader(new URL[]{jarUrl}, MySQLStorage.class.getClassLoader());
           			try {
           				driver = (Driver) Class.forName("org.postgresql.Driver", true, classLoader).newInstance();
-          				Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " &aLoaded: &f" + postgreJar.getName()));						
+          				Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&7[&6Piggyback&7] &aLoaded: &f" + postgreJar.getName()));						
 					} catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
-						Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " &cFailed to Load: " + postgreJar.getName()));
+						Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&7[&6Piggyback&7] &cFailed to Load: " + postgreJar.getName()));
 						e.printStackTrace();
 					}
                     	props = new Properties();
@@ -238,7 +238,7 @@ public class MySQLStorage {
           		}
          		
            	}else {
-           		Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " &cERROR: &eDatabase needs a type set. Possible values: YML, H2, MYSQL, POSTGRE, SQLITE"));
+           		Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&7[&6Piggyback&7] &cERROR: &eDatabase needs a type set. Possible values: YML, H2, MYSQL, POSTGRE, SQLITE"));
            	}
         
           	try {
@@ -272,7 +272,7 @@ public class MySQLStorage {
             }
             Bukkit.getScheduler().runTaskTimerAsynchronously(plugin,() -> keepAlive(), 20*60*60*7, 20*60*60*7);
         }
-        Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " &aSuccessfully connected to &f" + plugin.config.storageType.toUpperCase() +" &aDatabase!"));
+        Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&7[&6Piggyback&7] &aSuccessfully connected to &f" + plugin.config.storageType.toUpperCase() +" &aDatabase!"));
     }
     
     public List<String> loadDisabledPlayers(){
@@ -507,7 +507,7 @@ public class MySQLStorage {
                 try {
 				    conn = dataSource.getConnection();
 				} catch (SQLException e) {
-					Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " &cCannot connect to Hikari/SQLite Database! Check your settings in config.yml!"));
+					Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&7[&6Piggyback&7] &cCannot connect to Hikari/SQLite Database! Check your settings in config.yml!"));
 					e.printStackTrace();
 				}           	
         	}else {
@@ -614,8 +614,8 @@ public class MySQLStorage {
     			e.printStackTrace();
     		}            
     	}else {
-    		Bukkit.getServer().getLogger().info("ERROR: Not connected to database. This is a serious error and PiggyBack data WILL be lost. Please"
-    				+ " notify the plugin author");
+    		Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&7[&6Piggyback&7] &cERROR: Not connected to database. This is a serious error and PiggyBack data WILL be lost. Please"
+    				+ " &cnotify the plugin author"));
     	}
     	return keys;
     }
