@@ -7,8 +7,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.*;
-import java.util.logging.Logger;
-
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -51,7 +49,6 @@ public class Piggyback extends org.bukkit.plugin.java.JavaPlugin
 	public String clazzName;
 	public String sendPacket;
 	public static Class<?> clazz;
-	private Logger log;
 	private Commands commands;
   
 	private static CommandMap cmap;   
@@ -60,7 +57,6 @@ public class Piggyback extends org.bukkit.plugin.java.JavaPlugin
 	public void onEnable()
 	{
 		plugin = this;
-		log = getLogger();
 		PluginManager pm = getServer().getPluginManager();
 		initConfigs();
 		commands = new Commands(this);
@@ -83,10 +79,23 @@ public class Piggyback extends org.bukkit.plugin.java.JavaPlugin
     	  	com.plotsquared.core.plot.flag.GlobalFlagContainer.getInstance().addFlag(plotSquared);
     	  	log.info("Hooked into PlotSquared! Flag is deny-piggyback");
       	}*/
-     	checkForUpdates();
+     	// Check for Updates Async
+     	Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&7[&6Piggyback&7] &aChecking for updates..."));
+     	checkForUpdates(Double.parseDouble(this.getDescription().getVersion()), new UpdateCallBack() {
+			@Override
+			public void onQueryDone(boolean update, String latestVersion) {
+				if(update) {
+					Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&7[&6Piggyback&7] &aAn update is available! &bYours: " + Piggyback.plugin.getDescription().getVersion() + " &eLatest: &6Piggyback &fv" + latestVersion));
+    				Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&7[&6Piggyback&7] &aGet it Here! &7: &e* * * &fhttps://www.spigotmc.org/resources/piggyback-more-than-just-a-stacker.14130/ &e* * *"));
+				}else {
+					Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&7[&6Piggyback&7] &aYou are using the latest version."));
+				}
+				
+			}  		
+     	});
      	if(this.config.bStats) {
      		new Metrics(this, 15398);
-     		log.info("Starting bStats...");
+     		Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&7[&6Piggyback&7] &bStarting bStats..."));
      	}      
      	Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&7[&6Piggyback&7] &aPiggyback v" + plugin.getDescription().getVersion() + " enabled!"));
 	}
@@ -127,8 +136,9 @@ public class Piggyback extends org.bukkit.plugin.java.JavaPlugin
   }
   
   public void initConfigs(){
+	  // Load Config first to get Lang file name
 	  config = new ConfigAccessor(plugin);
-	  lang = new LanguageFile(plugin);
+	  lang = new LanguageFile(plugin);	  
 	  lists = new ToggleLists(plugin);
   }
   
@@ -212,27 +222,44 @@ public class Piggyback extends org.bukkit.plugin.java.JavaPlugin
     }
   
     @SuppressWarnings("deprecation")
-    public void checkForUpdates() {
-    	try {
-    		URL url = new URL("https://api.spigotmc.org/legacy/update.php?resource=14130");
-    		HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-    		connection.setRequestMethod("GET");
+    private void checkForUpdates(final double pluginVersion, final UpdateCallBack callback) {
+    	Bukkit.getScheduler().runTaskAsynchronously(plugin, new Runnable() {
+			@Override
+			public void run() {
+				try {
+		    		URL url = new URL("https://api.spigotmc.org/legacy/update.php?resource=14130");
+		    		HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+		    		connection.setRequestMethod("GET");
+		    		try (BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()))) {
+		    			String latestVersion = reader.readLine();	
+		    			if (pluginVersion<(Double.parseDouble(latestVersion))) {
+		    				Bukkit.getScheduler().runTask(plugin, new Runnable() {
+		                        @Override
+		                        public void run() {
+		                            callback.onQueryDone(true, latestVersion);
+		                        }
+		                    });
+		    			} else {
+		    				Bukkit.getScheduler().runTask(plugin, new Runnable() {
+		                        @Override
+		                        public void run() {
+		                            callback.onQueryDone(false, "");
+		                        }
+		                    });
+		    			}
+		    		}
+		    	} catch (Exception e) {
+		    		Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&7[&6Piggyback&7] &cCould not check for updates: "));
+		    		e.printStackTrace();
+		    	}	
+			}
+    	});
+    }
+    
+    public interface UpdateCallBack {
 
-    		try (BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()))) {
-    			String latestVersion = reader.readLine();
+        public void onQueryDone(boolean update, String latestVersion);
 
-    			if (!plugin.getDescription().getVersion().equalsIgnoreCase(latestVersion)) {
-    				Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&7[&6Piggyback&7] &aAn update is available! &eLatest: &6Piggyback &fv" + latestVersion));
-    				Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&7[&6Piggyback&7] &aGet it Here! &7: "));
-    				Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&7[&6Piggyback&7] &e* * * &fhttps://www.spigotmc.org/resources/piggyback-more-than-just-a-stacker.14130/ &e* * *"));
-    			} else {
-    				Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&7[&6Piggyback&7] &aYou are using the latest version."));
-    			}
-    		}
-    	} catch (Exception e) {
-    		Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&7[&6Piggyback&7] &cCould not check for updates: "));
-    		e.printStackTrace();
-    	}
     }
   
     /*public DenyPiggybackFlag getPlotSquared() {

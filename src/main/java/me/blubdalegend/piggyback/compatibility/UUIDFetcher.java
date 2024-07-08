@@ -67,6 +67,7 @@ public class UUIDFetcher implements Callable<Map<String, UUID>> {
 		stream.close();
 	}
 
+	@SuppressWarnings("deprecation")
 	private static HttpURLConnection createConnection() throws Exception {
 		URL url = new URL(PROFILE_URL);
 		HttpURLConnection connection = (HttpURLConnection) url.openConnection();

@@ -73,7 +73,6 @@ public class ConfigAccessor
 	public boolean autoDownloadLibs;
 	
 	public boolean bStats;
-	public int configVersion;
 	
 	public ConfigAccessor(Piggyback plugin){
 		this.plugin = plugin;
@@ -89,7 +88,7 @@ public class ConfigAccessor
 	    if (!this.example.exists())
 	        this.plugin.saveResource("deluxe-menus-example.yml", false);
 	    this.config = YamlConfiguration.loadConfiguration(file);
-	    updateConfig();
+	    updateConfig(config.getInt("config-version"));
 	    initConfig();
 	}
 		    
@@ -154,9 +153,6 @@ public class ConfigAccessor
 		
 		// bStats
 		bStats = config.getBoolean("metrics.bStatsMetrics");
-		
-		// Config Version
-		configVersion = config.getInt("config-version");
 	}
 	
 	private List<String> uppercaseStringList(List<String> list)
@@ -168,7 +164,7 @@ public class ConfigAccessor
 		return newList;
 	}
 	
-	public void updateConfig() {
+	public void updateConfig(int configVersion) {
         InputStream defaultConfigStream = plugin.getResource("config.yml");
         if (defaultConfigStream == null) {
         	Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&7[&6Piggyback&7] &cDefault config.yml not found in the jar!"));
@@ -185,6 +181,7 @@ public class ConfigAccessor
             try {
                 config.save(file);
                 Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&7[&6Piggyback&7] &aYour &fconfig.yml &ahas been updated successfully!"));
+                Bukkit.getConsoleSender().sendMessage();
                 Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&7[&6Piggyback&7] &7&oEven though this plugin updates its &f&oconfig.yml &7&oautomagically,"));
                 Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&7[&6Piggyback&7] &7&oI would consider renaming your current updated &f&oconfig.yml &7&oand"));
                 Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&7[&6Piggyback&7] &7&oletting a new one generate. Then manually copy over your old settings."));

@@ -15,7 +15,7 @@ public class BukkitListeners implements Listener{
 	
 	public BukkitListeners() {
 	}
-	
+	/*
 	@EventHandler(priority=EventPriority.HIGH, ignoreCancelled=true)
 	public void cancelVehiclePassengerDamage(EntityDamageByEntityEvent event)
 	{
@@ -27,7 +27,7 @@ public class BukkitListeners implements Listener{
 				event.setCancelled(true);
 			}
 		}
-	}
+	}*/
 	
 	//prevent player from dropping carried passengers underwater
 	@EventHandler(priority=EventPriority.HIGHEST)

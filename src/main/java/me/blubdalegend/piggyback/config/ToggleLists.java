@@ -76,7 +76,6 @@ public class ToggleLists{
 			if(isYML() || isSQLite()) {
 				Bukkit.getScheduler().runTaskTimerAsynchronously(plugin,new Runnable() {
 					public void run() {
-						Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " &aSaving data..."));
 						saveData();
 					}
 				}, 20*plugin.config.saveTimer, 20*plugin.config.saveTimer);

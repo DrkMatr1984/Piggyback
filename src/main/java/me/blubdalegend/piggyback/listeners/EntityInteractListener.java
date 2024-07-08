@@ -22,7 +22,7 @@ public class EntityInteractListener implements Listener
 	public EntityInteractListener(Plugin plugin){
 		this.plugin = plugin;
 	}
-	
+	/*
 	@EventHandler(priority=EventPriority.LOW, ignoreCancelled=true)
 	public void onPlayerLeftClickEntity(EntityDamageByEntityEvent event) {
 		if(event.getDamager() instanceof Player)
@@ -62,5 +62,5 @@ public class EntityInteractListener implements Listener
 				}				
 			}
 		}	
-	}
+	}*/
 }
