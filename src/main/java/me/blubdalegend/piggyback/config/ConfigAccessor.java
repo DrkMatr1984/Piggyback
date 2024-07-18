@@ -94,6 +94,7 @@ public class ConfigAccessor
 		    
 	public void initConfig()
 	{	
+		this.config = YamlConfiguration.loadConfiguration(file);
 		// main config section
 		clickAction = Actions.valueOf((Objects.requireNonNull(config.getString("main.clickAction"))).toUpperCase());
 		clickType = Clicks.valueOf((Objects.requireNonNull(config.getString("main.clickType"))).toUpperCase());
@@ -164,7 +165,7 @@ public class ConfigAccessor
 		return newList;
 	}
 	
-	public void updateConfig(int configVersion) {
+	private void updateConfig(int configVersion) {
         InputStream defaultConfigStream = plugin.getResource("config.yml");
         if (defaultConfigStream == null) {
         	Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&7[&6Piggyback&7] &cDefault config.yml not found in the jar!"));

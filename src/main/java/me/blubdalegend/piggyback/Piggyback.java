@@ -43,7 +43,7 @@ public class Piggyback extends org.bukkit.plugin.java.JavaPlugin
 	public static List<UUID> noPermsCooldownPlayers = new ArrayList<>();
 	public static HashMap<UUID,Long> piggybackPickupCooldownPlayers = new HashMap<>();
 	public static HashMap<UUID,Long> piggybackRideCooldownPlayers = new HashMap<>();
-	public static HashMap<UUID, List<Entity>> passengers = new HashMap<>();
+	public static HashMap<UUID, Entity> passengers = new HashMap<>();
 	private WorldGuardHook wgHook;
   //private DenyPiggybackFlag plotSquared;
 	public String clazzName;
@@ -107,7 +107,7 @@ public class Piggyback extends org.bukkit.plugin.java.JavaPlugin
           wgHook = new WorldGuardHook();
           Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&e* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *"));
           Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&7[&6Piggyback&7] &ahooked into &fWorldGuard! &aFlag &fallow-piggyback&a registered. Set"));
-          Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&7[&6Piggyback&7] \"&fallow-piggyback = DENY\" &ato deny &6Piggyback &ain regions."));
+          Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&f\"allow-piggyback = DENY\" &ato deny &6Piggyback &ain regions."));
           Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&e* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *"));
       }
   }

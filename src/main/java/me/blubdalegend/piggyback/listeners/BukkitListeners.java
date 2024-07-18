@@ -15,7 +15,7 @@ public class BukkitListeners implements Listener{
 	
 	public BukkitListeners() {
 	}
-	/*
+	
 	@EventHandler(priority=EventPriority.HIGH, ignoreCancelled=true)
 	public void cancelVehiclePassengerDamage(EntityDamageByEntityEvent event)
 	{
@@ -27,13 +27,13 @@ public class BukkitListeners implements Listener{
 				event.setCancelled(true);
 			}
 		}
-	}*/
+	}
 	
 	//prevent player from dropping carried passengers underwater
 	@EventHandler(priority=EventPriority.HIGHEST)
 	public void preventDismountUnderWater(EntityDismountEvent event) {
 		if(Piggyback.passengers.containsKey(event.getDismounted().getUniqueId())) {
-			if(Piggyback.passengers.get(event.getDismounted().getUniqueId()).contains(event.getEntity())) {
+			if(Piggyback.passengers.get(event.getDismounted().getUniqueId()) == event.getEntity()) {
 				if(event.getEntity().getLocation().getBlock().getType()==Material.WATER) {
 					event.getDismounted().addPassenger(event.getEntity());
 			    }				

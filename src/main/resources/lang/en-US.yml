@@ -19,6 +19,7 @@ message:
   drop: '&cDropped &e%passenger%&r'
   ride: '&aYou are riding %clicked%'
   throw: '&cThrew &e%passenger%&r'
+  farThrow: '&cFar threw &e%passenger%&r'
   pickupCD: '&cYou can''t pick up anything else for &f%time%&c seconds'
   rideCD: '&cYou can''t ride anything else for &f%time%&c seconds'
   toggleOn: '&aYou may now be picked-up/ridden by other players!'
@@ -56,4 +57,5 @@ help:
   reload: "&fReload Piggyback Configs and Language file"
   clickType: "&7&lCROUCH+%clickType%-CLICK"
   requireItem: "&7&lwhile  HOLDING A %requireItem%"
+lang-version: 1
   

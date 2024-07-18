@@ -7,15 +7,8 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.player.PlayerInteractAtEntityEvent;
-import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerToggleSneakEvent;
-import org.bukkit.inventory.EquipmentSlot;
-import org.bukkit.util.Vector;
-
 import me.blubdalegend.piggyback.Piggyback;
-import me.blubdalegend.piggyback.actions.ThrowEntity;
 import me.blubdalegend.piggyback.config.ConfigAccessor.Actions;
 import me.blubdalegend.piggyback.config.ConfigAccessor.Clicks;
 import me.blubdalegend.piggyback.events.PiggybackDropEntityEvent;
@@ -30,15 +23,11 @@ import me.blubdalegend.piggyback.tasks.NoPermsMessageCooldown;
 import me.blubdalegend.piggyback.tasks.ToggleMessageCooldown;
 
 import java.text.DecimalFormat;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Objects;
-import java.util.UUID;
 
 public class PickupClickListener implements org.bukkit.event.Listener
 {
 	private final Piggyback plugin;
-	private final HashMap<UUID, Entity> carriedEntities = new HashMap<>();
 
 	public PickupClickListener(Piggyback plugin)
 	{
@@ -46,49 +35,44 @@ public class PickupClickListener implements org.bukkit.event.Listener
 	}
 	
 	@EventHandler
-    public void onPlayerInteractEntity(PlayerInteractEntityEvent event) {
-		Bukkit.getLogger().info("Event is Firing");
-		if(event.getHand().equals(EquipmentSlot.HAND)) {
-			Bukkit.getLogger().info("Event is Firing with right hand"); 
-			Player player = event.getPlayer();
-		        Entity entity = event.getRightClicked();
-                List<Entity> passengers = player.getPassengers();
-		        if (player.isSneaking()) {
-		            // Pick up the entity
-		            // Try Delaying for .25 seconds maybe? (5 ticks)
-		            carriedEntities.put(player.getUniqueId(), entity);
-		            player.setPassenger(entity);
-		            player.sendMessage("You picked up the entity!");
-		            event.setCancelled(true);
-		        }
-		}   
-    }
-	
-	@EventHandler
-    public void onPlayerInteractAtEntity(PlayerInteractAtEntityEvent event) {
-		Bukkit.getLogger().info("PlayerInteractAtEntityEvent is Firing");
-		Bukkit.getLogger().info(event.getRightClicked().getName());
-	}
-	
-	/////////////////// new throw method !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!  Remove other Throw methods and merge them with the one
-	@EventHandler
     public void onPlayerInteract(PlayerInteractEvent event) {
 		Player p = event.getPlayer();
 		if(!p.getPassengers().isEmpty())
-			if(carriedEntities.containsKey(p.getUniqueId()) && isLookingUp(p) && p.isSneaking()) {
+			if(Piggyback.passengers.containsKey(p.getUniqueId()) && isLookingUp(p)) {
 				if(event.getClickedBlock()==null) {
-					Entity carried = carriedEntities.get(p.getUniqueId());
-                    carriedEntities.remove(p.getUniqueId());
-                    p.removePassenger(carried);
-                    ThrowEntity.throwEntity(carried, p);
-                    p.sendMessage("You threw the entity!");
+					Entity e = Piggyback.passengers.get(p.getUniqueId());
+					if(p.isSprinting() && plugin.config.farThrowRider) {
+						//call my  far throw event
+			           	PiggybackFarThrowEntityEvent farThrowEnt = new PiggybackFarThrowEntityEvent(e, p);
+			           	Bukkit.getServer().getPluginManager().callEvent(farThrowEnt);
+			           	if(!farThrowEnt.isCancelled()){
+			           		event.setCancelled(true);
+			           	}
+					}
+					if(p.isSneaking()) {
+						if(plugin.config.throwRiderAway) {
+							//call my throw event
+			            	PiggybackThrowEntityEvent throwEnt = new PiggybackThrowEntityEvent(e, p);
+			            	Bukkit.getServer().getPluginManager().callEvent(throwEnt);
+			            	if(!throwEnt.isCancelled()){
+			            		event.setCancelled(true);
+			            	}
+						}else {
+							//call my drop event
+							PiggybackDropEntityEvent dropEnt = new PiggybackDropEntityEvent(e, p);
+							Bukkit.getServer().getPluginManager().callEvent(dropEnt);
+							if(!dropEnt.isCancelled()){
+								event.setCancelled(true);
+			            	}
+						}						
+					}
 				}
 			}
 	}
 	
-	public boolean isLookingUp(Player player) {
+	private boolean isLookingUp(Player player) {
 		float pitch = player.getLocation().getPitch();
-	    return pitch <= -50 && pitch >= -90;
+	    return pitch <= -40 && pitch >= -90;
 	}
 	
 	@SuppressWarnings("deprecation")
@@ -112,37 +96,7 @@ public class PickupClickListener implements org.bukkit.event.Listener
 					return;
 				}
 				if(perm){
-					if(!player.getPassengers().isEmpty()){
-						if (player.getPassengers().contains(clicked))
-						{
-							if (plugin.config.throwRiderAway) 
-							{
-								if(plugin.config.farThrowRider && player.isSprinting()) {
-									//call my  far throw event
-					            	PiggybackFarThrowEntityEvent farThrowEnt = new PiggybackFarThrowEntityEvent(clicked, player);
-					            	Bukkit.getServer().getPluginManager().callEvent(farThrowEnt);
-					            	if(!farThrowEnt.isCancelled()){
-					            		event.setDamageCancelled(true);
-					            	}
-								}else {
-									//call my throw event
-					            	PiggybackThrowEntityEvent throwEnt = new PiggybackThrowEntityEvent(clicked, player);
-					            	Bukkit.getServer().getPluginManager().callEvent(throwEnt);
-					            	if(!throwEnt.isCancelled()){
-					            		event.setDamageCancelled(true);
-					            	}
-								}		            			
-							}else{
-								//call my drop event
-								PiggybackDropEntityEvent dropEnt = new PiggybackDropEntityEvent(clicked, player);
-								Bukkit.getServer().getPluginManager().callEvent(dropEnt);
-								if(!dropEnt.isCancelled()){
-									event.setDamageCancelled(true);
-				            	}
-							}
-						}	  
-					}else {
-						Bukkit.getServer().getLogger().info("Trying to Pickup...");
+					if(player.getPassengers().isEmpty()){
 						if(!plugin.config.disabledWorlds.isEmpty()) {
 					    	if(plugin.config.disabledWorlds.contains(clicked.getWorld().toString().toUpperCase()) && !plugin.config.whitelistWorlds)
 						    {
@@ -607,7 +561,6 @@ public class PickupClickListener implements org.bukkit.event.Listener
 	@EventHandler(priority=EventPriority.HIGH, ignoreCancelled=true)
 	public void checkCrouchRightClickPickup(PlayerInteractEntityCrouchRightClickEvent event)
 	{
-		Bukkit.broadcastMessage("EVENT IS FIRING");
 		if(this.plugin.config.clickType.equals(Clicks.EITHER) || this.plugin.config.clickType.equals(Clicks.RIGHT)) {
 			boolean perm = false;
 			Player player = event.getPlayer();
@@ -625,41 +578,7 @@ public class PickupClickListener implements org.bukkit.event.Listener
 			        return;
 			    }		    
 				if(perm){
-					if(!player.getPassengers().isEmpty()){
-						Bukkit.broadcastMessage("Passengers is not empty.");
-						if (player.getPassengers().contains(clicked))
-						{
-							Bukkit.broadcastMessage("player clicked on passenger...");
-							if (plugin.config.throwRiderAway) 
-							{
-								Bukkit.broadcastMessage("Trying to throw");
-								if(plugin.config.farThrowRider && player.isSprinting()) {
-									//call my  far throw event
-					            	PiggybackFarThrowEntityEvent farThrowEnt = new PiggybackFarThrowEntityEvent(clicked, player);
-					            	Bukkit.getServer().getPluginManager().callEvent(farThrowEnt);
-					            	if(!farThrowEnt.isCancelled()){
-					            		event.setCancelled(true);
-					            	}
-								}else {
-									//call my throw event
-					            	PiggybackThrowEntityEvent throwEnt = new PiggybackThrowEntityEvent(clicked, player);
-					            	Bukkit.getServer().getPluginManager().callEvent(throwEnt);
-					            	if(!throwEnt.isCancelled()){
-					            		event.setCancelled(true);
-					            	}
-								}		
-							}else{
-								Bukkit.broadcastMessage("Trying to drop");
-								//call my drop event
-								PiggybackDropEntityEvent dropEnt = new PiggybackDropEntityEvent(clicked, player);
-								Bukkit.getServer().getPluginManager().callEvent(dropEnt);
-								if(!dropEnt.isCancelled()){
-									event.setCancelled(true);
-				            	}
-							}
-						}	  
-					}else {
-						Bukkit.getServer().getLogger().info("Trying to Pickup...");
+					if(player.getPassengers().isEmpty()){
 						if(!plugin.config.disabledWorlds.isEmpty()) {
 					    	if(plugin.config.disabledWorlds.contains(clicked.getWorld().toString().toUpperCase()) && !plugin.config.whitelistWorlds)
 						    {

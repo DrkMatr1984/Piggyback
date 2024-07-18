@@ -35,14 +35,8 @@ public class PiggybackEventsListener implements org.bukkit.event.Listener
 	public void onEntityThrow(PiggybackThrowEntityEvent event)
 	{		
   		Player player = event.getPlayer();
-  		player.sendMessage("Got to PiggybackThrowEntityEvent");
   		player.removePassenger(event.getEntity());
-  		List<Entity> riders = new ArrayList<>();
-		if(Piggyback.passengers.containsKey(player.getUniqueId())) {
-			riders = Piggyback.passengers.get(player.getUniqueId());
-		}
-		riders.remove(event.getEntity());
-		Piggyback.passengers.put(player.getUniqueId(),riders);
+		Piggyback.passengers.remove(player.getUniqueId());
 		ThrowEntity.throwEntity(event.getEntity(), player);
 		if (plugin.config.send && (!(plugin.lists.hasMessagesDisabled(player))))
 		{
@@ -56,19 +50,14 @@ public class PiggybackEventsListener implements org.bukkit.event.Listener
 	public void onEntityFarThrow(PiggybackFarThrowEntityEvent event)
 	{		
   		Player player = event.getPlayer();
-  		player.sendMessage("Got to PiggybackFarThrowEntityEvent");
   		player.removePassenger(event.getEntity());
-  		List<Entity> riders = new ArrayList<>();
-		if(Piggyback.passengers.containsKey(player.getUniqueId())) {
-			riders = Piggyback.passengers.get(player.getUniqueId());
-		}
-		riders.remove(event.getEntity());
-		Piggyback.passengers.put(player.getUniqueId(),riders);
+		Piggyback.passengers.remove(player.getUniqueId());
 		ThrowEntity.farThrowEntity(event.getEntity(), event.getPlayer());
 		if (plugin.config.send && (!(plugin.lists.hasMessagesDisabled(player))))
 		{
-			if(!((plugin.lang.prefix + " " + plugin.lang.throwMsg).equals(" "))){
-				 event.getPlayer().sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " " + (plugin.lang.throwMsg).replace("%passenger%", getEntityName(event.getEntity()))));
+			if(!((plugin.lang.prefix + " " + plugin.lang.farThrowMsg).equals(" "))){
+				//Create Far throw message
+				 event.getPlayer().sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " " + (plugin.lang.farThrowMsg).replace("%passenger%", getEntityName(event.getEntity()))));
 			}		  
 		}
 	}
@@ -77,14 +66,8 @@ public class PiggybackEventsListener implements org.bukkit.event.Listener
 	public void onEntityDrop(PiggybackDropEntityEvent event)
 	{	
 		Player player = event.getPlayer();
-		player.sendMessage("Got to PiggyBackDropEntityEvent");
 		player.removePassenger(event.getEntity());
-		List<Entity> riders = new ArrayList<>();
-		if(Piggyback.passengers.containsKey(player.getUniqueId())) {
-			riders = Piggyback.passengers.get(player.getUniqueId());
-		}
-		riders.remove(event.getEntity());
-		Piggyback.passengers.put(player.getUniqueId(),riders);
+		Piggyback.passengers.remove(player.getUniqueId());
 		if (plugin.config.send && (!(plugin.lists.hasMessagesDisabled(player))))
 		{
 			if(!((plugin.lang.prefix + " " + plugin.lang.dropMsg).equals(" "))){
@@ -105,13 +88,7 @@ public class PiggybackEventsListener implements org.bukkit.event.Listener
 			}
 	    }
 		player.addPassenger(entity);
-		List<Entity> riders = new ArrayList<>();
-		if(Piggyback.passengers.containsKey(player.getUniqueId())) {
-			riders = Piggyback.passengers.get(player.getUniqueId());
-		}
-		if(!riders.contains(entity))
-			riders.add(entity);
-		Piggyback.passengers.put(player.getUniqueId(),riders);
+		Piggyback.passengers.put(player.getUniqueId(), entity);
 		if (plugin.config.send && (!(plugin.lists.hasMessagesDisabled(player)))) 
 		{
 		    if(player.getPassengers().contains(entity)){
@@ -134,13 +111,7 @@ public class PiggybackEventsListener implements org.bukkit.event.Listener
 			}
 	    }
 		clicked.addPassenger(player);
-		List<Entity> riders = new ArrayList<>();
-		if(Piggyback.passengers.containsKey(clicked.getUniqueId())) {
-			riders = Piggyback.passengers.get(clicked.getUniqueId());
-		}
-		if(!riders.contains(player))
-			riders.add(player);
-		Piggyback.passengers.put(clicked.getUniqueId(),riders);
+		Piggyback.passengers.put(clicked.getUniqueId(), player);
 		
 		//Disallow dismount for a time so riding players don't fall right off
 		playersRiding.add(player);
