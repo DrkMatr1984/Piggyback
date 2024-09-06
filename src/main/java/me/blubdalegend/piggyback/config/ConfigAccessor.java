@@ -42,12 +42,15 @@ public class ConfigAccessor
 	public boolean allowNPCs;
 
 	public long pickupCooldown;
-	public boolean throwRiderAway;
-	public boolean farThrowRider;
 	
 	public long rideCooldown;
 	public boolean pickupOnlyMobs;
 	public boolean pickupOnlyPlayers;
+	
+	public boolean throwRiderAway;
+	public boolean farThrowRider;
+	public double throwPower;
+	public double farThrowPower;
 	
 	public String langfile;
 	public boolean send;
@@ -112,13 +115,17 @@ public class ConfigAccessor
 		
 		// pickup configuration
 		pickupCooldown = ((config.getLong("pickup.cooldown")) * 20);
-		throwRiderAway = config.getBoolean("pickup.throwRiderAway");
-		farThrowRider = config.getBoolean("pickup.farThrowRider");
 		
 		// ride
 		rideCooldown = ((config.getLong("ride.cooldown")) * 20);
 		pickupOnlyMobs = config.getBoolean("ride.pickupOnlyMobs");
 		pickupOnlyPlayers = config.getBoolean("ride.pickupOnlyPlayers");
+		
+		// throw
+		throwRiderAway = config.getBoolean("throw.throwRiderAway");
+		throwPower = Double.parseDouble(config.getString("throw.throwPower"));
+		farThrowRider = config.getBoolean("throw.farThrowRider");
+		farThrowPower = Double.parseDouble(config.getString("throw.farThrowPower"));
 		
 		// messages
 		langfile = ((config.getString("messages.language")) + ".yml");

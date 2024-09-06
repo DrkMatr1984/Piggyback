@@ -1,4 +1,4 @@
-package me.blubdalegend.piggyback.config;
+package me.blubdalegend.piggyback.storage;
 
 import java.io.File;
 import java.io.IOException;
@@ -24,8 +24,8 @@ import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
 import me.blubdalegend.piggyback.Piggyback;
-import me.blubdalegend.piggyback.compatibility.DownloadDrivers;
-import me.blubdalegend.piggyback.compatibility.ResourceUtils;
+import me.blubdalegend.piggyback.utils.DownloadDrivers;
+import me.blubdalegend.piggyback.utils.ResourceUtils;
 
 public class MySQLStorage {
 	

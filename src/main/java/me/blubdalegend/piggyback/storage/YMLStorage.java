@@ -1,4 +1,4 @@
-package me.blubdalegend.piggyback.config;
+package me.blubdalegend.piggyback.storage;
 
 import java.io.File;
 import java.io.IOException;

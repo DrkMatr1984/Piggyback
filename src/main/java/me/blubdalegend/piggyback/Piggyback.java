@@ -19,12 +19,13 @@ import org.bukkit.plugin.PluginManager;
 
 import me.blubdalegend.piggyback.config.ConfigAccessor;
 import me.blubdalegend.piggyback.config.LanguageFile;
-import me.blubdalegend.piggyback.config.MySQLStorage;
-import me.blubdalegend.piggyback.config.ToggleLists;
 import me.blubdalegend.piggyback.listeners.PiggybackEventsListener;
+import me.blubdalegend.piggyback.storage.MySQLStorage;
+import me.blubdalegend.piggyback.storage.ToggleLists;
 import me.blubdalegend.piggyback.listeners.EntityInteractListener;
 import me.blubdalegend.piggyback.listeners.BukkitListeners;
 import me.blubdalegend.piggyback.listeners.PickupClickListener;
+import me.blubdalegend.piggyback.compatibility.TownyHook;
 //import me.blubdalegend.piggyback.compatibility.DenyPiggybackFlag;
 import me.blubdalegend.piggyback.compatibility.WorldGuardHook;
 
@@ -51,8 +52,9 @@ public class Piggyback extends org.bukkit.plugin.java.JavaPlugin
 	public static Class<?> clazz;
 	private Commands commands;
   
-	private static CommandMap cmap;   
+	private static CommandMap cmap = null;   
 	private CCommand command = null;
+	public static TownyHook townyHook = null;
   
 	public void onEnable()
 	{
@@ -73,7 +75,10 @@ public class Piggyback extends org.bukkit.plugin.java.JavaPlugin
      	if(Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
      		Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&7[&6Piggyback&7] &aHooked into PlaceholderAPI!"));
      		new me.blubdalegend.piggyback.placeholders.PlaceholderAPI(plugin).register();
-    	 }
+    	}
+     	if(Bukkit.getPluginManager().isPluginEnabled("Towny")) {
+     		townyHook = new TownyHook(plugin);
+     	}
      	/*if(Bukkit.getPluginManager().isPluginEnabled("PlotSquared")) {
     	  	plotSquared = new DenyPiggybackFlag(false);
     	  	com.plotsquared.core.plot.flag.GlobalFlagContainer.getInstance().addFlag(plotSquared);
@@ -172,16 +177,17 @@ public class Piggyback extends org.bukkit.plugin.java.JavaPlugin
   			try {
   				Field f = clazz.getDeclaredField("commandMap");
   				f.setAccessible(true);
-  				cmap = (CommandMap)f.get(Bukkit.getServer());
-  				if (!lang.command.equals(null)) {
-  					this.command = new CCommand(lang.command);
-  					if(!cmap.register("pback", this.command)) {
-  						Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&7[&6Piggyback&7] &aCommand &e" + lang.command + " &chas already been taken. Defaulting to &e'pback' &cfor PiggyBack command."));
-  					}else {
-  						Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&7[&6Piggyback&7] &aCommand &e" + lang.command + " &aRegistered!"));
-  					}
-  					this.command.setExecutor(this.commands);        
-  				} 
+  				if(cmap!=null) {
+  					if (!lang.command.equals(null)) {
+  	  					this.command = new CCommand(lang.command);
+  	  					if(!cmap.register("pback", this.command)) {
+  	  						Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&7[&6Piggyback&7] &aCommand &e" + lang.command + " &chas already been taken. Defaulting to &e'pback' &cfor PiggyBack command."));
+  	  					}else {
+  	  						Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&7[&6Piggyback&7] &aCommand &e" + lang.command + " &aRegistered!"));
+  	  					}
+  	  					this.command.setExecutor(this.commands);        
+  	  				} 
+  				}				
   			} catch (Exception e) {
   				e.printStackTrace();
   			} 

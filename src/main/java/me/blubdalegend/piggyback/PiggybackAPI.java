@@ -68,12 +68,8 @@ public class PiggybackAPI
 		return 0;
 	}
 	
-	public static void throwEntity(Entity ent, Player player) {
-		ThrowEntity.throwEntity(ent, player);
-	}
-	
-	public static void farThrowEntity(Entity ent, Player player) {
-		ThrowEntity.farThrowEntity(ent, player);
+	public static void throwEntity(Entity ent, Player player, double throwPower) {
+		ThrowEntity.throwEntity(ent, player, throwPower);
 	}
 	
 }

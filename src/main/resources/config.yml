@@ -45,12 +45,6 @@ main:
 pickup:
   # Cooldown in seconds before being able to pick-up players/mobs (set to 0 to disable)
   cooldown: 10
-  # Whether to 'throw' the rider when looking at them while crouching and left-clicking on them
-  # when they are riding you.
-  throwRiderAway: true
-  # If the above setting and this is also true, the player will perform a "far throw" when sprinting
-  # and left-clicking on them when they are riding you.
-  farThrowRider: false
   
 ##################################
 ####### Ride Configuration #######
@@ -70,6 +64,23 @@ ride:
   # If this is true, players will still obey normal pick-up rules for players and
   # only ride mobs
   pickupOnlyPlayers: false
+
+##################################
+###### Throw Configuration #######
+##################################
+
+# These configs control throwing options for when player is carrying another player.
+throw:
+  # Whether to 'throw' the rider when looking at them while crouching and left-clicking on them
+  # when they are riding you.
+  throwRiderAway: true
+  # This option controls the throw power of the 'normal' throw. (Can be decimal or whole number)
+  throwPower: 1
+  # If the above setting and this is also true, the player will perform a "far throw" when sprinting
+  # and left-clicking on them when they are riding you.
+  farThrowRider: false
+  # This option controls the throw power of the 'far' throw. (Can be decimal or whole number)
+  farThrowPower: 2.0
 
 ##################################
 ##### Message Configuration ######
@@ -138,11 +149,9 @@ storage:
   # Postgre and H2 need their respective jars placed in /PiggyBack/lib/ to function. (Currently h2-1.4.190.jar and postgresql-42.5.0.jar)
   # Case-Insensitive
   type: 'yml'
-  # Amount of time in seconds before saving data when using SQLite
-  # or YML
+  # Amount of time in seconds before saving data when using SQLite or YML
   saveTimer: 600
-  # Filename of SQLite database file if SQLite is chosen. Location is
-  # in piggyback/data
+  # Filename of SQLite database file if SQLite is chosen. Location is in piggyback/data
   sqliteFilename: 'pback.db'
   # Hostname or IP of the server if using H2, MYSQL, or POSTGRE (H2 Already includes tcp://)
   hostname: '127.0.0.1'
@@ -174,7 +183,37 @@ storage:
   ## to edit part of the startup string you may be able to start an h2 jar as a server and use it as a personal MySQL server.
   ## If interest is piqued I may add an embedded version of an H2 server that optionally runs with PiggyBack that other 
   ## plugins may connect to and use.
-    
+
+##################################
+## Compatibility Configuration ###
+##################################
+# Config options for generic protection plugin integration and compatibility (This works by simulating a block place by a player
+# at their current location. If the player would be blocked from placing a block in that location, they are also blocked from 
+# using Piggyback in that location)
+genericProtectionPlugin:
+  # Whether to enable blocking piggyback on areas protected from block placement
+  enableGenericProtectionPlugin: false
+# Config options for worldguard integration and compatibility
+worldguard:
+  # enable the Piggyback flag in worldguard
+  enablePiggybackFlag: true
+# Config options for towny integration and compatibility
+towny:
+  # Whether or not to allow players to use Piggyback in the wilderness on players/mobs
+  allowPiggybackInWilderness: true
+  # Piggyback is always disabled on mobs/entities in enemy teritory. This option controls whether or not to still allow piggyback
+  # on players of enemy nations while they are in a piggyback enabled area
+  allowPiggybackOnEnemies: false
+  # Piggyback is always disabled on mobs/entities in enemy teritory. This option controls whether or not to still allow piggyback
+  # on players of neutral nations while they are in a piggyback enabled area
+  allowPiggybackOnNeutral: true
+  # Piggyback is always disabled on mobs/entities in enemy teritory. This option controls whether or not to still allow piggyback
+  # on players of allied nations while they are in a piggyback enabled area
+  allowPiggybackOnAllies: true
+  # Piggyback is always disabled on mobs/entities in enemy teritory. This option controls whether or not to still allow piggyback
+  # on players of Towny friends while they are in a piggyback enabled area
+  allowPiggybackOnFriends: true
+  
 ##################################
 ##### Metrics Configuration ######
 ##################################

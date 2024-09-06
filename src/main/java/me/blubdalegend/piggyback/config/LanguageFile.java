@@ -13,7 +13,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import me.blubdalegend.piggyback.Piggyback;
-import me.blubdalegend.piggyback.compatibility.ResourceUtils;
+import me.blubdalegend.piggyback.utils.ResourceUtils;
 
 public class LanguageFile
 {
@@ -26,6 +26,9 @@ public class LanguageFile
 	public String toggleCommand; 
 	public String messagesCommand;
 	public String helpCommand;
+	public String townCommand;
+	public String nationCommand;
+	public String plotCommand;
 	
 	public String title;
 	public String prefix;      
@@ -116,6 +119,9 @@ public class LanguageFile
 		toggleCommand = (language.getString("commands.toggle")).toLowerCase();
 		messagesCommand = (language.getString("commands.messages")).toLowerCase();
 		helpCommand = (language.getString("commands.help")).toLowerCase();
+		townCommand = (language.getString("commands.town")).toLowerCase();
+		nationCommand = (language.getString("commands.nation")).toLowerCase();
+		plotCommand = (language.getString("commands.plot")).toLowerCase();
 		// feedback
 		title = language.getString("message.prefix");
 		prefix = "&f[&r" + title + "&f]&r";      

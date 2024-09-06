@@ -1,4 +1,4 @@
-package me.blubdalegend.piggyback.compatibility;
+package me.blubdalegend.piggyback.utils;
 
 import com.google.common.collect.ImmutableList;
 

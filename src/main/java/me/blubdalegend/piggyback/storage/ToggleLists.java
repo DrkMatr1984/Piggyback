@@ -1,4 +1,4 @@
-package me.blubdalegend.piggyback.config;
+package me.blubdalegend.piggyback.storage;
 
 import java.sql.SQLException;
 import java.util.ArrayList;

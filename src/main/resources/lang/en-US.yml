@@ -6,6 +6,9 @@ commands:
   toggle: 'toggle'
   messages: 'messages'
   help: 'help'
+  town: 'town'
+  nation: 'nation'
+  plot: 'plot'
 message:
 ## Colors are fine here, Messages can be disabled by leaving the setting blank, for instance,    drop: ""
 ## Placeholders

@@ -37,7 +37,7 @@ public class PiggybackEventsListener implements org.bukkit.event.Listener
   		Player player = event.getPlayer();
   		player.removePassenger(event.getEntity());
 		Piggyback.passengers.remove(player.getUniqueId());
-		ThrowEntity.throwEntity(event.getEntity(), player);
+		ThrowEntity.throwEntity(event.getEntity(), player, plugin.config.throwPower);
 		if (plugin.config.send && (!(plugin.lists.hasMessagesDisabled(player))))
 		{
 			if(!((plugin.lang.prefix + " " + plugin.lang.throwMsg).equals(" "))){
@@ -52,7 +52,7 @@ public class PiggybackEventsListener implements org.bukkit.event.Listener
   		Player player = event.getPlayer();
   		player.removePassenger(event.getEntity());
 		Piggyback.passengers.remove(player.getUniqueId());
-		ThrowEntity.farThrowEntity(event.getEntity(), event.getPlayer());
+		ThrowEntity.throwEntity(event.getEntity(), player, plugin.config.farThrowPower);
 		if (plugin.config.send && (!(plugin.lists.hasMessagesDisabled(player))))
 		{
 			if(!((plugin.lang.prefix + " " + plugin.lang.farThrowMsg).equals(" "))){

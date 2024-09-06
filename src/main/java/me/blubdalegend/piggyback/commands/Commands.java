@@ -10,8 +10,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import me.blubdalegend.piggyback.Piggyback;
-import me.blubdalegend.piggyback.compatibility.UUIDFetcher;
-import me.blubdalegend.piggyback.compatibility.UUIDFetcher.CallBack;
+import me.blubdalegend.piggyback.utils.UUIDFetcher;
+import me.blubdalegend.piggyback.utils.UUIDFetcher.CallBack;
 
 public class Commands implements CommandExecutor
 {
@@ -236,12 +236,29 @@ public class Commands implements CommandExecutor
 					       		sender.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " " + plugin.lang.noPerms));
 					       	}	
 					    }
+				    }else if((args[0].toLowerCase().equals(plugin.lang.townCommand) && args[2].toLowerCase().equals(plugin.lang.toggleCommand)) && Piggyback.townyHook!=null) {
+				    	if(Piggyback.townyHook.hasTown(args[1])){
+				    		if((sender instanceof Player && Piggyback.townyHook.isMayor(args[1], (Player)sender)) || sender.isOp() || !(sender instanceof Player)){
+				    			if(Piggyback.townyHook.getAllowPiggybackInTown(args[1])) {
+				    				// toggle off and display toggled off message
+				    			}else {
+				    				// toggle on and display toggled on message
+				    			}
+				    		}else{
+						    	if(!((plugin.lang.prefix + " " + plugin.lang.noPerms).equals(" "))){
+						       		sender.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " " + plugin.lang.noPerms));
+						       	}	
+						    }
+				    	}else {
+				    		//send no town with this name message
+				    	}	
 				    }else {
 				    	if(!((plugin.lang.prefix + " " + plugin.lang.wrongCommand).equals(" "))){
 							sender.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.lang.prefix + " " + plugin.lang.wrongCommand));
 		        		}
 				    }					
 				}
+				// Towny Commands
 			}
 		}catch (Exception e) {
 			if(!((plugin.lang.prefix + " " + plugin.lang.error).equals(" "))){
@@ -266,13 +283,13 @@ public class Commands implements CommandExecutor
 			sender.sendMessage(ChatColor.translateAlternateColorCodes('&',"&7/&e" + plugin.lang.command + " &3" + plugin.lang.messagesCommand + " " + plugin.lang.helpMessageToggleOther));
 		if(sender.hasPermission("piggyback.reload") || sender.isOp() || !(sender instanceof Player))
 			sender.sendMessage(ChatColor.translateAlternateColorCodes('&',"&7/&e" + plugin.lang.command + " &8" + plugin.lang.reloadCommand + " &7- &r" + plugin.lang.helpReload));
+		// Towny Commands /pback town <town> toggle (mayors and assistant only)  /pback nation <nation> toggle (mayors and assistant only)  /pback plot toggle - Toggles for individual plots by the plot owner
 		sender.sendMessage("");
 		int j = ((plugin.lang.title + " " + plugin.lang.help).length());
 		String s = "";
 		for(int i = 0; i<j; i++){
 			s = s + "#";
 		}
-		//////////////////////////////// NEEDS ADDED TO LANGUAGE.YML
 		sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&5&o####" + s));
 		String send = "  ";
 		if(plugin.config.requireItem!=null) {

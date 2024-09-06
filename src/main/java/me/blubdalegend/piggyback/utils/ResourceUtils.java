@@ -1,4 +1,4 @@
-package me.blubdalegend.piggyback.compatibility;
+package me.blubdalegend.piggyback.utils;
 
 import java.io.File;
 import java.io.IOException;
